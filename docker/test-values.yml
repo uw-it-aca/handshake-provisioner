@@ -53,6 +53,15 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
+    - name: test.handshake.uw.edu-aws-secrets
+      externalKey: axdd/kv/data/handshake/shared/aws-secrets
+      data:
+        - name: access-key-id
+          property: access-key-id
+        - name: secret-access-key
+          property: secret-access-key
+        - name: storage-bucket-name
+          property: storage-bucket-name
 
 environmentVariablesSecrets:
   djangoSecret:
@@ -67,3 +76,16 @@ environmentVariablesSecrets:
     name: STORAGE_PROJECT_ID
     secretName: test.handshake.uw.edu-shared-secrets
     secretKey: storage-project-id
+  awsStorageBucketName:
+    name: AWS_STORAGE_BUCKET_NAME
+    secretName: test.handshake.uw.edu-aws-secrets
+    secretKey: storage-bucket-name
+  awsAccessKeyID:
+    name: AWS_S3_ACCESS_KEY_ID
+    secretName: test.handshake.uw.edu-aws-secrets
+    secretKey: access-key-id
+  awsSecretAccessKey:
+    name: AWS_S3_SECRET_ACCESS_KEY
+    secretName: test.handshake.uw.edu-aws-secrets
+    secretKey: secret-access-key
+

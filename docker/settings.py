@@ -17,3 +17,5 @@ else:
     GS_LOCATION = os.path.join(os.getenv('STORAGE_DATA_ROOT', ''))
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
+
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', '')

@@ -23,6 +23,7 @@ setup(
     install_requires = [
         'Django~=3.2',
         'django-storages[google]>=1.10',
+        'boto3',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports Handshake',
