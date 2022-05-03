@@ -40,9 +40,9 @@ env:
 # defined in the "deploy" job
 on:
   push:
-    branches: [main, master, qa, develop, feature/eval-me]
+    branches: [main, qa, develop, feature/eval-me]
   pull_request:
-    branches: [main, master, qa, develop, feature/eval-me]
+    branches: [main, qa, develop, feature/eval-me]
     types: [opened, reopened, synchronize]
 
 jobs:
@@ -118,7 +118,7 @@ jobs:
           docker run -u root -t
           -v ${PWD}:/coverage
           -e DJANGO_APP="$DJANGO_APP"
-          -e "ENV=localdev" -e "AUTH=SAML_MOCK"
+          -e "ENV=localdev"
           app-test-container
           bash -c ". ./docker/test.sh"
 
@@ -154,7 +154,7 @@ jobs:
 
       - name: Deployment Pipeline
         if: >-
-          contains(fromJSON('["main", "master", "develop", "qa"]'),
+          contains(fromJSON('["main", "develop", "qa"]'),
             needs.context.outputs.git_repo_branch)
         uses: uw-it-aca/actions/cicd-deploy@main
         with:
