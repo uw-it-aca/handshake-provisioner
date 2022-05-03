@@ -4,7 +4,7 @@
 from django.test import TestCase, override_settings
 from django.core.files.storage import default_storage
 from django.core.exceptions import ObjectDoesNotExist
-from catalyst_utils.dao.file import read_file, write_file
+from sis_provisioner.dao.file import read_file, write_file
 
 
 @override_settings(MEDIA_ROOT='/app')
