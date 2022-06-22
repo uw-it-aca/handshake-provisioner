@@ -33,28 +33,37 @@ environmentVariables:
   - name: SESSION_BACKEND
     value: MEMCACHED
 
+  - name: AXDD_PERSON_CLIENT_ENV
+    value: prod
+
 externalSecrets:
   enabled: true
   secrets:
     - name: test.handshake.uw.edu-secrets
-      externalKey: axdd/kv/data/handshake/test/secrets
+      externalKey: handshake/test/secrets
       data:
         - name: django-secret
           property: django-secret
         - name: storage-bucket-name
           property: storage-bucket-name
     - name: test.handshake.uw.edu-shared-secrets
-      externalKey: axdd/kv/data/handshake/shared/secrets
+      externalKey: handshake/shared/secrets
       data:
         - name: storage-project-id
           property: storage-project-id
+        - name: person-db-user
+          property: person-db-user
+        - name: person-db-pass
+          property: person-db-pass
+        - name: person-db-host
+          property: person-db-host
     - name: test.handshake.uw.edu-gcs-credentials
-      externalKey: axdd/kv/data/handshake/shared/gcs-credentials
+      externalKey: handshake/shared/gcs-credentials
       data:
         - name: credentials.json
           property: credentials.json
     - name: test.handshake.uw.edu-aws-secrets
-      externalKey: axdd/kv/data/handshake/shared/aws-secrets
+      externalKey: handshake/shared/aws-secrets
       data:
         - name: access-key-id
           property: access-key-id
@@ -88,4 +97,15 @@ environmentVariablesSecrets:
     name: AWS_S3_SECRET_ACCESS_KEY
     secretName: test.handshake.uw.edu-aws-secrets
     secretKey: secret-access-key
-
+  personDBHost:
+    name: UW_PERSON_DB_HOSTNAME
+    secretName: test.handshake.uw.edu-shared-secrets
+    secretKey: person-db-host
+  personDBUser:
+    name: UW_PERSON_DB_USERNAME
+    secretName: test.handshake.uw.edu-shared-secrets
+    secretKey: person-db-user
+  personDBPass:
+    name: UW_PERSON_DB_PASSWORD
+    secretName: test.handshake.uw.edu-shared-secrets
+    secretKey: person-db-pass
