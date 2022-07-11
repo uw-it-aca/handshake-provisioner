@@ -16,7 +16,7 @@ class HandshakeStorage():
             )
         return self._storage
 
-    def read_file(self.path):
+    def read_file(self, path):
         if not self.storage.exists(path):
             raise ObjectDoesNotExist()
 
