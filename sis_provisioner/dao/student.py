@@ -14,24 +14,24 @@ class UWHandshakeClient:
 
     @staticmethod
     def valid_class_code(class_code):
-        class_codes = getattr(settings, 'INCLUDED_CLASS_CODES', '[]')
+        class_codes = getattr(settings, 'INCLUDED_CLASS_CODES', [])
         return class_code in class_codes
 
     @staticmethod
     def valid_campus_code(campus_code):
-        campus_codes = getattr(settings, 'INCLUDED_CAMPUS_CODES', '[]')
+        campus_codes = getattr(settings, 'INCLUDED_CAMPUS_CODES', [])
         return campus_code in campus_codes
 
     @staticmethod
     def valid_major_code(major_codes):
-        excluded_codes = getattr(settings, 'EXCLUDED_MAJOR_CODES', '[]')
+        excluded_codes = getattr(settings, 'EXCLUDED_MAJOR_CODES', [])
         for excluded_code in excluded_codes:
             if excluded_code in major_codes:
                 return False
         return True
 
     def _update_college_for_majors(self, majors):
-        engr_majors = getattr(settings, 'ENGR_COLLEGE_MAJORS', '[]')
+        engr_majors = getattr(settings, 'ENGR_COLLEGE_MAJORS', [])
         for major in majors:
             if major.major_abbr_code in engr_majors:
                 major.college = 'J'
