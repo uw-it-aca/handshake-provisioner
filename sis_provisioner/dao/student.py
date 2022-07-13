@@ -36,10 +36,6 @@ class UWHandshakeClient:
             if major.major_abbr_code in engr_majors:
                 major.college = 'J'
 
-    def _get_handshake_major(self, majors):
-        # most alphabetically last major college code
-        return max(major.college for major in majors)
-
     def get_students_for_handshake(self):
         students = self.client.get_registered_students(
             include_employee=False,
@@ -64,11 +60,6 @@ class UWHandshakeClient:
                 continue
 
             self._update_college_for_majors(person.student.majors)
-
-            synced_major = self._get_handshake_major(person.student.majors)
-            # no major syncing for Foster College or Bothell Campus
-            if synced_major == 'E' or person.student.campus_code == '1':
-                person.student.majors = []
 
             handshake_students.append(person)
 
