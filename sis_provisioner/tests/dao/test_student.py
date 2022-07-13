@@ -9,11 +9,15 @@ from sis_provisioner.dao.student import UWHandshakeClient
 class StudentDAOFunctionsTest(TestCase):
     def test_valid_class_code(self):
         self.assertTrue(UWHandshakeClient.valid_class_code('1'))
+        self.assertTrue(UWHandshakeClient.valid_class_code('5'))
         self.assertFalse(UWHandshakeClient.valid_class_code('0'))
         self.assertFalse(UWHandshakeClient.valid_class_code(1))
 
     def test_valid_campus_code(self):
-        pass
+        self.assertTrue(UWHandshakeClient.valid_campus_code('0'))
+        self.assertFalse(UWHandshakeClient.valid_campus_code('2'))
+        self.assertFalse(UWHandshakeClient.valid_campus_code(1))
 
     def test_valid_major_code(self):
-        pass
+        self.assertTrue(UWHandshakeClient.valid_major_code('0-CSE'))
+        self.assertFalse(UWHandshakeClient.valid_major_code('0-EMBA'))
