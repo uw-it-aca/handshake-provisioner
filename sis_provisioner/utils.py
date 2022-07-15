@@ -20,6 +20,11 @@ def valid_major_codes(majors):
     return True
 
 
+def is_athlete(special_program_code):
+    athlete_codes = getattr(settings, 'ATHLETIC_PROGRAM_CODES', [])
+    return special_program_code in athlete_codes
+
+
 def get_college_for_major(major):
     if major.major_abbr_code in getattr(settings, 'ENGR_COLLEGE_MAJORS', []):
         return 'J'

@@ -47,31 +47,4 @@ HANDSHAKE_CSV_HEADER = [
     'primary_education:education_level_name',
 ]
 
-"""
-maps fields of the expected handshake fields to the fields as they appear in the
-student data
-
-adding '[]' after an attribute indicates that it is a list of values, and an
-index inside means to only grab that index of the attribute list
-"""
-HANDSHAKE_FIELDNAMES = {
-    'auth_identifier': 'uwnetid',
-    'username': 'uwnetid',
-    'email_address': 'student:student_email',
-    'card_id': 'student:student_number',
-    'school_year_name': 'student:class_code',
-    'campus_name': 'student:campus_code',
-    'last_name': 'last_name',
-    'first_name': 'first_name',
-    'middle_name': 'preferred_middle_name',
-    'preferred_name': 'preferred_first_name',
-    'primary_education:college_name': 'student:majors[]:college',
-    'primary_education:major_names[]': 'student:majors[]:major_name',
-    'primary_education:primary_major_name': 'student:majors[0]:major_name',
-    # 'primary_education:education_level_name': '',
-    'gender': 'student:gender',
-    'ethnicity': 'assigned_ethnic_code',
-    # 'athlete': '',
-    'veteran': 'student:veteran_benefit_code',
-    # 'work_study_eligible': ''
-}
+ATHLETE_CODES = [25, 26, 27, 30, 31, 32, 33, 34, 40, 41, 42]

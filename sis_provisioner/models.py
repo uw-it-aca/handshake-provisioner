@@ -7,7 +7,7 @@ from sis_provisioner.dao.file import read_file, write_file
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
     valid_class_code, valid_campus_code, valid_major_codes,
-    get_college_for_major, get_major_names)
+    get_college_for_major, get_major_names, is_athlete)
 from datetime import datetime
 import csv
 import io
@@ -54,8 +54,8 @@ class ImportFile(models.Model):
                 person.uwnetid,
                 person.student.student_email,
                 person.student.student_number,
-                person.student.class_code,  # TODO: year name
-                person.student.campus_code,  # TODO: campus name
+                person.student.class_desc,  # TODO: year name or code
+                person.student.campus_desc,  # TODO: campus name or code
                 person.last_name,
                 person.first_name,
                 person.preferred_middle_name,
@@ -64,9 +64,9 @@ class ImportFile(models.Model):
                 get_major_names(person.student.majors),
                 person.student.gender,
                 person.assigned_ethnic_code,  # TODO: letter code?
-                'athlete',  # TODO: true|false?
+                is_athlete(person.student.special_program_code),
                 person.student.veteran_benefit_code,  # TODO: true|false?
-                'work_study_eligible',
+                'work_study_eligible', # TODO: get from visa type (coming soon)
                 'primary_education:education_level_name',  # TODO: ?
             ])
 
