@@ -47,4 +47,6 @@ HANDSHAKE_CSV_HEADER = [
     'primary_education:education_level_name',
 ]
 
-ATHLETE_CODES = [25, 26, 27, 30, 31, 32, 33, 34, 40, 41, 42]
+ATHLETE_CODES = [
+    '25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'
+]
