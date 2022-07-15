@@ -21,7 +21,7 @@ def valid_major_codes(majors):
 
 
 def is_athlete(special_program_code):
-    athlete_codes = getattr(settings, 'ATHLETIC_PROGRAM_CODES', [])
+    athlete_codes = getattr(settings, 'ATHLETE_CODES', [])
     return special_program_code in athlete_codes
 
 
@@ -40,12 +40,12 @@ def get_synced_college_code(codes):
 
 
 def get_major_names(majors):
-    return ','.join(m.major_name for m in majors)
+    return ','.join([m.major_name for m in majors])
 
 
 def get_synced_college_name(majors):
     college_code = get_synced_college_code(
-        get_college_for_major(major) for major in majors
+        [get_college_for_major(major) for major in majors]
     )
-    college_dict = getattr(settings, 'COLLEGE_CODE_TO_NAME', {})
+    college_dict = getattr(settings, 'COLLEGES', {})
     return college_dict.get(college_code, None)
