@@ -25,11 +25,27 @@ def is_athlete(special_program_code):
     return special_program_code in athlete_codes
 
 
+def is_veteran(veteran_benefit_code):
+    return veteran_benefit_code != '0'
+
+
 def get_college_for_major(major):
     if major.major_abbr_code in getattr(settings, 'ENGR_COLLEGE_MAJORS', []):
         return 'J'
     return major.college
 
 
+def get_synced_college_code(codes):
+    return max(codes) if codes else None
+
+
 def get_major_names(majors):
-    return ','.join([m.major_name for m in majors])
+    return ','.join(m.major_name for m in majors)
+
+
+def get_synced_college_name(majors):
+    college_code = get_synced_college_code(
+        get_college_for_major(major) for major in majors
+    )
+    college_dict = getattr(settings, 'COLLEGE_CODE_TO_NAME', {})
+    return college_dict.get(college_code, None)
