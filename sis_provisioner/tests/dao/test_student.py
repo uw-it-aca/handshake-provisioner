@@ -2,22 +2,21 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase, override_settings
-from sis_provisioner.dao.student import UWHandshakeClient
+from sis_provisioner.dao.student import (
+    UWPersonClient, get_students_for_handshake)
+import mock
 
 
-@override_settings()
 class StudentDAOFunctionsTest(TestCase):
-    def test_valid_class_code(self):
-        self.assertTrue(UWHandshakeClient.valid_class_code('1'))
-        self.assertTrue(UWHandshakeClient.valid_class_code('5'))
-        self.assertFalse(UWHandshakeClient.valid_class_code('0'))
-        self.assertFalse(UWHandshakeClient.valid_class_code(1))
-
-    def test_valid_campus_code(self):
-        self.assertTrue(UWHandshakeClient.valid_campus_code('0'))
-        self.assertFalse(UWHandshakeClient.valid_campus_code('2'))
-        self.assertFalse(UWHandshakeClient.valid_campus_code(1))
-
-    def test_valid_major_code(self):
-        self.assertTrue(UWHandshakeClient.valid_major_code('0-CSE'))
-        self.assertFalse(UWHandshakeClient.valid_major_code('0-EMBA'))
+    @mock.patch.object(UWPersonClient, 'get_registered_students')
+    def test_get_students_for_handshake(self, mock_get_registered_students):
+        r = get_students_for_handshake()
+        mock_get_registered_students.assert_called_with(
+            include_employee=False,
+            include_student_transcripts=False,
+            include_student_transfers=False,
+            include_student_sports=False,
+            include_student_advisers=False,
+            include_student_intended_majors=False,
+            include_student_pending_majors=False,
+            include_student_requested_majors=False)

@@ -1,5 +1,6 @@
 ingress:
   enabled: false
+
 lifecycle:
   enabled: true
   preStop:
@@ -10,18 +11,28 @@ readiness:
   enabled: true
 securityPolicy:
   enabled: true
+
 repo: handshake
 instance: test
-image:
-  repository: gcr.io/uwit-mci-axdd/handshake
-  tag: IMAGE_TAG
-memcached:
+
+externalService:
   enabled: true
-  replicaCount: 1
-  updateStrategy:
-    type: RollingUpdate
+  name: handshake-db-service
+  type: ClusterIP
+  serviceAddress:
+  servicePort: 5432
+database:
+  engine: postgres
+  name: handshake-test
+  hostname: handshake-db-service
+  secretName: test.handshake.uw.edu-sql-secrets
+
+memcached:
+  enabled: false
+
 cronjob:
   enabled: false
+
 gcsCredentials:
   mounted: true
   secretName: test.handshake.uw.edu-gcs-credentials
@@ -46,6 +57,13 @@ externalSecrets:
           property: django-secret
         - name: storage-bucket-name
           property: storage-bucket-name
+    - name: test.handshake.uw.edu-sql-secrets
+      externalKey: handshake/shared/sql-secrets
+      data:
+        - name: username
+          property: username
+        - name: password
+          property: password
     - name: test.handshake.uw.edu-shared-secrets
       externalKey: handshake/shared/secrets
       data:

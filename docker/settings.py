@@ -27,6 +27,26 @@ EXCLUDED_MAJOR_CODES = ['0-EMBA', '0-GEMBA']
 ENGR_COLLEGE_MAJORS = ['0-BIOEN', '0-BSE', '0-DATA', '0-PHARBX', '0-PREBSE',
                         '0-TECH I', '0-C SCI', '0-CMP E', '0-CSE']
 
+HANDSHAKE_CSV_HEADER = [
+    'auth_identifier',
+    'email_address',
+    'card_id',
+    'school_year_name',
+    'campus_name',
+    'last_name',
+    'first_name',
+    'middle_name',
+    'preferred_name',
+    'primary_education:college_name',
+    'primary_education:major_names',
+    'gender',
+    'ethnicity',
+    'athlete',
+    'veteran',
+    'work_study_eligible',
+    'primary_education:education_level_name',
+]
+
 """
 maps fields of the expected handshake fields to the fields as they appear in the
 student data
