@@ -39,13 +39,16 @@ gcsCredentials:
 
 environmentVariables:
   - name: ENV
-    value: test
-
-  - name: SESSION_BACKEND
-    value: MEMCACHED
+    value: "test"
 
   - name: AXDD_PERSON_CLIENT_ENV
-    value: prod
+    value: "prod"
+
+  - name: UW_PERSON_DB_HOSTNAME
+    value: "172.18.1.67"
+
+  - name: UW_PERSON_DB_DATABASE
+    value: "uw-person-prod"
 
 externalSecrets:
   enabled: true
@@ -73,8 +76,6 @@ externalSecrets:
           property: person-db-user
         - name: person-db-pass
           property: person-db-pass
-        - name: person-db-host
-          property: person-db-host
     - name: test.handshake.uw.edu-gcs-credentials
       externalKey: handshake/shared/gcs-credentials
       data:
@@ -115,10 +116,6 @@ environmentVariablesSecrets:
     name: AWS_S3_SECRET_ACCESS_KEY
     secretName: test.handshake.uw.edu-aws-secrets
     secretKey: secret-access-key
-  personDBHost:
-    name: UW_PERSON_DB_HOSTNAME
-    secretName: test.handshake.uw.edu-shared-secrets
-    secretKey: person-db-host
   personDBUser:
     name: UW_PERSON_DB_USERNAME
     secretName: test.handshake.uw.edu-shared-secrets
