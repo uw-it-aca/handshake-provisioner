@@ -48,16 +48,19 @@ gcsCredentials:
 
 environmentVariables:
   - name: ENV
-    value: "test"
+    value: test
+
+  - name: CLUSTER_CNAME
+    value: handshake-test.axdd.s.uw.edu
 
   - name: AXDD_PERSON_CLIENT_ENV
-    value: "PROD"
+    value: PROD
 
   - name: UW_PERSON_DB_HOSTNAME
-    value: "172.18.1.67"
+    value: 172.18.1.67
 
   - name: UW_PERSON_DB_DATABASE
-    value: "uw-person-prod"
+    value: uw-person-prod
 
 externalSecrets:
   enabled: true
