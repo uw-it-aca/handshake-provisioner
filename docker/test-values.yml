@@ -1,0 +1,126 @@
+ingress:
+  enabled: false
+
+lifecycle:
+  enabled: true
+  preStop:
+    enabled: true
+affinity:
+   podsSpanNodes: true
+readiness:
+  enabled: true
+securityPolicy:
+  enabled: true
+
+repo: handshake
+instance: test
+
+externalService:
+  enabled: true
+  name: handshake-db-service
+  type: ClusterIP
+  serviceAddress: 172.18.1.73
+  servicePort: 5432
+database:
+  engine: postgres
+  name: handshake-test
+  hostname: handshake-db-service
+  secretName: test.handshake.uw.edu-sql-secrets
+
+memcached:
+  enabled: false
+
+cronjob:
+  enabled: false
+
+gcsCredentials:
+  mounted: true
+  secretName: test.handshake.uw.edu-gcs-credentials
+
+environmentVariables:
+  - name: ENV
+    value: "test"
+
+  - name: AXDD_PERSON_CLIENT_ENV
+    value: "prod"
+
+  - name: UW_PERSON_DB_HOSTNAME
+    value: "172.18.1.67"
+
+  - name: UW_PERSON_DB_DATABASE
+    value: "uw-person-prod"
+
+externalSecrets:
+  enabled: true
+  secrets:
+    - name: test.handshake.uw.edu-secrets
+      externalKey: handshake/test/secrets
+      data:
+        - name: django-secret
+          property: django-secret
+        - name: storage-bucket-name
+          property: storage-bucket-name
+    - name: test.handshake.uw.edu-sql-secrets
+      externalKey: handshake/shared/sql-secrets
+      data:
+        - name: username
+          property: username
+        - name: password
+          property: password
+    - name: test.handshake.uw.edu-shared-secrets
+      externalKey: handshake/shared/secrets
+      data:
+        - name: storage-project-id
+          property: storage-project-id
+        - name: person-db-user
+          property: person-db-user
+        - name: person-db-pass
+          property: person-db-pass
+    - name: test.handshake.uw.edu-gcs-credentials
+      externalKey: handshake/shared/gcs-credentials
+      data:
+        - name: credentials.json
+          property: credentials.json
+    - name: test.handshake.uw.edu-aws-secrets
+      externalKey: handshake/shared/aws-secrets
+      data:
+        - name: access-key-id
+          property: access-key-id
+        - name: secret-access-key
+          property: secret-access-key
+        - name: storage-bucket-name
+          property: storage-bucket-name
+
+environmentVariablesSecrets:
+  djangoSecret:
+    name: DJANGO_SECRET
+    secretName: test.handshake.uw.edu-secrets
+    secretKey: django-secret
+  storageBucketName:
+    name: STORAGE_BUCKET_NAME
+    secretName: test.handshake.uw.edu-secrets
+    secretKey: storage-bucket-name
+  storageProjectId:
+    name: STORAGE_PROJECT_ID
+    secretName: test.handshake.uw.edu-shared-secrets
+    secretKey: storage-project-id
+  awsStorageBucketName:
+    name: AWS_STORAGE_BUCKET_NAME
+    secretName: test.handshake.uw.edu-aws-secrets
+    secretKey: storage-bucket-name
+  awsAccessKeyID:
+    name: AWS_S3_ACCESS_KEY_ID
+    secretName: test.handshake.uw.edu-aws-secrets
+    secretKey: access-key-id
+  awsSecretAccessKey:
+    name: AWS_S3_SECRET_ACCESS_KEY
+    secretName: test.handshake.uw.edu-aws-secrets
+    secretKey: secret-access-key
+  personDBUser:
+    name: UW_PERSON_DB_USERNAME
+    secretName: test.handshake.uw.edu-shared-secrets
+    secretKey: person-db-user
+  personDBPass:
+    name: UW_PERSON_DB_PASSWORD
+    secretName: test.handshake.uw.edu-shared-secrets
+    secretKey: person-db-pass
