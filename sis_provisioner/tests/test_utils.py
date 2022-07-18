@@ -7,7 +7,7 @@ from sis_provisioner.utils import *
 
 
 @override_settings()
-class StudentDAOFunctionsTest(TestCase):
+class HandshakeUtilsTest(TestCase):
     def test_valid_class_code(self):
         self.assertTrue(valid_class_code('1'))
         self.assertTrue(valid_class_code('5'))
@@ -59,7 +59,8 @@ class StudentDAOFunctionsTest(TestCase):
         major.major_name = 'Bachelor of Science'
         major2 = Major()
         major2.major_name = 'Master of Science'
-        self.assertEqual(get_major_names([major, major2]), 'Bachelor of Science,Master of Science')
+        self.assertEqual(get_major_names([major, major2]),
+                         'Bachelor of Science,Master of Science')
         self.assertEqual(get_major_names([]), '')
         self.assertEqual(get_major_names([major]), 'Bachelor of Science')
 
@@ -73,7 +74,10 @@ class StudentDAOFunctionsTest(TestCase):
         major3 = Major()
         major3.major_abbr_code = '3'
         major3.college = 'C'
-        self.assertEqual(get_synced_college_name([major, major2]), 'THE INFORMATION SCHOOL')
-        self.assertEqual(get_synced_college_name([major, major3]), 'COLLEGE OF ENGINEERING')
-        self.assertEqual(get_synced_college_name([major3]), 'COLLEGE OF ARTS AND SCIENCES')
+        self.assertEqual(get_synced_college_name([major, major2]),
+                         'THE INFORMATION SCHOOL')
+        self.assertEqual(get_synced_college_name([major, major3]),
+                         'COLLEGE OF ENGINEERING')
+        self.assertEqual(get_synced_college_name([major3]),
+                         'COLLEGE OF ARTS AND SCIENCES')
         self.assertEqual(get_synced_college_name([]), None)

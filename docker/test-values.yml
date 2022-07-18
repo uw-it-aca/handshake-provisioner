@@ -19,7 +19,7 @@ externalService:
   enabled: true
   name: handshake-db-service
   type: ClusterIP
-  serviceAddress:
+  serviceAddress: 172.18.1.73
   servicePort: 5432
 database:
   engine: postgres

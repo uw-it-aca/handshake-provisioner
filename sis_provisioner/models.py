@@ -55,7 +55,7 @@ class ImportFile(models.Model):
                 person.student.student_email,
                 person.student.student_number,
                 person.student.class_desc,  # TODO: year name or code
-                person.student.campus_desc,  # TODO: campus name or code
+                person.student.campus_desc,  # TODO: campus name
                 person.last_name,
                 person.first_name,
                 person.preferred_middle_name,
@@ -65,8 +65,8 @@ class ImportFile(models.Model):
                 person.student.gender,
                 person.assigned_ethnic_code,  # TODO: letter code?
                 is_athlete(person.student.special_program_code),
-                is_veteran(person.student.veteran_benefit_code),  # TODO: true|false?
-                'work_study_eligible',  # TODO: get from visa type (coming soon)
+                is_veteran(person.student.veteran_benefit_code),
+                'work_study_eligible',  # TODO: get from visa type
                 'primary_education:education_level_name',  # TODO: ?
             ])
 
