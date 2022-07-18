@@ -1,10 +1,10 @@
 resources:
   limits:
-    cpu: 750m
-    memory: 2048Mi
+    cpu: 500m
+    memory: 768Mi
   requests:
     cpu: 50m
-    memory: 512Mi
+    memory: 384Mi
 targetAverageUtilization: 100
 affinity:
    podsSpanNodes: true
@@ -22,7 +22,7 @@ securityPolicy:
   enabled: true
 
 repo: handshake
-instance: test
+instance: prod
 
 externalService:
   enabled: true
@@ -32,9 +32,9 @@ externalService:
   servicePort: 5432
 database:
   engine: postgres
-  name: handshake-test
+  name: handshake-prod
   hostname: handshake-db-service
-  secretName: handshake-test.axdd.s.uw.edu-sql-secrets
+  secretName: handshake.axdd.s.uw.edu-sql-secrets
 
 memcached:
   enabled: false
@@ -44,14 +44,14 @@ cronjob:
 
 gcsCredentials:
   mounted: true
-  secretName: handshake-test.axdd.s.uw.edu-gcs-credentials
+  secretName: handshake.axdd.s.uw.edu-gcs-credentials
 
 environmentVariables:
   - name: ENV
-    value: test
+    value: prod
 
   - name: CLUSTER_CNAME
-    value: handshake-test.axdd.s.uw.edu
+    value: handshake.axdd.s.uw.edu
 
   - name: AXDD_PERSON_CLIENT_ENV
     value: PROD
@@ -65,21 +65,21 @@ environmentVariables:
 externalSecrets:
   enabled: true
   secrets:
-    - name: handshake-test.axdd.s.uw.edu-secrets
+    - name: handshake.axdd.s.uw.edu-secrets
       externalKey: handshake/test/secrets
       data:
         - name: django-secret
           property: django-secret
         - name: storage-bucket-name
           property: storage-bucket-name
-    - name: handshake-test.axdd.s.uw.edu-sql-secrets
+    - name: handshake.axdd.s.uw.edu-sql-secrets
       externalKey: handshake/shared/sql-secrets
       data:
         - name: username
           property: username
         - name: password
           property: password
-    - name: handshake-test.axdd.s.uw.edu-shared-secrets
+    - name: handshake.axdd.s.uw.edu-shared-secrets
       externalKey: handshake/shared/secrets
       data:
         - name: storage-project-id
@@ -88,12 +88,12 @@ externalSecrets:
           property: person-db-user
         - name: person-db-pass
           property: person-db-pass
-    - name: handshake-test.axdd.s.uw.edu-gcs-credentials
+    - name: handshake.axdd.s.uw.edu-gcs-credentials
       externalKey: handshake/shared/gcs-credentials
       data:
         - name: credentials.json
           property: credentials.json
-    - name: handshake-test.axdd.s.uw.edu-aws-secrets
+    - name: handshake.axdd.s.uw.edu-aws-secrets
       externalKey: handshake/shared/aws-secrets
       data:
         - name: access-key-id
@@ -106,33 +106,33 @@ externalSecrets:
 environmentVariablesSecrets:
   djangoSecret:
     name: DJANGO_SECRET
-    secretName: handshake-test.axdd.s.uw.edu-secrets
+    secretName: handshake.axdd.s.uw.edu-secrets
     secretKey: django-secret
   storageBucketName:
     name: STORAGE_BUCKET_NAME
-    secretName: handshake-test.axdd.s.uw.edu-secrets
+    secretName: handshake.axdd.s.uw.edu-secrets
     secretKey: storage-bucket-name
   storageProjectId:
     name: STORAGE_PROJECT_ID
-    secretName: handshake-test.axdd.s.uw.edu-shared-secrets
+    secretName: handshake.axdd.s.uw.edu-shared-secrets
     secretKey: storage-project-id
   awsStorageBucketName:
     name: AWS_STORAGE_BUCKET_NAME
-    secretName: handshake-test.axdd.s.uw.edu-aws-secrets
+    secretName: handshake.axdd.s.uw.edu-aws-secrets
     secretKey: storage-bucket-name
   awsAccessKeyID:
     name: AWS_S3_ACCESS_KEY_ID
-    secretName: handshake-test.axdd.s.uw.edu-aws-secrets
+    secretName: handshake.axdd.s.uw.edu-aws-secrets
     secretKey: access-key-id
   awsSecretAccessKey:
     name: AWS_S3_SECRET_ACCESS_KEY
-    secretName: handshake-test.axdd.s.uw.edu-aws-secrets
+    secretName: handshake.axdd.s.uw.edu-aws-secrets
     secretKey: secret-access-key
   personDBUser:
     name: UW_PERSON_DB_USERNAME
-    secretName: handshake-test.axdd.s.uw.edu-shared-secrets
+    secretName: handshake.axdd.s.uw.edu-shared-secrets
     secretKey: person-db-user
   personDBPass:
     name: UW_PERSON_DB_PASSWORD
-    secretName: handshake-test.axdd.s.uw.edu-shared-secrets
+    secretName: handshake.axdd.s.uw.edu-shared-secrets
     secretKey: person-db-pass
