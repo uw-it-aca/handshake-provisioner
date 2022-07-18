@@ -42,7 +42,7 @@ environmentVariables:
     value: "test"
 
   - name: AXDD_PERSON_CLIENT_ENV
-    value: "prod"
+    value: "PROD"
 
   - name: UW_PERSON_DB_HOSTNAME
     value: "172.18.1.67"
