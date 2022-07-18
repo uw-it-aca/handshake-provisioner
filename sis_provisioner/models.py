@@ -34,7 +34,7 @@ class ImportFile(models.Model):
         self.save()
 
     def generate_csv(self):
-        s = io.BytesIO()
+        s = io.StringIO()
         csv.register_dialect('unix_newline', lineterminator='\n')
         writer = csv.writer(s, dialect='unix_newline')
 
