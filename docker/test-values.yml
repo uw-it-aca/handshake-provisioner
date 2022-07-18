@@ -1,3 +1,14 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 768Mi
+  requests:
+    cpu: 50m
+    memory: 384Mi
+targetAverageUtilization: 100
+affinity:
+   podsSpanNodes: true
+
 ingress:
   enabled: false
 
@@ -5,8 +16,6 @@ lifecycle:
   enabled: true
   preStop:
     enabled: true
-affinity:
-   podsSpanNodes: true
 readiness:
   enabled: true
 securityPolicy:
