@@ -1,3 +1,14 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 768Mi
+  requests:
+    cpu: 50m
+    memory: 384Mi
+targetAverageUtilization: 100
+affinity:
+   podsSpanNodes: true
+
 ingress:
   enabled: false
 
@@ -5,8 +16,6 @@ lifecycle:
   enabled: true
   preStop:
     enabled: true
-affinity:
-   podsSpanNodes: true
 readiness:
   enabled: true
 securityPolicy:
@@ -39,16 +48,19 @@ gcsCredentials:
 
 environmentVariables:
   - name: ENV
-    value: "test"
+    value: test
+
+  - name: CLUSTER_CNAME
+    value: handshake-test.axdd.s.uw.edu
 
   - name: AXDD_PERSON_CLIENT_ENV
-    value: "PROD"
+    value: PROD
 
   - name: UW_PERSON_DB_HOSTNAME
-    value: "172.18.1.67"
+    value: 172.18.1.67
 
   - name: UW_PERSON_DB_DATABASE
-    value: "uw-person-prod"
+    value: uw-person-prod
 
 externalSecrets:
   enabled: true

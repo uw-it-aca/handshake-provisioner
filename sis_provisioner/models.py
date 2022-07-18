@@ -63,7 +63,7 @@ class ImportFile(models.Model):
                 get_synced_college_name(person.student.majors),
                 get_major_names(person.student.majors),
                 person.student.gender,
-                person.assigned_ethnic_code,  # TODO: letter code?
+                person.student.assigned_ethnic_desc,
                 is_athlete(person.student.special_program_code),
                 is_veteran(person.student.veteran_benefit_code),
                 'work_study_eligible',  # TODO: get from visa type
