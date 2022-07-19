@@ -64,4 +64,4 @@ class ImportFile(models.Model):
                 'primary_education:education_level_name',  # TODO: ?
             ])
 
-        return s
+        return s.getvalue()
