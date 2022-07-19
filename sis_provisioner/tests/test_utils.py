@@ -8,17 +8,6 @@ from sis_provisioner.utils import *
 
 @override_settings()
 class HandshakeUtilsTest(TestCase):
-    def test_valid_class_code(self):
-        self.assertTrue(valid_class_code('1'))
-        self.assertTrue(valid_class_code('5'))
-        self.assertFalse(valid_class_code('0'))
-        self.assertFalse(valid_class_code(1))
-
-    def test_valid_campus_code(self):
-        self.assertTrue(valid_campus_code('0'))
-        self.assertFalse(valid_campus_code('2'))
-        self.assertFalse(valid_campus_code(1))
-
     def test_valid_major_codes(self):
         excluded_major = Major()
         excluded_major.major_abbr_code = '0-EMBA'

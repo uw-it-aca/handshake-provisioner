@@ -4,14 +4,6 @@
 from django.conf import settings
 
 
-def valid_class_code(class_code):
-    return class_code in getattr(settings, 'INCLUDE_CLASS_CODES', [])
-
-
-def valid_campus_code(campus_code):
-    return campus_code in getattr(settings, 'INCLUDE_CAMPUS_CODES', [])
-
-
 def valid_major_codes(majors):
     excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
     for major in majors:
@@ -49,3 +41,10 @@ def get_synced_college_name(majors):
     )
     college_dict = getattr(settings, 'COLLEGES', {})
     return college_dict.get(college_code, None)
+
+
+def get_ethnicity_name(ethnicities):
+    try:
+        return ethnicities[0].assigned_ethnic_desc
+    except IndexError:
+        pass

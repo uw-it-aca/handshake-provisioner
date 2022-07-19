@@ -6,8 +6,8 @@ from django.conf import settings
 from sis_provisioner.dao.file import read_file, write_file
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
-    valid_class_code, valid_campus_code, valid_major_codes,
-    get_major_names, is_athlete, is_veteran, get_synced_college_name)
+    valid_major_codes, get_major_names, is_athlete, is_veteran,
+    get_synced_college_name, get_ethnicity_name)
 from datetime import datetime
 import csv
 import io
@@ -57,7 +57,7 @@ class ImportFile(models.Model):
                 get_synced_college_name(person.student.majors),
                 get_major_names(person.student.majors),
                 person.student.gender,
-                person.student.ethnicities[0].assigned_ethnic_desc,
+                get_ethnicity_name(person.student.ethnicities),
                 is_athlete(person.student.special_program_code),
                 is_veteran(person.student.veteran_benefit_code),
                 'work_study_eligible',  # TODO: get from visa type
