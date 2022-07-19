@@ -3,8 +3,8 @@ resources:
     cpu: 750m
     memory: 2048Mi
   requests:
-    cpu: 50m
-    memory: 512Mi
+    cpu: 500m
+    memory: 768Mi
 targetAverageUtilization: 100
 affinity:
    podsSpanNodes: true
