@@ -48,8 +48,8 @@ class ImportFile(models.Model):
                 person.uwnetid,
                 person.student.student_email,
                 person.student.student_number,
-                person.student.class_desc,  # TODO: year name or code
-                person.student.campus_desc,  # TODO: campus name
+                person.student.class_desc,
+                person.student.campus_desc,
                 person.surname,
                 person.first_name,
                 person.preferred_middle_name,
@@ -57,7 +57,7 @@ class ImportFile(models.Model):
                 get_synced_college_name(person.student.majors),
                 get_major_names(person.student.majors),
                 person.student.gender,
-                person.student.assigned_ethnic_desc,
+                person.student.ethnicities[0].assigned_ethnic_desc,
                 is_athlete(person.student.special_program_code),
                 is_veteran(person.student.veteran_benefit_code),
                 'work_study_eligible',  # TODO: get from visa type
