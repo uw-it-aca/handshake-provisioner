@@ -3,12 +3,12 @@
 
 from django.test import TestCase, override_settings
 from sis_provisioner.dao.student import (
-    UWPersonClient, get_students_for_handshake)
+    HandshakePersonClient, get_students_for_handshake)
 import mock
 
 
 class StudentDAOFunctionsTest(TestCase):
-    @mock.patch.object(UWPersonClient, 'get_registered_students')
+    @mock.patch.object(HandshakePersonClient, 'get_registered_students')
     def test_get_students_for_handshake(self, mock_get_registered_students):
         r = get_students_for_handshake()
         mock_get_registered_students.assert_called_with(
