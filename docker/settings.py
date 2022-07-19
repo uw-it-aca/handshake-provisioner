@@ -21,9 +21,10 @@ else:
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
 
 # Settings that control student data provisioning
-INCLUDED_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
-INCLUDED_CAMPUS_CODES = ['0', '1']
-EXCLUDED_MAJOR_CODES = ['0-EMBA', '0-GEMBA']
+ENROLL_STATUS = '12'
+INCLUDE_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
+INCLUDE_CAMPUS_CODES = ['0', '1']
+EXCLUDE_MAJOR_CODES = ['0-EMBA', '0-GEMBA']
 ENGR_COLLEGE_MAJORS = ['0-BIOEN', '0-BSE', '0-DATA', '0-PHARBX', '0-PREBSE',
                         '0-TECH I', '0-C SCI', '0-CMP E', '0-CSE']
 

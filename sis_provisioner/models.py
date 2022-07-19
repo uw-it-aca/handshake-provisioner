@@ -41,12 +41,6 @@ class ImportFile(models.Model):
         writer.writerow(settings.HANDSHAKE_CSV_HEADER)
 
         for person in get_students_for_handshake():
-            if not valid_class_code(person.student.class_code):
-                continue
-
-            if not valid_campus_code(person.student.campus_code):
-                continue
-
             if not valid_major_codes(person.student.majors):
                 continue
 
@@ -56,7 +50,7 @@ class ImportFile(models.Model):
                 person.student.student_number,
                 person.student.class_desc,  # TODO: year name or code
                 person.student.campus_desc,  # TODO: campus name
-                person.last_name,
+                person.surname,
                 person.first_name,
                 person.preferred_middle_name,
                 person.preferred_first_name,

@@ -5,15 +5,15 @@ from django.conf import settings
 
 
 def valid_class_code(class_code):
-    return class_code in getattr(settings, 'INCLUDED_CLASS_CODES', [])
+    return class_code in getattr(settings, 'INCLUDE_CLASS_CODES', [])
 
 
 def valid_campus_code(campus_code):
-    return campus_code in getattr(settings, 'INCLUDED_CAMPUS_CODES', [])
+    return campus_code in getattr(settings, 'INCLUDE_CAMPUS_CODES', [])
 
 
 def valid_major_codes(majors):
-    excluded_codes = getattr(settings, 'EXCLUDED_MAJOR_CODES', [])
+    excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
     for major in majors:
         if major.major_abbr_code in excluded_codes:
             return False
