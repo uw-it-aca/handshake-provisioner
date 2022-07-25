@@ -46,12 +46,14 @@ class HandshakeUtilsTest(TestCase):
     def test_get_major_names(self):
         major = Major()
         major.major_name = 'Bachelor of Science'
+        major.college = 'C'
         major2 = Major()
         major2.major_name = 'Master of Science'
+        major2.college = 'A'
         self.assertEqual(get_major_names([major, major2]),
-                         'Bachelor of Science,Master of Science')
+                         'Bachelor Of Science;Master Of Science')
         self.assertEqual(get_major_names([]), '')
-        self.assertEqual(get_major_names([major]), 'Bachelor of Science')
+        self.assertEqual(get_major_names([major]), 'Bachelor Of Science')
 
     def test_get_synced_college_name(self):
         major = Major()
@@ -64,9 +66,9 @@ class HandshakeUtilsTest(TestCase):
         major3.major_abbr_code = '3'
         major3.college = 'C'
         self.assertEqual(get_synced_college_name([major, major2]),
-                         'THE INFORMATION SCHOOL')
+                         'The Information School')
         self.assertEqual(get_synced_college_name([major, major3]),
-                         'COLLEGE OF ENGINEERING')
+                         'College Of Engineering')
         self.assertEqual(get_synced_college_name([major3]),
-                         'COLLEGE OF ARTS AND SCIENCES')
+                         'College Of Arts And Sciences')
         self.assertEqual(get_synced_college_name([]), None)

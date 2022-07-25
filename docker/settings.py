@@ -29,17 +29,23 @@ ENGR_COLLEGE_MAJORS = ['0-BIOEN', '0-BSE', '0-DATA', '0-PHARBX', '0-PREBSE',
                         '0-TECH I', '0-C SCI', '0-CMP E', '0-CSE']
 
 HANDSHAKE_CSV_HEADER = [
+    'username',
     'auth_identifier',
-    'email_address',
     'card_id',
     'school_year_name',
-    'campus_name',
     'last_name',
     'first_name',
     'middle_name',
     'preferred_name',
     'primary_education:college_name',
+    'email_address',
+    'campus_name',
     'primary_education:major_names',
+    'primary_education:primary_major_name',
+    'primary_education:currently_attending',
+]
+
+NEW_CSV_HEADERS = [
     'gender',
     'ethnicity',
     'athlete',
