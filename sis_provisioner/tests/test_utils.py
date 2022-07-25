@@ -49,7 +49,7 @@ class HandshakeUtilsTest(TestCase):
         major.college = 'C'
         major2 = Major()
         major2.major_name = 'Master of Science'
-        major.college = 'A'
+        major2.college = 'A'
         self.assertEqual(get_major_names([major, major2]),
                          'Bachelor Of Science;Master Of Science')
         self.assertEqual(get_major_names([]), '')
