@@ -7,12 +7,17 @@ from uw_person_client import UWPersonClient
 
 class HandshakePersonClient(UWPersonClient):
     def get_registered_students(self, **kwargs):
+        sqla_term = self.DB.session.query(self.DB.Term).filter(
+            self.DB.Term.year == 2022,  # Fix these
+            self.DB.Term.quarter == 4).first()
+
         sqla_persons = self.DB.session.query(self.DB.Person).join(
             self.DB.Student).filter(
                 self.DB.Person._is_active_student == True,  # noqa
                 self.DB.Student.enroll_status_code == settings.ENROLL_STATUS,
                 self.DB.Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
-                self.DB.Student.class_code.in_(settings.INCLUDE_CLASS_CODES)
+                self.DB.Student.class_code.in_(settings.INCLUDE_CLASS_CODES),
+                self.DB.Student.academic_term == sqla_term,
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
 
