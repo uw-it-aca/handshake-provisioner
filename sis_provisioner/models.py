@@ -6,8 +6,8 @@ from django.conf import settings
 from sis_provisioner.dao.file import read_file, write_file
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
-    valid_major_codes, get_major_names, is_athlete, is_veteran,
-    get_synced_college_name, get_ethnicity_name)
+    valid_major_codes, get_major_names, get_primary_major_name, is_athlete,
+    is_veteran, get_synced_college_name, get_ethnicity_name)
 from datetime import datetime
 import csv
 import io
@@ -46,22 +46,25 @@ class ImportFile(models.Model):
 
             writer.writerow([
                 person.uwnetid,
-                person.student.student_email,
+                person.uwnetid,
                 person.student.student_number,
                 person.student.class_desc,
-                person.student.campus_desc,
                 person.surname,
                 person.first_name,
                 person.preferred_middle_name,
                 person.preferred_first_name,
                 get_synced_college_name(person.student.majors),
+                person.student.student_email,
+                person.student.campus_desc,
                 get_major_names(person.student.majors),
-                person.student.gender,
-                get_ethnicity_name(person.student.ethnicities),
-                is_athlete(person.student.special_program_code),
-                is_veteran(person.student.veteran_benefit_code),
-                'work_study_eligible',  # TODO: get from visa type
-                'primary_education:education_level_name',  # TODO: ?
+                get_primary_major_name(person.student.majors),
+                'TRUE',  # TODO: primary_education:currently_attending
+                # person.student.gender,
+                # get_ethnicity_name(person.student.ethnicities),
+                # is_athlete(person.student.special_program_code),
+                # is_veteran(person.student.veteran_benefit_code),
+                # 'work_study_eligible',  # TODO: get from visa type
+                # 'primary_education:education_level_name',  # TODO: ?
             ])
 
         return s.getvalue()

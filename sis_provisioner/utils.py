@@ -2,6 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.conf import settings
+from string import capwords
+
+
+def titleize(string):
+    return capwords(string)
 
 
 def valid_major_codes(majors):
@@ -32,7 +37,14 @@ def get_synced_college_code(codes):
 
 
 def get_major_names(majors):
-    return ','.join([m.major_name for m in majors])
+    return ';'.join([titleize(m.major_name) for m in majors])
+
+
+def get_primary_major_name(majors):
+    try:
+        return titleize(majors[0].major_name)
+    except IndexError:
+        pass
 
 
 def get_synced_college_name(majors):
@@ -40,11 +52,14 @@ def get_synced_college_name(majors):
         [get_college_for_major(major) for major in majors]
     )
     college_dict = getattr(settings, 'COLLEGES', {})
-    return college_dict.get(college_code, None)
+    try:
+        return titleize(college_dict.get(college_code))
+    except AttributeError:
+        pass
 
 
 def get_ethnicity_name(ethnicities):
     try:
-        return ethnicities[0].assigned_ethnic_desc
+        return titleize(ethnicities[0].assigned_ethnic_desc)
     except IndexError:
         pass
