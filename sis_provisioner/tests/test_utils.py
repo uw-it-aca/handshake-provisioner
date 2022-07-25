@@ -80,9 +80,9 @@ class HandshakeUtilsTest(TestCase):
         major3.major_abbr_code = '3'
         major3.college = 'C'
         self.assertEqual(get_synced_college_name([major, major2]),
-                         'THE INFORMATION SCHOOL')
+                         'The Information School')
         self.assertEqual(get_synced_college_name([major, major3]),
-                         'COLLEGE OF ENGINEERING')
+                         'College of Engineering')
         self.assertEqual(get_synced_college_name([major3]),
-                         'COLLEGE OF ARTS AND SCIENCES')
+                         'College of Arts & Sciences')
         self.assertEqual(get_synced_college_name([]), None)
