@@ -36,11 +36,18 @@ def get_synced_college_code(codes):
     return max(codes) if codes else None
 
 
+def get_majors(majors):
+    majors.sort(key=lambda m: m.college, reverse=True)
+    return majors
+
+
 def get_major_names(majors):
+    majors = get_majors(majors)
     return ';'.join([titleize(m.major_name) for m in majors])
 
 
 def get_primary_major_name(majors):
+    majors = get_majors(majors)
     try:
         return titleize(majors[0].major_name)
     except IndexError:
