@@ -12,15 +12,6 @@ def valid_major_codes(majors):
     return True
 
 
-def is_athlete(special_program_code):
-    athlete_codes = getattr(settings, 'ATHLETE_CODES', [])
-    return special_program_code in athlete_codes
-
-
-def is_veteran(veteran_benefit_code):
-    return veteran_benefit_code != '0'
-
-
 def get_college_for_major(major):
     if major.major_abbr_code in getattr(settings, 'ENGR_COLLEGE_MAJORS', []):
         return 'J'
@@ -31,8 +22,22 @@ def get_synced_college_code(codes):
     return max(codes) if codes else None
 
 
+def get_majors(majors):
+    majors.sort(key=lambda m: m.college, reverse=True)
+    return majors
+
+
 def get_major_names(majors):
-    return ','.join([m.major_name for m in majors])
+    majors = get_majors(majors)
+    return ';'.join([m.major_name for m in majors])
+
+
+def get_primary_major_name(majors):
+    majors = get_majors(majors)
+    try:
+        return majors[0].major_name
+    except IndexError:
+        pass
 
 
 def get_synced_college_name(majors):
@@ -41,10 +46,3 @@ def get_synced_college_name(majors):
     )
     college_dict = getattr(settings, 'COLLEGES', {})
     return college_dict.get(college_code, None)
-
-
-def get_ethnicity_name(ethnicities):
-    try:
-        return ethnicities[0].assigned_ethnic_desc
-    except IndexError:
-        pass

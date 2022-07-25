@@ -20,15 +20,6 @@ class HandshakeUtilsTest(TestCase):
         self.assertFalse(valid_major_codes(majors_1))
         self.assertTrue(valid_major_codes(majors_2))
 
-    def test_is_athlete(self):
-        self.assertTrue(is_athlete('30'))
-        self.assertFalse(is_athlete('13'))
-        self.assertFalse(is_athlete(25))
-
-    def test_is_veteran(self):
-        self.assertTrue(is_veteran('1'))
-        self.assertFalse(is_veteran('0'))
-
     def test_get_college_for_major(self):
         major = Major()
         major.major_abbr_code = '0-BSE'
@@ -43,15 +34,40 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_code(codes), 'C')
         self.assertEqual(get_synced_college_code(None), None)
 
+    def test_get_majors(self):
+        major = Major()
+        major.major_name = 'Bachelor of Science'
+        major.college = 'C'
+        major2 = Major()
+        major2.major_name = 'Master of Science'
+        major2.college = 'A'
+        get_majors([major, major2])
+        get_major_names([])
+        get_major_names([major])
+
     def test_get_major_names(self):
         major = Major()
         major.major_name = 'Bachelor of Science'
+        major.college = 'A'
         major2 = Major()
         major2.major_name = 'Master of Science'
+        major2.college = 'C'
         self.assertEqual(get_major_names([major, major2]),
-                         'Bachelor of Science,Master of Science')
+                         'Master of Science;Bachelor of Science')
         self.assertEqual(get_major_names([]), '')
         self.assertEqual(get_major_names([major]), 'Bachelor of Science')
+
+    def test_get_primary_major_name(self):
+        major = Major()
+        major.major_name = 'Bachelor of Science'
+        major.college = 'A'
+        major2 = Major()
+        major2.major_name = 'Master of Science'
+        major2.college = 'C'
+        self.assertEqual(get_primary_major_name([major, major2]),
+                         'Master of Science')
+        self.assertEqual(get_primary_major_name([]), None)
+        self.assertEqual(get_primary_major_name([major]), 'Bachelor of Science')
 
     def test_get_synced_college_name(self):
         major = Major()
