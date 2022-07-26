@@ -9,15 +9,13 @@ import mock
 
 class StudentDAOFunctionsTest(TestCase):
     @mock.patch.object(HandshakePersonClient, 'get_registered_students')
-    @mock.patch('sis_provisioner.dao.student.current_next_terms')
-    def test_get_students_for_handshake(self, mock_terms,
-                                        mock_get_registered_students):
-        years = [2022]
-        quarters = [1, 2]
-        mock_terms.return_value = (years, quarters)
+    def test_get_students_for_handshake(self, mock_get_registered_students):
+        term_years = [2022]
+        term_quarters = [1, 2]
 
-        r = get_students_for_handshake()
+        r = get_students_for_handshake(term_years, term_quarters)
         mock_get_registered_students.assert_called_with(
+            term_years, term_quarters,
             include_employee=False,
             include_student_transcripts=False,
             include_student_transfers=False,
@@ -25,6 +23,4 @@ class StudentDAOFunctionsTest(TestCase):
             include_student_advisers=False,
             include_student_intended_majors=False,
             include_student_pending_majors=False,
-            include_student_requested_majors=False,
-            include_term_years=years,
-            include_term_quarters=quarters)
+            include_student_requested_majors=False)
