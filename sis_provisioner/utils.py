@@ -11,7 +11,7 @@ def titleize(string):
 
 
 def current_next_terms():
-    return ([2022], [3, 4])  # TODO: ...
+    return ([2022, 3], [2022, 4])  # TODO: ...
 
 
 def valid_major_codes(majors):

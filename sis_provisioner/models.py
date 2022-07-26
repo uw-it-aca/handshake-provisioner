@@ -41,9 +41,9 @@ class ImportFile(models.Model):
 
         writer.writerow(settings.HANDSHAKE_CSV_HEADER)
 
-        term_years, term_quarters = current_next_terms()
+        current_next_terms = current_next_terms()
 
-        for person in get_students_for_handshake(term_years, term_quarters):
+        for person in get_students_for_handshake(current_next_terms):
             if not valid_major_codes(person.student.majors):
                 continue
 
