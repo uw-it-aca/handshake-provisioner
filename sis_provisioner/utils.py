@@ -2,11 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.conf import settings
+from datetime import datetime
 from string import capwords
 
 
 def titleize(string):
     return capwords(string)
+
+
+def current_next_terms():
+    return ([2022], [3, 4])  # TODO: ...
 
 
 def valid_major_codes(majors):

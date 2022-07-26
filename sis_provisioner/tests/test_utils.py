@@ -8,6 +8,9 @@ from sis_provisioner.utils import *
 
 @override_settings()
 class HandshakeUtilsTest(TestCase):
+    def test_current_next_terms(self):
+        pass
+
     def test_valid_major_codes(self):
         excluded_major = Major()
         excluded_major.major_abbr_code = '0-EMBA'
