@@ -14,7 +14,7 @@ class HandshakePersonClient(UWPersonClient):
                 self.DB.Student.enroll_status_code == settings.ENROLL_STATUS,
                 self.DB.Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
                 self.DB.Student.class_code.in_(settings.INCLUDE_CLASS_CODES),
-                tuple_(self.DB.Term.term_year, self.DB.Term.term_quarter).in_(
+                tuple_(self.DB.Term.year, self.DB.Term.quarter).in_(
                     academic_terms),
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
