@@ -10,11 +10,11 @@ import mock
 class StudentDAOFunctionsTest(TestCase):
     @mock.patch.object(HandshakePersonClient, 'get_registered_students')
     def test_get_students_for_handshake(self, mock_get_registered_students):
-        current_next_terms = [(2022, 4), (2023, 1)]
+        academic_terms = [(2022, 4), (2023, 1)]
 
-        r = get_students_for_handshake(current_next_terms)
+        r = get_students_for_handshake(academic_terms)
         mock_get_registered_students.assert_called_with(
-            current_next_terms,
+            academic_terms,
             include_employee=False,
             include_student_transcripts=False,
             include_student_transfers=False,
