@@ -3,6 +3,8 @@
 
 from django.conf import settings
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from math import floor
 import re
 
 RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
@@ -33,8 +35,15 @@ def titleize(string, andrepl='and'):
     return titled_string
 
 
+def get_term(term: datetime):
+    year, month = term.year, term.month
+    quarter = floor(month / 3 + 2/3)
+    return (year, quarter)
+
+
 def current_next_terms():
-    return [(2022, 3), (2022, 4)]  # TODO: ...
+    now = datetime.now()
+    return [get_term(now), get_term(now + relativedelta(months=3))]
 
 
 def valid_major_codes(majors):

@@ -4,6 +4,7 @@
 from django.test import TestCase, override_settings
 from uw_person_client.components import Major
 from sis_provisioner.utils import *
+from mock import patch
 
 
 @override_settings()
@@ -75,6 +76,24 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_name([major3]),
                          'College of Arts & Sciences')
         self.assertEqual(get_synced_college_name([]), None)
+
+    def test_get_current_next_term(self):
+        with patch('sis_provisioner.utils.datetime') as mock_datetime:
+            mock_datetime.now.return_value = datetime(2020, 1, 31)
+            self.assertEqual(current_next_terms(),
+                             [(2020, 1), (2020, 2)])
+            mock_datetime.now.return_value = datetime(2020, 12, 31)
+            self.assertEqual(current_next_terms(),
+                             [(2020, 4), (2021, 1)])
+            mock_datetime.now.return_value = datetime(2020, 2, 29)
+            self.assertEqual(current_next_terms(),
+                             [(2020, 1), (2020, 2)])
+            mock_datetime.now.return_value = datetime(2020, 5, 15)
+            self.assertEqual(current_next_terms(),
+                             [(2020, 2), (2020, 3)])
+            mock_datetime.now.return_value = datetime(2020, 9, 15)
+            self.assertEqual(current_next_terms(),
+                             [(2020, 3), (2020, 4)])
 
     def test_titleize(self):
         self.assertRaises(TypeError, titleize, None)
