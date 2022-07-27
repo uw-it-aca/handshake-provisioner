@@ -54,9 +54,9 @@ class HandshakeUtilsTest(TestCase):
         major2.major_name = 'Master of Science'
         major2.college = 'A'
         self.assertEqual(get_major_names([major, major2]),
-                         'Bachelor Of Science;Master Of Science')
+                         'Bachelor of Science;Master of Science')
         self.assertEqual(get_major_names([]), '')
-        self.assertEqual(get_major_names([major]), 'Bachelor Of Science')
+        self.assertEqual(get_major_names([major]), 'Bachelor of Science')
 
     def test_get_synced_college_name(self):
         major = Major()
@@ -71,7 +71,19 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_name([major, major2]),
                          'The Information School')
         self.assertEqual(get_synced_college_name([major, major3]),
-                         'College Of Engineering')
+                         'College of Engineering')
         self.assertEqual(get_synced_college_name([major3]),
-                         'College Of Arts And Sciences')
+                         'College of Arts & Sciences')
         self.assertEqual(get_synced_college_name([]), None)
+
+    def test_titleize(self):
+        self.assertEqual(titleize('bachelor of science'),
+                         'Bachelor of Science')
+        self.assertEqual(titleize('arts and sciences', andrepl='&'),
+                         'Arts & Sciences')
+        self.assertEqual(titleize('arts and sciences'), 'Arts and Sciences')
+        self.assertEqual(titleize('It\'s for majors'), 'It\'s for Majors')
+        self.assertEqual(titleize('The INFORMATION (hi) school'),
+                         'The Information (Hi) School')
+        self.assertEqual(titleize('special school (w/ honors)'),
+                         'Special School (w/ Honors)')

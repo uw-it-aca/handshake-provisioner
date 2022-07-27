@@ -3,11 +3,28 @@
 
 from django.conf import settings
 from datetime import datetime
-from string import capwords
+import re
 
 
-def titleize(string):
-    return capwords(string)
+RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|:|&|")')
+RE_UNTITLEIZE = re.compile(r'^(?:And|For|Of|The|W/)$')
+
+
+def cap_first_letter(string):
+    return string[0].upper() + string[1:]
+
+
+def titleize(string, andrepl='and'):
+    if string is None:
+        return None
+
+    titled_string = ''
+
+    for word in re.split(RE_WORD_BOUNDS, str(string)):
+        titled_string += re.sub(
+            RE_UNTITLEIZE, lambda m: m.group(0).lower(), word.capitalize()
+        )
+    return cap_first_letter(titled_string.replace(' and ', f' {andrepl} '))
 
 
 def current_next_terms():
@@ -65,7 +82,7 @@ def get_synced_college_name(majors):
     )
     college_dict = getattr(settings, 'COLLEGES', {})
     try:
-        return titleize(college_dict.get(college_code))
+        return titleize(college_dict.get(college_code), andrepl='&')
     except AttributeError:
         pass
 
