@@ -18,9 +18,8 @@ def titleize(string, andrepl='and'):
         raise TypeError('String is required')
 
     titled_string = ''
-    index = 0
 
-    for word in re.split(RE_WORD_BOUNDS, str(string)):
+    for index, word in enumerate(re.split(RE_WORD_BOUNDS, str(string))):
         if re.match(RE_TITLE_ABBR, word):
             titled_string += word.upper()
 
@@ -29,9 +28,7 @@ def titleize(string, andrepl='and'):
             titled_string += word.capitalize() if (index == 0) else word
 
         else:
-            titled_string += word.lower().capitalize()
-
-        index += 1
+            titled_string += word.capitalize()
 
     return titled_string
 
