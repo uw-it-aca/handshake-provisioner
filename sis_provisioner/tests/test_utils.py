@@ -60,12 +60,13 @@ class HandshakeUtilsTest(TestCase):
         major3.college = 'E'
         major3.major_abbr_code = '2'
         self.assertEqual(get_major_names([major, major2]),
-                         'Bachelor Of Science;Master Of Science')
+                         'Bachelor of Science;Master of Science')
         self.assertEqual(get_major_names([]), '')
-        self.assertEqual(get_major_names([major]), 'Bachelor Of Science')
+        self.assertEqual(get_major_names([major]), 'Bachelor of Science')
         self.assertEqual(get_major_names([major3]), '')
         self.assertEqual(get_major_names([major, major3]),
-                         'Bachelor Of Science;Business Administration')
+                         'Bachelor of Science;Business Administration')
+        self.assertEqual(get_major_names([major]), 'Bachelor of Science')
 
     def test_get_synced_college_name(self):
         major = Major()
@@ -80,7 +81,33 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_name([major, major2]),
                          'The Information School')
         self.assertEqual(get_synced_college_name([major, major3]),
-                         'College Of Engineering')
+                         'College of Engineering')
         self.assertEqual(get_synced_college_name([major3]),
-                         'College Of Arts And Sciences')
+                         'College of Arts & Sciences')
         self.assertEqual(get_synced_college_name([]), None)
+
+    def test_titleize(self):
+        self.assertRaises(TypeError, titleize, None)
+        self.assertEqual(titleize(123), '123')
+        self.assertEquals(titleize(''), '')
+        self.assertEqual(titleize('bachelor of science'),
+                         'Bachelor of Science')
+        self.assertEqual(titleize('arts and sciences', andrepl='&'),
+                         'Arts & Sciences')
+        self.assertEqual(titleize('arts and sciences'), 'Arts and Sciences')
+        self.assertEqual(titleize('It\'s for majors'), 'It\'s for Majors')
+        self.assertEqual(titleize('The INFORMATION (hi) school'),
+                         'The Information (Hi) School')
+        self.assertEqual(titleize('special school (w/ honors)'),
+                         'Special School (w/ Honors)')
+        self.assertEqual(titleize('and, (,for,) '), 'And, (,for,)')
+        self.assertEqual(titleize('foR ,BS/JS/,MS'), 'For ,BS/Js/,MS')
+        self.assertEqual(titleize('He said "hi"'), 'He Said "Hi"')
+        self.assertEqual(titleize('computers,science,and engineering (BS/MS)'),
+                         'Computers,Science,and Engineering (BS/MS)'),
+        self.assertEqual(titleize('waffles &, and w/syrup', andrepl='&'),
+                         'Waffles &, & w/Syrup')
+        self.assertEqual(titleize('a new, improved title'),
+                         'A New, Improved Title')
+        self.assertEqual(titleize(' a new, improved title '),
+                         'A New, Improved Title')
