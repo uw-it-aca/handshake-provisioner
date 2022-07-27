@@ -19,7 +19,7 @@ def cap_first_letter(string):
 
 def titleize(string, andrepl='and'):
     if string is None:
-        return None
+        raise TypeError('String is required')
 
     titled_string = ''
 
@@ -94,7 +94,7 @@ def get_synced_college_name(majors):
     college_dict = getattr(settings, 'COLLEGES', {})
     try:
         return titleize(college_dict.get(college_code), andrepl='&')
-    except AttributeError:
+    except (AttributeError, TypeError):
         pass
 
 

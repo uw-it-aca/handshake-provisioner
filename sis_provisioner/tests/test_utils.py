@@ -77,6 +77,9 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_name([]), None)
 
     def test_titleize(self):
+        self.assertRaises(TypeError, titleize, None)
+        self.assertEqual(titleize(123), '123')
+        self.assertEquals(titleize(''), '')
         self.assertEqual(titleize('bachelor of science'),
                          'Bachelor of Science')
         self.assertEqual(titleize('arts and sciences', andrepl='&'),
@@ -89,8 +92,6 @@ class HandshakeUtilsTest(TestCase):
                          'Special School (w/ Honors)')
         self.assertEqual(titleize('and, (,for,) '), 'And, (,for,) ')
         self.assertEqual(titleize('foR ,BS/JS/,MS'), 'For ,BS/Js/,MS')
-        self.assertRaises(TypeError, titleize(None))
-        self.assertEqual(titleize(123), '123')
         self.assertEqual(titleize('He said "hi"'), 'He Said "Hi"')
         self.assertEqual(titleize('computers,science,and engineering (BS/MS)'),
                          'Computers,Science,and Engineering (BS/MS)'),
