@@ -87,3 +87,15 @@ class HandshakeUtilsTest(TestCase):
                          'The Information (Hi) School')
         self.assertEqual(titleize('special school (w/ honors)'),
                          'Special School (w/ Honors)')
+        self.assertEqual(titleize('and, (,for,) '), 'And, (,for,) ')
+        self.assertEqual(titleize('foR ,BS/JS/,MS'), 'For ,BS/Js/,MS')
+        self.assertRaises(TypeError, titleize(None))
+        self.assertEqual(titleize(123), '123')
+        self.assertEqual(titleize('He said "hi"'), 'He Said "Hi"')
+        self.assertEqual(titleize('computers,science,and engineering (BS/MS)'),
+                         'Computers,Science,and Engineering (BS/MS)'),
+        self.assertEqual(titleize(''), '')
+        self.assertEqual(titleize('waffles &, and w/syrup', andrepl='&'),
+                         'Waffles &, & w/Syrup')
+        self.assertEqual(titleize('a new, improved title'),
+                         'A New, Improved Title')
