@@ -4,12 +4,35 @@
 from django.conf import settings
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from string import capwords
 from math import floor
+import re
+
+RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
+RE_UNTITLEIZE = re.compile(r'^(?:and|for|of|the|w)$', re.I)
+RE_TITLE_ABBR = re.compile(r'^(?:bs|ms)$', re.I)
 
 
-def titleize(string):
-    return capwords(string)
+def titleize(string, andrepl='and'):
+    """
+    Capitalizes the first letter of every word, effective only in ASCII region.
+    """
+    if string is None:
+        raise TypeError('String is required')
+
+    titled_string = ''
+
+    for idx, word in enumerate(re.split(RE_WORD_BOUNDS, str(string).strip())):
+        if re.match(RE_TITLE_ABBR, word):
+            titled_string += word.upper()
+
+        elif re.match(RE_UNTITLEIZE, word):
+            word = word.lower().replace('and', andrepl)
+            titled_string += word.capitalize() if (idx == 0) else word
+
+        else:
+            titled_string += word.capitalize()
+
+    return titled_string
 
 
 def get_term(term: datetime):
@@ -74,8 +97,8 @@ def get_synced_college_name(majors):
     )
     college_dict = getattr(settings, 'COLLEGES', {})
     try:
-        return titleize(college_dict.get(college_code))
-    except AttributeError:
+        return titleize(college_dict.get(college_code), andrepl='&')
+    except (AttributeError, TypeError):
         pass
 
 
