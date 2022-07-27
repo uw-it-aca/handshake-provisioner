@@ -6,11 +6,14 @@ from datetime import datetime
 import re
 
 
-RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|:|&|")')
-RE_UNTITLEIZE = re.compile(r'^(?:And|For|Of|The|W/)$')
+RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
+RE_UNTITLEIZE = re.compile(r'^(?:And|For|Of|The|W)$')
+RE_TITLE_ABBR = re.compile(r'^(?:Bs|Ms)$')
 
 
 def cap_first_letter(string):
+    if len(string) < 2:
+        return string.upper()
     return string[0].upper() + string[1:]
 
 
@@ -24,7 +27,15 @@ def titleize(string, andrepl='and'):
         titled_string += re.sub(
             RE_UNTITLEIZE, lambda m: m.group(0).lower(), word.capitalize()
         )
-    return cap_first_letter(titled_string.replace(' and ', f' {andrepl} '))
+
+    new_titled_string = ''
+
+    for word in re.split(RE_WORD_BOUNDS, str(titled_string)):
+        new_titled_string += re.sub(
+            RE_TITLE_ABBR, lambda m: m.group(0).upper(), word
+        )
+
+    return cap_first_letter(new_titled_string.replace(' and ', f' {andrepl} '))
 
 
 def current_next_terms():
