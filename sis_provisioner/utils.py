@@ -5,37 +5,35 @@ from django.conf import settings
 from datetime import datetime
 import re
 
-
 RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
-RE_UNTITLEIZE = re.compile(r'^(?:And|For|Of|The|W)$')
-RE_TITLE_ABBR = re.compile(r'^(?:Bs|Ms)$')
-
-
-def cap_first_letter(string):
-    if len(string) < 2:
-        return string.upper()
-    return string[0].upper() + string[1:]
+RE_UNTITLEIZE = re.compile(r'^(?:and|for|of|the|w)$', re.I)
+RE_TITLE_ABBR = re.compile(r'^(?:bs|ms)$', re.I)
 
 
 def titleize(string, andrepl='and'):
+    """
+    Capitalizes the first letter of every word, effective only in ASCII region.
+    """
     if string is None:
         raise TypeError('String is required')
 
     titled_string = ''
+    index = 0
 
     for word in re.split(RE_WORD_BOUNDS, str(string)):
-        titled_string += re.sub(
-            RE_UNTITLEIZE, lambda m: m.group(0).lower(), word.capitalize()
-        )
+        if re.match(RE_TITLE_ABBR, word):
+            titled_string += word.upper()
 
-    new_titled_string = ''
+        elif re.match(RE_UNTITLEIZE, word):
+            word = word.lower().replace('and', andrepl)
+            titled_string += word.capitalize() if (index == 0) else word
 
-    for word in re.split(RE_WORD_BOUNDS, str(titled_string)):
-        new_titled_string += re.sub(
-            RE_TITLE_ABBR, lambda m: m.group(0).upper(), word
-        )
+        else:
+            titled_string += word.lower().capitalize()
 
-    return cap_first_letter(new_titled_string.replace(' and ', f' {andrepl} '))
+        index += 1
+
+    return titled_string
 
 
 def current_next_terms():
