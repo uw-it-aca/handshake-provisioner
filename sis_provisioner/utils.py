@@ -19,13 +19,13 @@ def titleize(string, andrepl='and'):
 
     titled_string = ''
 
-    for index, word in enumerate(re.split(RE_WORD_BOUNDS, str(string))):
+    for idx, word in enumerate(re.split(RE_WORD_BOUNDS, str(string).strip())):
         if re.match(RE_TITLE_ABBR, word):
             titled_string += word.upper()
 
         elif re.match(RE_UNTITLEIZE, word):
             word = word.lower().replace('and', andrepl)
-            titled_string += word.capitalize() if (index == 0) else word
+            titled_string += word.capitalize() if (idx == 0) else word
 
         else:
             titled_string += word.capitalize()
