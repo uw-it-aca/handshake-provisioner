@@ -88,6 +88,12 @@ class HandshakeUtilsTest(TestCase):
             mock_datetime.now.return_value = datetime(2020, 2, 29)
             self.assertEqual(current_next_terms(),
                              [(2020, 1), (2020, 2)])
+            mock_datetime.now.return_value = datetime(2020, 5, 15)
+            self.assertEqual(current_next_terms(),
+                             [(2020, 2), (2020, 3)])
+            mock_datetime.now.return_value = datetime(2020, 9, 15)
+            self.assertEqual(current_next_terms(),
+                             [(2020, 3), (2020, 4)])
 
     def test_titleize(self):
         self.assertRaises(TypeError, titleize, None)
