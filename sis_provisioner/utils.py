@@ -35,15 +35,20 @@ def titleize(string, andrepl='and'):
     return titled_string
 
 
-def get_term(term: datetime):
-    year, month = term.year, term.month
-    quarter = floor(month / 3 + 2/3)
-    return (year, quarter)
+def term_from_datetime(dt: datetime):
+    return (dt.year, floor(dt.month / 3 + 2/3))
+
+
+def current_term():
+    return term_from_datetime(datetime.now())
+
+
+def next_term():
+    return term_from_datetime(datetime.now() + relativedelta(months=3))
 
 
 def current_next_terms():
-    now = datetime.now()
-    return [get_term(now), get_term(now + relativedelta(months=3))]
+    return [current_term(), next_term()]
 
 
 def valid_major_codes(majors):

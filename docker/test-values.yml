@@ -62,6 +62,9 @@ environmentVariables:
   - name: UW_PERSON_DB_DATABASE
     value: uw-person-prod
 
+  - name: AWS_S3_REGION_NAME
+    value: "us-east-1"
+
 externalSecrets:
   enabled: true
   secrets:
