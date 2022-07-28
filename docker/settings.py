@@ -20,6 +20,13 @@ else:
 
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
 
+AXDD_PERSON_CLIENT_ENV = os.getenv('AXDD_PERSON_CLIENT_ENV', 'localdev')
+UW_PERSON_DB_USERNAME = os.getenv('UW_PERSON_DB_USERNAME')
+UW_PERSON_DB_PASSWORD = os.getenv('UW_PERSON_DB_PASSWORD')
+UW_PERSON_DB_HOSTNAME = os.getenv('UW_PERSON_DB_HOSTNAME', 'localhost')
+UW_PERSON_DB_DATABASE = os.getenv('UW_PERSON_DB_DATABASE', 'uw-person')
+UW_PERSON_DB_PORT = os.getenv('UW_PERSON_DB_PORT', '5432')
+
 # Settings that control student data provisioning
 ENROLL_STATUS = '12'
 INCLUDE_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
