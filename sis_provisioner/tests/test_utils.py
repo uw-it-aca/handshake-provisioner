@@ -50,13 +50,23 @@ class HandshakeUtilsTest(TestCase):
     def test_get_major_names(self):
         major = Major()
         major.major_name = 'Bachelor of Science'
-        major.college = 'C'
+        major.college = 'F'
+        major.major_abbr_code = '0-BSE'
         major2 = Major()
         major2.major_name = 'Master of Science'
         major2.college = 'A'
+        major2.major_abbr_code = '1'
+        major3 = Major()
+        major3.major_name = 'Business Administration'
+        major3.college = 'E'
+        major3.major_abbr_code = '2'
         self.assertEqual(get_major_names([major, major2]),
                          'Bachelor of Science;Master of Science')
         self.assertEqual(get_major_names([]), '')
+        self.assertEqual(get_major_names([major]), 'Bachelor of Science')
+        self.assertEqual(get_major_names([major3]), '')
+        self.assertEqual(get_major_names([major, major3]),
+                         'Bachelor of Science;Business Administration')
         self.assertEqual(get_major_names([major]), 'Bachelor of Science')
 
     def test_get_synced_college_name(self):

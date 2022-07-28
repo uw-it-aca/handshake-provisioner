@@ -73,7 +73,16 @@ def get_synced_college_code(codes):
     return max(codes) if codes else None
 
 
+def is_no_sync_college(majors):
+    college_code = get_synced_college_code(
+        [get_college_for_major(major) for major in majors]
+    )
+    return college_code == 'E' or college_code == 'V'
+
+
 def get_majors(majors):
+    if is_no_sync_college(majors):
+        return []
     majors.sort(key=lambda m: m.college, reverse=True)
     return majors
 
