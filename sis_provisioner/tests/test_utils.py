@@ -89,6 +89,7 @@ class HandshakeUtilsTest(TestCase):
 
     def test_get_current_next_term(self):
         with patch('sis_provisioner.utils.datetime') as mock_datetime:
+            mock_datetime.side_effect = datetime
             mock_datetime.now.return_value = datetime(2020, 1, 31)
             self.assertEqual(current_next_terms(),
                              [(2020, 1), (2020, 2)])
@@ -130,3 +131,22 @@ class HandshakeUtilsTest(TestCase):
                          'A New, Improved Title')
         self.assertEqual(titleize(' a new, improved title '),
                          'A New, Improved Title')
+
+    def test_get_quarter_from_date(self):
+        self.assertEqual(get_quarter_from_date(datetime(2020, 1, 1)), 4)
+        self.assertEqual(get_quarter_from_date(datetime(2022, 4, 1)), 2)
+        self.assertEqual(get_quarter_from_date(datetime(2021, 6, 20)), 2)
+        self.assertEqual(get_quarter_from_date(datetime(2021, 6, 21)), 3)
+        self.assertEqual(get_quarter_from_date(datetime(2020, 10, 1)), 4)
+        self.assertEqual(get_quarter_from_date(datetime(2022, 1, 3, 12, 0)), 1)
+        self.assertEqual(get_quarter_from_date(datetime(2020, 4, 1, 12, 0)), 2)
+        self.assertEqual(get_quarter_from_date(datetime(2022, 6, 20, 12, 0)), 3)
+        self.assertEqual(get_quarter_from_date(datetime(2020, 10, 1, 12, 0)), 4)
+        self.assertEqual(get_quarter_from_date(datetime(2022, 1, 2, 12, 0, 0)), 4)
+        self.assertEqual(get_quarter_from_date(datetime(2020, 4, 1, 12, 0, 0)), 2)
+        self.assertEqual(get_quarter_from_date(datetime(2022, 9, 27, 12, 0, 0)), 3)
+        self.assertEqual(get_quarter_from_date(datetime(2022, 9, 28, 12, 0, 0)), 4)
+        self.assertEqual(get_quarter_from_date(datetime(2022, 3, 27)), 1)
+        self.assertEqual(get_quarter_from_date(datetime(2022, 3, 28)), 2)
+        self.assertEqual(get_quarter_from_date(datetime(2020, 7, 1, 12, 0, 0, 0)), 3)
+        self.assertEqual(get_quarter_from_date(datetime(2023, 6, 20, 12, 0, 0)), 3)
