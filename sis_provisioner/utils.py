@@ -34,58 +34,6 @@ def titleize(string, andrepl='and'):
     return titled_string
 
 
-def get_fall_start_date(year):
-    sept = datetime(year, 9, 24)
-    return sept + relativedelta(weekday=2)  # last Wednesday
-
-
-def get_winter_start_date(year):
-    jan = datetime(year, 1, 2)
-    # if Jan 1 is Sunday or Monday, start on Jan 3
-    if jan.weekday() in [0, 1]:
-        return jan.replace(day=3)
-    return jan + relativedelta(weekday=0)  # first Monday after Jan 1
-
-
-def get_spring_start_date(year):
-    start = get_winter_start_date(year) + relativedelta(weeks=11, days=1)
-    return start + relativedelta(weekday=0)  # second Monday after winter
-
-
-def get_summer_start_date(year):
-    start = get_spring_start_date(year) + relativedelta(weeks=11, days=1)
-    return start + relativedelta(weekday=0)  # second Monday after spring
-
-
-def get_quarter_from_date(dt: datetime):
-    terms = [get_winter_start_date(dt.year), get_spring_start_date(dt.year),
-             get_summer_start_date(dt.year), get_fall_start_date(dt.year)]
-    
-    idx = 0
-    while idx < len(terms) and dt >= terms[idx]:
-        idx += 1
-    return idx if idx > 0 else 4
-
-
-def term_from_datetime(dt: datetime):
-    return (dt.year, get_quarter_from_date(dt))
-
-
-def current_term():
-    return term_from_datetime(datetime.now())
-
-
-def next_term():
-    current = current_term()
-    if current[1] == 4:
-        return (current[0] + 1, 1)
-    return (current[0], current[1] + 1)
-
-
-def current_next_terms():
-    return [current_term(), next_term()]
-
-
 def valid_major_codes(majors):
     excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
     for major in majors:
@@ -156,3 +104,59 @@ def get_ethnicity_name(ethnicities):
         return titleize(ethnicities[0].assigned_ethnic_desc)
     except IndexError:
         pass
+
+class DateToTerm():
+    def get_fall_start_date(self, year):
+        sept = datetime(year, 9, 24)
+        return sept + relativedelta(weekday=2)  # last Wednesday
+
+
+    def get_winter_start_date(self, year):
+        jan = datetime(year, 1, 2)
+        # if Jan 1 is Sunday or Monday, start on Jan 3
+        if jan.weekday() in [0, 1]:
+            return jan.replace(day=3)
+        return jan + relativedelta(weekday=0)  # first Monday after Jan 1
+
+
+    def get_spring_start_date(self, year):
+        start = self.get_winter_start_date(year) +\
+            relativedelta(weeks=11, days=1)
+        return start + relativedelta(weekday=0)  # second Monday after winter
+
+
+    def get_summer_start_date(self, year):
+        start = self.get_spring_start_date(year) +\
+            relativedelta(weeks=11, days=1)
+        return start + relativedelta(weekday=0)  # second Monday after spring
+
+
+    def get_quarter_from_date(self, dt: datetime):
+        terms = [self.get_winter_start_date(dt.year),
+                 self.get_spring_start_date(dt.year),
+                 self.get_summer_start_date(dt.year),
+                 self.get_fall_start_date(dt.year)]
+        
+        idx = 0
+        while idx < len(terms) and dt >= terms[idx]:
+            idx += 1
+        return idx if idx > 0 else 4
+
+
+    def term_from_datetime(self, dt: datetime):
+        return (dt.year, self.get_quarter_from_date(dt))
+
+
+    def current_term(self):
+        return self.term_from_datetime(datetime.now())
+
+
+    def next_term(self):
+        current = self.current_term()
+        if current[1] == 4:
+            return (current[0] + 1, 1)
+        return (current[0], current[1] + 1)
+
+
+    def current_next_terms(self):
+        return [self.current_term(), self.next_term()]
