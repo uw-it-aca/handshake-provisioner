@@ -9,8 +9,8 @@ EXTRA_OUTPUT_CSV = 'extra.csv'
 MATCHING_OUTPUT_CSV = 'matching.csv'
 
 
-def validate_csv(filepath):
-    example_df = pd.read_csv(EXAMPLE_CSV)
+def validate_csv(filepath, example_path):
+    example_df = pd.read_csv(example_path)
     generated_df = pd.read_csv(filepath)
 
     example_netids = example_df['username'].to_list()
@@ -42,5 +42,7 @@ def validate_csv(filepath):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('file', help='CSV file to validate')
+    parser.add_argument('--example', '-e', help='Example file to compare to',
+                        default=EXAMPLE_CSV)
     args = parser.parse_args()
-    validate_csv(args.file)
+    validate_csv(args.file, args.example)

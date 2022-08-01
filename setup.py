@@ -25,6 +25,7 @@ setup(
         'django-storages[google]>=1.10',
         'boto3',
         'axdd-person-client>=1.0.2',
+        'pandas',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports Handshake',
