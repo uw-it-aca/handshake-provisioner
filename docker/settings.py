@@ -99,3 +99,5 @@ CLASS_CODES = {
     '5': 'Senior',
     '8': 'Masters',
 }
+
+EMAIL_DOMAIN = 'uw.edu'
