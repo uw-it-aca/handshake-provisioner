@@ -68,9 +68,26 @@ def is_veteran(veteran_benefit_code):
     return veteran_benefit_code != '0'
 
 
+def get_class_desc(student):
+    class_code = student.class_code
+    majors = student.majors
+    if class_code not in getattr(settings, 'INCLUDE_CLASS_CODES', []):
+        return None
+    if any('MBA' in major.major_abbr_code for major in majors) and \
+            get_synced_college_name(majors) == 'Foster School of Business':
+        return 'Masters of Business Administration'
+    return getattr(settings, 'CLASS_CODES', {}).get(class_code, None)
+
+
+def format_student_number(number):
+    return '0' * (7-len(number)) + number
+
+
 def get_college_for_major(major):
     if major.major_abbr_code in getattr(settings, 'ENGR_COLLEGE_MAJORS', []):
         return 'J'
+    if major.major_abbr_code in getattr(settings, 'CSE_COLLEGE_MAJORS', []):
+        return 'J2'
     return major.college
 
 
@@ -94,14 +111,14 @@ def get_majors(majors):
 
 def get_major_names(majors):
     majors = get_majors(majors)
-    return ';'.join([titleize(m.major_name) for m in majors])
+    return ';'.join([m.major_full_name for m in majors])
 
 
 def get_primary_major_name(majors):
     majors = get_majors(majors)
     try:
-        return titleize(majors[0].major_name)
-    except IndexError:
+        return majors[0].major_full_name
+    except (IndexError, AttributeError):
         pass
 
 
@@ -110,14 +127,11 @@ def get_synced_college_name(majors):
         [get_college_for_major(major) for major in majors]
     )
     college_dict = getattr(settings, 'COLLEGES', {})
-    try:
-        return titleize(college_dict.get(college_code), andrepl='&')
-    except (AttributeError, TypeError):
-        pass
+    return college_dict.get(college_code)
 
 
 def get_ethnicity_name(ethnicities):
     try:
-        return titleize(ethnicities[0].assigned_ethnic_desc)
-    except IndexError:
+        return ethnicities[0].assigned_ethnic_desc
+    except (IndexError, AttributeError):
         pass

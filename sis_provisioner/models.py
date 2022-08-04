@@ -8,7 +8,8 @@ from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
     valid_major_codes, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_synced_college_name, get_ethnicity_name,
-    current_next_terms, current_term, next_term)
+    current_next_terms, current_term, next_term, get_class_desc,
+    format_student_number)
 from datetime import datetime
 import csv
 import io
@@ -45,11 +46,16 @@ class ImportFile(models.Model):
             if not valid_major_codes(person.student.majors):
                 continue
 
+            if not person.student.student_email:
+                continue
+
+            # TODO: don't write for students on requested account deletion list
+
             writer.writerow([
                 person.uwnetid,
                 person.uwnetid,
                 person.student.student_number,
-                person.student.class_desc,
+                get_class_desc(person.student),
                 person.surname,
                 person.first_name,
                 person.preferred_middle_name,
@@ -59,7 +65,7 @@ class ImportFile(models.Model):
                 person.student.campus_desc,
                 get_major_names(person.student.majors),
                 get_primary_major_name(person.student.majors),
-                'TRUE',  # TODO: primary_education:currently_attending
+                'TRUE',
                 # person.student.gender,
                 # get_ethnicity_name(person.student.ethnicities),
                 # is_athlete(person.student.special_program_code),

@@ -31,9 +31,10 @@ UW_PERSON_DB_PORT = os.getenv('UW_PERSON_DB_PORT', '5432')
 ENROLL_STATUS = '12'
 INCLUDE_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
 INCLUDE_CAMPUS_CODES = ['0', '1']
-EXCLUDE_MAJOR_CODES = ['0-EMBA', '0-GEMBA']
+EXCLUDE_MAJOR_CODES = ['0-GEMBA']
 ENGR_COLLEGE_MAJORS = ['0-BIOEN', '0-BSE', '0-DATA', '0-PHARBX', '0-PREBSE',
-                        '0-TECH I', '0-C SCI', '0-CMP E', '0-CSE']
+                        '0-TECH I']
+CSE_COLLEGE_MAJORS = ['0-C SCI', '0-CMP E', '0-CSE']
 
 HANDSHAKE_CSV_HEADER = [
     'username',
@@ -66,24 +67,35 @@ ATHLETE_CODES = [
 ]
 
 COLLEGES = {
-    'A': 'UNDERGRADUATE INTERDISCIPLINARY PROGRAMS',
-    'B': 'COLLEGE OF BUILT ENVIRONMENT',
-    'C': 'COLLEGE OF ARTS AND SCIENCES',
-    'D': 'COLLEGE OF THE ENVIRONMENT',
-    'E': 'SCHOOL OF BUSINESS',
-    'H': 'COLLEGE OF EDUCATION',
-    'J': 'COLLEGE OF ENGINEERING',
-    'M': 'SCHOOL OF PUBLIC HEALTH & COMMUNITY MED',
-    'N': 'SCHOOL OF NURSING',
-    'O': 'INTERSCHOOL OR INTERCOLLEGE PROGRAMS',
-    'P': 'SCHOOL OF PHARMACY',
-    'Q': 'SCHOOL OF PUBLIC AFFAIRS',
-    'R': 'INTERDISCIPLINARY GRADUATE PROGRAMS',
-    'S': 'THE INFORMATION SCHOOL',
-    'T': 'SCHOOL OF SOCIAL WORK',
-    'U': 'SCHOOL OF DENTISTRY',
-    'V': 'UNIVERSITY OF WASHINGTON, BOTHELL',
-    'X': 'SCHOOL OF LAW',
-    'Y': 'SCHOOL OF MEDICINE',
-    'Z': 'UNIVERSITY OF WASHINGTON, TACOMA',
+    'A': 'Interdisciplinary Undergraduate Programs',
+    'B': 'College of Built Environment',
+    'C': 'College of Arts & Sciences',
+    'D': 'College of the Environment',
+    'E': 'Foster School of Business',
+    'H': 'College of Education',
+    'J': 'College of Engineering',
+    'J2': 'School of Computer Science & Engineering',
+    'K': 'College of Ocean & Fishery Sciences',
+    'L': 'College of Forest Resources',
+    'M': 'School of Public Health',
+    'N': 'School of Nursing',
+    'O': 'Interschool or Intercollege Programs',
+    'P': 'School of Pharmacy',
+    'Q': 'Evans School of Public Affairs',
+    'R': 'Interdisciplinary Graduate Programs',
+    'S': 'The Information School',
+    'T': 'School of Social Work',
+    'U': 'School of Dentistry',
+    'V': 'UW Bothell',
+    'X': 'School of Law',
+    'Y': 'School of Medicine',
+}
+
+CLASS_CODES = {
+    '1': 'Freshman',
+    '2': 'Sophomore',
+    '3': 'Junior',
+    '4': 'Senior',
+    '5': 'Senior',
+    '8': 'Masters',
 }
