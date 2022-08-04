@@ -46,9 +46,6 @@ class ImportFile(models.Model):
             if not valid_major_codes(person.student.majors):
                 continue
 
-            if not person.student.student_email:
-                continue
-
             # TODO: don't write for students on requested account deletion list
 
             writer.writerow([
