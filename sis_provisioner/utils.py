@@ -10,6 +10,8 @@ RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
 RE_UNTITLEIZE = re.compile(r'^(?:and|for|of|the|w)$', re.I)
 RE_TITLE_ABBR = re.compile(r'^(?:bs|ms)$', re.I)
 
+STUDENT_NUM_LEN = 7
+
 
 def titleize(string, andrepl='and'):
     """
@@ -63,7 +65,7 @@ def get_class_desc(student):
 
 
 def format_student_number(number):
-    return '0' * (7-len(number)) + number
+    return number.zfill(STUDENT_NUM_LEN)
 
 
 def get_college_for_major(major):

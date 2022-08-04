@@ -159,7 +159,7 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_student_number('12'), '0000012')
         self.assertEqual(format_student_number('1'), '0000001')
         self.assertEqual(format_student_number(''), '0000000')
-        self.assertRaises(TypeError, format_student_number, 1234567)
+        self.assertRaises(AttributeError, format_student_number, 1234567)
 
     def test_get_current_next_term(self):
         term = DateToTerm()
