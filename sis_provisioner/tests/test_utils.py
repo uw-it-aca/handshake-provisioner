@@ -9,9 +9,6 @@ from mock import patch
 
 @override_settings()
 class HandshakeUtilsTest(TestCase):
-    def test_current_next_terms(self):
-        pass
-
     def test_valid_major_codes(self):
         excluded_major = Major()
         excluded_major.major_abbr_code = '0-GEMBA'
@@ -86,24 +83,6 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_name([major3]),
                          'College of Arts & Sciences')
         self.assertEqual(get_synced_college_name([]), None)
-
-    def test_get_current_next_term(self):
-        with patch('sis_provisioner.utils.datetime') as mock_datetime:
-            mock_datetime.now.return_value = datetime(2020, 1, 31)
-            self.assertEqual(current_next_terms(),
-                             [(2020, 1), (2020, 2)])
-            mock_datetime.now.return_value = datetime(2020, 12, 31)
-            self.assertEqual(current_next_terms(),
-                             [(2020, 4), (2021, 1)])
-            mock_datetime.now.return_value = datetime(2020, 2, 29)
-            self.assertEqual(current_next_terms(),
-                             [(2020, 1), (2020, 2)])
-            mock_datetime.now.return_value = datetime(2020, 5, 15)
-            self.assertEqual(current_next_terms(),
-                             [(2020, 2), (2020, 3)])
-            mock_datetime.now.return_value = datetime(2020, 9, 15)
-            self.assertEqual(current_next_terms(),
-                             [(2020, 3), (2020, 4)])
 
     def test_titleize(self):
         self.assertRaises(TypeError, titleize, None)
@@ -181,3 +160,60 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_student_number('1'), '0000001')
         self.assertEqual(format_student_number(''), '0000000')
         self.assertRaises(TypeError, format_student_number, 1234567)
+
+    def test_get_current_next_term(self):
+        term = DateToTerm()
+        with patch('sis_provisioner.utils.datetime') as mock_datetime:
+            mock_datetime.side_effect = datetime
+            mock_datetime.now.return_value = datetime(2020, 1, 31)
+            self.assertEqual(term.current_next_terms(),
+                             [(2020, 1), (2020, 2)])
+            mock_datetime.now.return_value = datetime(2020, 12, 31)
+            self.assertEqual(term.current_next_terms(),
+                             [(2020, 4), (2021, 1)])
+            mock_datetime.now.return_value = datetime(2020, 2, 29)
+            self.assertEqual(term.current_next_terms(),
+                             [(2020, 1), (2020, 2)])
+            mock_datetime.now.return_value = datetime(2020, 5, 15)
+            self.assertEqual(term.current_next_terms(),
+                             [(2020, 2), (2020, 3)])
+            mock_datetime.now.return_value = datetime(2020, 9, 15)
+            self.assertEqual(term.current_next_terms(),
+                             [(2020, 3), (2020, 4)])
+
+    def test_get_quarter_from_date(self):
+        term = DateToTerm()
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2020, 1, 1)), 4)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2022, 4, 1)), 2)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2021, 6, 20)), 2)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2021, 6, 21)), 3)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2020, 10, 1)), 4)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2022, 1, 3, 1, 0)), 1)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2020, 4, 1, 1, 0)), 2)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2022, 6, 20, 1, 0)), 3)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2020, 10, 1, 1, 0)), 4)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2022, 1, 2, 1, 0)), 4)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2020, 4, 1, 1, 0)), 2)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2022, 9, 27, 1, 0)), 3)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2022, 9, 28, 1, 0)), 4)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2022, 3, 27)), 1)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2022, 3, 28)), 2)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2020, 7, 1, 2, 0)), 3)
+        self.assertEqual(
+            term.get_quarter_from_date(datetime(2023, 6, 20, 2, 0)), 3)

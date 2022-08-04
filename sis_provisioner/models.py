@@ -9,7 +9,7 @@ from sis_provisioner.utils import (
     valid_major_codes, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_synced_college_name, get_ethnicity_name,
     current_next_terms, current_term, next_term, get_class_desc,
-    format_student_number)
+    format_student_number, DateToTerm)
 from datetime import datetime
 import csv
 import io
@@ -42,7 +42,8 @@ class ImportFile(models.Model):
 
         writer.writerow(settings.HANDSHAKE_CSV_HEADER)
 
-        for person in get_students_for_handshake([next_term()]):
+        term = DateToTerm()
+        for person in get_students_for_handshake([term.next_term()]):
             if not valid_major_codes(person.student.majors):
                 continue
 
