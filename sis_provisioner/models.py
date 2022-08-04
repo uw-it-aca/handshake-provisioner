@@ -54,7 +54,7 @@ class ImportFile(models.Model):
             writer.writerow([
                 person.uwnetid,
                 person.uwnetid,
-                person.student.student_number,
+                format_student_number(person.student.student_number),
                 get_class_desc(person.student),
                 person.surname,
                 person.first_name,
