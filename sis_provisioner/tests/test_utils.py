@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase, override_settings
-from uw_person_client.components import Major
+from uw_person_client.components import Major, Student
 from sis_provisioner.utils import *
 from mock import patch
 
@@ -11,7 +11,7 @@ from mock import patch
 class HandshakeUtilsTest(TestCase):
     def test_valid_major_codes(self):
         excluded_major = Major()
-        excluded_major.major_abbr_code = '0-EMBA'
+        excluded_major.major_abbr_code = '0-GEMBA'
         major = Major()
         major.major_abbr_code = '1'
         major2 = Major()
@@ -46,15 +46,15 @@ class HandshakeUtilsTest(TestCase):
 
     def test_get_major_names(self):
         major = Major()
-        major.major_name = 'Bachelor of Science'
+        major.major_full_name = 'Bachelor of Science'
         major.college = 'F'
         major.major_abbr_code = '0-BSE'
         major2 = Major()
-        major2.major_name = 'Master of Science'
+        major2.major_full_name = 'Master of Science'
         major2.college = 'A'
         major2.major_abbr_code = '1'
         major3 = Major()
-        major3.major_name = 'Business Administration'
+        major3.major_full_name = 'Business Administration'
         major3.college = 'E'
         major3.major_abbr_code = '2'
         self.assertEqual(get_major_names([major, major2]),
@@ -87,7 +87,7 @@ class HandshakeUtilsTest(TestCase):
     def test_titleize(self):
         self.assertRaises(TypeError, titleize, None)
         self.assertEqual(titleize(123), '123')
-        self.assertEquals(titleize(''), '')
+        self.assertEqual(titleize(''), '')
         self.assertEqual(titleize('bachelor of science'),
                          'Bachelor of Science')
         self.assertEqual(titleize('arts and sciences', andrepl='&'),
@@ -109,6 +109,57 @@ class HandshakeUtilsTest(TestCase):
                          'A New, Improved Title')
         self.assertEqual(titleize(' a new, improved title '),
                          'A New, Improved Title')
+
+    def test_get_class_desc(self):
+        major1 = Major()
+        major1.major_abbr_code = '0'
+        major1.college = 'C'
+        major2 = Major()
+        major2.major_abbr_code = '0-EMBA'
+        major2.college = 'E'
+        major3 = Major()
+        major3.major_abbr_code = '0-EMBA'
+        major3.college = 'F'
+
+        student = Student()
+        student.class_code = '1'
+        student.majors = [major1]
+
+        self.assertEqual(get_class_desc(student), 'Freshman')
+        student.class_code = '2'
+        self.assertEqual(get_class_desc(student), 'Sophomore')
+        student.class_code = '3'
+        self.assertEqual(get_class_desc(student), 'Junior')
+        student.class_code = '4'
+        self.assertEqual(get_class_desc(student), 'Senior')
+        student.class_code = '5'
+        self.assertEqual(get_class_desc(student), 'Senior')
+        student.class_code = '8'
+        self.assertEqual(get_class_desc(student), 'Masters')
+        student.majors = [major2]
+        self.assertEqual(get_class_desc(student),
+                         'Masters of Business Administration')
+        student.majors = [major2, major3]
+        self.assertEqual(get_class_desc(student),
+                         'Masters')
+        student.majors = [major1, major2]
+        self.assertEqual(get_class_desc(student),
+                         'Masters of Business Administration')
+        student.class_code = '9'
+        self.assertEqual(get_class_desc(student), None)
+        student.class_code = 1
+        self.assertEqual(get_class_desc(student), None)
+
+    def test_format_student_number(self):
+        self.assertEqual(format_student_number('1234567'), '1234567')
+        self.assertEqual(format_student_number('123456'), '0123456')
+        self.assertEqual(format_student_number('12345'), '0012345')
+        self.assertEqual(format_student_number('1234'), '0001234')
+        self.assertEqual(format_student_number('123'), '0000123')
+        self.assertEqual(format_student_number('12'), '0000012')
+        self.assertEqual(format_student_number('1'), '0000001')
+        self.assertEqual(format_student_number(''), '0000000')
+        self.assertRaises(AttributeError, format_student_number, 1234567)
 
     def test_get_current_next_term(self):
         term = DateToTerm()
