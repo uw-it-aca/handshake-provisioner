@@ -61,7 +61,7 @@ class ImportFile(models.Model):
                 person.preferred_middle_name,
                 person.preferred_first_name,
                 get_synced_college_name(person.student.majors),
-                person.student.student_email,
+                '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
                 person.student.campus_desc,
                 get_major_names(person.student.majors),
                 get_primary_major_name(person.student.majors),
