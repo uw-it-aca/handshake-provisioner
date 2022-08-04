@@ -7,8 +7,7 @@ from sis_provisioner.dao.file import read_file, write_file
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
     valid_major_codes, get_major_names, get_primary_major_name, is_athlete,
-    is_veteran, get_synced_college_name, get_ethnicity_name,
-    current_next_terms, current_term, next_term, get_class_desc,
+    is_veteran, get_synced_college_name, get_ethnicity_name, get_class_desc,
     format_student_number, DateToTerm)
 from datetime import datetime
 import csv
