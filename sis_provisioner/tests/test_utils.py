@@ -159,3 +159,18 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_student_number('1'), '0000001')
         self.assertEqual(format_student_number(''), '0000000')
         self.assertRaises(AttributeError, format_student_number, 1234567)
+
+    def test_get_middle_name(self):
+        self.assertEqual(get_middle_name('John Doe'), 'Doe')
+        self.assertEqual(get_middle_name('John Doe Jr.'), 'Doe Jr.')
+        self.assertEqual(get_middle_name('John Doe III'), 'Doe III')
+        self.assertEqual(get_middle_name('John'), None)
+        self.assertEqual(get_middle_name('John D'), 'D')
+
+    def test_get_first_name(self):
+        self.assertEqual(get_first_name('John Doe'), 'John')
+        self.assertEqual(get_first_name('John Doe Jr.'), 'John')
+        self.assertEqual(get_first_name('John Doe III'), 'John')
+        self.assertEqual(get_first_name('John'), 'John')
+        self.assertEqual(get_first_name('John-D'), 'John-D')
+        self.assertEqual(get_first_name(''), '')

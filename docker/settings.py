@@ -68,7 +68,7 @@ ATHLETE_CODES = [
 
 COLLEGES = {
     'A': 'Interdisciplinary Undergraduate Programs',
-    'B': 'College of Built Environment',
+    'B': 'College of Built Environments',
     'C': 'College of Arts & Sciences',
     'D': 'College of the Environment',
     'E': 'Foster School of Business',

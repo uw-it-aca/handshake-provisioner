@@ -118,3 +118,15 @@ def get_ethnicity_name(ethnicities):
         return ethnicities[0].assigned_ethnic_desc
     except (IndexError, AttributeError):
         pass
+
+def get_middle_name(first_name):
+    try:
+        return first_name.split(' ', 1)[1]
+    except IndexError:
+        pass
+
+def get_first_name(first_name):
+    try:
+        return first_name.split(' ', 1)[0]
+    except IndexError:
+        pass
