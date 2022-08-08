@@ -8,14 +8,14 @@ from datetime import datetime
 
 class AcademicTermTest(TestCase):
     def test_name(self):
-        term = AcademicTerm(datetime=datetime(2020, 1, 10))
+        term = AcademicTerm(date=datetime(2020, 1, 10))
         self.assertEqual(term.name, 'WIN2020')
         self.assertEqual(term.next().name, 'SPR2020')
         self.assertEqual(term.next().name, 'SUM2020')
         self.assertEqual(term.next().name, 'AUT2020')
 
     def test_term_from_datetime(self):
-        term = AcademicTerm(datetime=datetime(2020, 1, 1))
+        term = AcademicTerm(date=datetime(2020, 1, 1))
         self.assertEqual(term.year, 2020)
         self.assertEqual(term.quarter, 4)
 
@@ -23,7 +23,7 @@ class AcademicTermTest(TestCase):
         self.assertEqual(term.year, 2021)
         self.assertEqual(term.quarter, 1)
 
-        term = AcademicTerm(datetime=datetime(2022, 4, 1))
+        term = AcademicTerm(date=datetime(2022, 4, 1))
         self.assertEqual(term.year, 2022)
         self.assertEqual(term.quarter, 2)
 
@@ -31,7 +31,7 @@ class AcademicTermTest(TestCase):
         self.assertEqual(term.year, 2022)
         self.assertEqual(term.quarter, 3)
 
-        term = AcademicTerm(datetime=datetime(2021, 6, 20))
+        term = AcademicTerm(date=datetime(2021, 6, 20))
         self.assertEqual(term.year, 2021)
         self.assertEqual(term.quarter, 2)
 
@@ -39,7 +39,7 @@ class AcademicTermTest(TestCase):
         self.assertEqual(term.year, 2021)
         self.assertEqual(term.quarter, 3)
 
-        term = AcademicTerm(datetime=datetime(2021, 6, 21))
+        term = AcademicTerm(date=datetime(2021, 6, 21))
         self.assertEqual(term.year, 2021)
         self.assertEqual(term.quarter, 3)
 
@@ -47,7 +47,7 @@ class AcademicTermTest(TestCase):
         self.assertEqual(term.year, 2021)
         self.assertEqual(term.quarter, 4)
 
-        term = AcademicTerm(datetime=datetime(2021, 10, 1))
+        term = AcademicTerm(date=datetime(2021, 10, 1))
         self.assertEqual(term.year, 2021)
         self.assertEqual(term.quarter, 4)
 
@@ -55,7 +55,7 @@ class AcademicTermTest(TestCase):
         self.assertEqual(term.year, 2022)
         self.assertEqual(term.quarter, 1)
 
-        term = AcademicTerm(datetime=datetime(2022, 3, 27))
+        term = AcademicTerm(date=datetime(2022, 3, 27))
         self.assertEqual(term.year, 2022)
         self.assertEqual(term.quarter, 1)
 
@@ -63,7 +63,7 @@ class AcademicTermTest(TestCase):
         self.assertEqual(term.year, 2022)
         self.assertEqual(term.quarter, 2)
 
-        term = AcademicTerm(datetime=datetime(2022, 3, 28))
+        term = AcademicTerm(date=datetime(2022, 3, 28))
         self.assertEqual(term.year, 2022)
         self.assertEqual(term.quarter, 2)
 

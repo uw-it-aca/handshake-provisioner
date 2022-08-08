@@ -23,15 +23,15 @@ class AcademicTerm():
 
     QTR_NAMES = {WINTER: 'WIN', SPRING: 'SPR', SUMMER: 'SUM', AUTUMN: 'AUT'}
 
-    def __init__(self, datetime=None):
-        if datetime is None:
-            datetime = datetime.now()
+    def __init__(self, date=None):
+        if date is None:
+            date = datetime.now()
 
-        self._datetime = datetime
+        self._date = date
         self.current()
 
     def current(self):
-        year, quarter = self._term_from_datetime(self._datetime)
+        year, quarter = self._term_from_datetime(self._date)
         self.year = year
         self.quarter = quarter
         return self
