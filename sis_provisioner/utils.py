@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.conf import settings
+from nameparser import HumanName
 import re
 
 RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
@@ -119,14 +120,17 @@ def get_ethnicity_name(ethnicities):
     except (IndexError, AttributeError):
         pass
 
-def get_middle_name(first_name):
-    try:
-        return first_name.split(' ', 1)[1]
-    except IndexError:
-        pass
 
-def get_first_name(first_name):
+def format_first_name(first_name):
     try:
-        return first_name.split(' ', 1)[0]
-    except IndexError:
-        pass
+        if first_name.isupper():
+            hname = HumanName(first_name)
+            hname.capitalize()
+            first_name = str(hname)
+
+        first, middle = first_name.strip().split(' ', 1)
+    except ValueError:
+        first, middle = first_name, ''
+    except AttributeError:
+        first, middle = '', ''
+    return first.strip(), middle.strip()
