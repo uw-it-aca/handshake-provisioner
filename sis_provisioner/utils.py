@@ -134,3 +134,14 @@ def format_first_name(first_name):
     except AttributeError:
         first, middle = '', ''
     return first.strip(), middle.strip()
+
+
+def format_last_name(last_name):
+    try:
+        if last_name.isupper():
+            hname = HumanName(last_name)
+            hname.capitalize()
+            last_name = str(hname)
+        return last_name.strip()
+    except AttributeError:
+        return ''

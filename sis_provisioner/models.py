@@ -8,7 +8,7 @@ from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
     valid_major_codes, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_synced_college_name, get_ethnicity_name, get_class_desc,
-    format_student_number, format_first_name)
+    format_student_number, format_first_name, format_last_name)
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 import csv
@@ -124,7 +124,7 @@ class ImportFile(models.Model):
                 person.uwnetid,
                 format_student_number(person.student.student_number),
                 get_class_desc(person.student),
-                person.surname,
+                format_last_name(person.surname),
                 first_name,
                 middle_name,
                 person.preferred_first_name,
