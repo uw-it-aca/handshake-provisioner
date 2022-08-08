@@ -8,7 +8,7 @@ from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
     valid_major_codes, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_synced_college_name, get_ethnicity_name, get_class_desc,
-    format_student_number, DateToTerm)
+    format_student_number)
 from datetime import datetime
 import csv
 import io
@@ -29,20 +29,19 @@ class ImportFile(models.Model):
     def sisimport(self):
         pass
 
-    def create(self):
+    def create(self, academic_term):
         self.path = datetime.now().strftime('%Y/%m/%d/%H%M%S-%f.csv')
-        write_file(self.path, self.generate_csv())
+        write_file(self.path, self.generate_csv(academic_term))
         self.save()
 
-    def generate_csv(self):
+    def generate_csv(self, academic_term):
         s = io.StringIO()
         csv.register_dialect('unix_newline', lineterminator='\n')
         writer = csv.writer(s, dialect='unix_newline')
 
         writer.writerow(settings.HANDSHAKE_CSV_HEADER)
 
-        term = DateToTerm()
-        for person in get_students_for_handshake([term.next_term()]):
+        for person in get_students_for_handshake(academic_term):
             if not valid_major_codes(person.student.majors):
                 continue
 
