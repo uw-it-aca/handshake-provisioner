@@ -50,7 +50,11 @@ def validate_csv(column, filepath, example_path):
     missing_df.to_csv(MISSING_OUTPUT_CSV, index=False)
     extra_df.to_csv(EXTRA_OUTPUT_CSV, index=False)
 
-    compare_df = matching_df.compare(matching_df2, align_axis=0)
+    compare_df = matching_df.compare(matching_df2, align_axis=0)\
+        .rename(index={'self': 'example', 'other': 'generated'})
+    compare_df.insert(0, 'From',
+                      ['example' if x % 2 else 'generated'
+                       for x in range(len(compare_df))])
     compare_df.to_csv('comparison.csv', index=False)
 
     print('differences: ', round(len(compare_df) / 2))
