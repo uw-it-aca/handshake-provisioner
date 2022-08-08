@@ -121,58 +121,51 @@ def get_ethnicity_name(ethnicities):
     except (IndexError, AttributeError):
         pass
 
+
 class DateToTerm():
-    def get_fall_start_date(self, year):
+    @property
+    def today(self):
+        override_date = getattr(settings, 'CURRENT_DATE_OVERRIDE', None)
+        if override_date is not None:
+            return datetime.strptime(override_date, '%Y-%m-%d')
+        return datetime.now()
+
+    def autumn_start_date(self, year):
         sept = datetime(year, 9, 24)
         return sept + relativedelta(weekday=2)  # last Wednesday
 
-
-    def get_winter_start_date(self, year):
+    def winter_start_date(self, year):
         jan = datetime(year, 1, 2)
         # if Jan 1 is Sunday or Monday, start on Jan 3
         if jan.weekday() in [0, 1]:
             return jan.replace(day=3)
         return jan + relativedelta(weekday=0)  # first Monday after Jan 1
 
-
-    def get_spring_start_date(self, year):
-        start = self.get_winter_start_date(year) +\
-            relativedelta(weeks=11, days=1)
+    def spring_start_date(self, year):
+        start = self.winter_start_date(year) + relativedelta(weeks=11, days=1)
         return start + relativedelta(weekday=0)  # second Monday after winter
 
-
-    def get_summer_start_date(self, year):
-        start = self.get_spring_start_date(year) +\
-            relativedelta(weeks=11, days=1)
+    def summer_start_date(self, year):
+        start = self.spring_start_date(year) + relativedelta(weeks=11, days=1)
         return start + relativedelta(weekday=0)  # second Monday after spring
 
-
-    def get_quarter_from_date(self, dt: datetime):
-        terms = [self.get_winter_start_date(dt.year),
-                 self.get_spring_start_date(dt.year),
-                 self.get_summer_start_date(dt.year),
-                 self.get_fall_start_date(dt.year)]
-        
-        idx = 0
-        while idx < len(terms) and dt >= terms[idx]:
-            idx += 1
-        return idx if idx > 0 else 4
-
-
     def term_from_datetime(self, dt: datetime):
-        return (dt.year, self.get_quarter_from_date(dt))
+        terms = [self.winter_start_date(dt.year),
+                 self.spring_start_date(dt.year),
+                 self.summer_start_date(dt.year),
+                 self.autumn_start_date(dt.year)]
 
+        quarter = 0
+        while quarter < len(terms) and dt >= terms[quarter]:
+            quarter += 1
+
+        return dt.year, quarter if (quarter > 0) else 4
 
     def current_term(self):
-        return self.term_from_datetime(datetime.now())
-
+        return self.term_from_datetime(self.today)
 
     def next_term(self):
-        current = self.current_term()
-        if current[1] == 4:
-            return (current[0] + 1, 1)
-        return (current[0], current[1] + 1)
-
-
-    def current_next_terms(self):
-        return [self.current_term(), self.next_term()]
+        year, quarter = self.current_term()
+        if quarter == 4:
+            return year + 1, 1
+        return year, quarter + 1

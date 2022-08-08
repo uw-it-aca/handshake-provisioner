@@ -3,26 +3,25 @@
 
 from django.conf import settings
 from uw_person_client import UWPersonClient
-from sqlalchemy import tuple_
 
 
 class HandshakePersonClient(UWPersonClient):
-    def get_registered_students(self, academic_terms, **kwargs):
+    def get_registered_students(self, academic_term, **kwargs):
         sqla_persons = self.DB.session.query(self.DB.Person).join(
             self.DB.Student).join(
             self.DB.Term, self.DB.Student.academic_term).filter(
                 self.DB.Student.enroll_status_code == settings.ENROLL_STATUS,
                 self.DB.Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
                 self.DB.Student.class_code.in_(settings.INCLUDE_CLASS_CODES),
-                tuple_(self.DB.Term.year, self.DB.Term.quarter).in_(
-                    academic_terms),
+                self.DB.Term.year == academic_term[0],
+                self.DB.Term.quarter == academic_term[1],
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
 
 
-def get_students_for_handshake(academic_terms):
+def get_students_for_handshake(academic_term):
     return HandshakePersonClient().get_registered_students(
-        academic_terms,
+        academic_term,
         include_employee=False,
         include_student_transcripts=False,
         include_student_transfers=False,
