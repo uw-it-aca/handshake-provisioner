@@ -159,34 +159,3 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_student_number('1'), '0000001')
         self.assertEqual(format_student_number(''), '0000000')
         self.assertRaises(AttributeError, format_student_number, 1234567)
-
-    def test_term_from_datetime(self):
-        term = DateToTerm()
-
-        with override_settings(CURRENT_DATE_OVERRIDE='2020-1-1'):
-            self.assertEqual(term.current_term(), (2020, 4))
-            self.assertEqual(term.next_term(), (2021, 1))
-
-        with override_settings(CURRENT_DATE_OVERRIDE='2022-4-1'):
-            self.assertEqual(term.current_term(), (2022, 2))
-            self.assertEqual(term.next_term(), (2022, 3))
-
-        with override_settings(CURRENT_DATE_OVERRIDE='2021-6-20'):
-            self.assertEqual(term.current_term(), (2021, 2))
-            self.assertEqual(term.next_term(), (2021, 3))
-
-        with override_settings(CURRENT_DATE_OVERRIDE='2021-6-21'):
-            self.assertEqual(term.current_term(), (2021, 3))
-            self.assertEqual(term.next_term(), (2021, 4))
-
-        with override_settings(CURRENT_DATE_OVERRIDE='2021-10-1'):
-            self.assertEqual(term.current_term(), (2021, 4))
-            self.assertEqual(term.next_term(), (2022, 1))
-
-        with override_settings(CURRENT_DATE_OVERRIDE='2022-3-27'):
-            self.assertEqual(term.current_term(), (2022, 1))
-            self.assertEqual(term.next_term(), (2022, 2))
-
-        with override_settings(CURRENT_DATE_OVERRIDE='2022-3-28'):
-            self.assertEqual(term.current_term(), (2022, 2))
-            self.assertEqual(term.next_term(), (2022, 3))

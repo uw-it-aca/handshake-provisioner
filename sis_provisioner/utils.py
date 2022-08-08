@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.conf import settings
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import re
 
 RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
@@ -120,52 +118,3 @@ def get_ethnicity_name(ethnicities):
         return ethnicities[0].assigned_ethnic_desc
     except (IndexError, AttributeError):
         pass
-
-
-class DateToTerm():
-    @property
-    def today(self):
-        override_date = getattr(settings, 'CURRENT_DATE_OVERRIDE', None)
-        if override_date is not None:
-            return datetime.strptime(override_date, '%Y-%m-%d')
-        return datetime.now()
-
-    def autumn_start_date(self, year):
-        sept = datetime(year, 9, 24)
-        return sept + relativedelta(weekday=2)  # last Wednesday
-
-    def winter_start_date(self, year):
-        jan = datetime(year, 1, 2)
-        # if Jan 1 is Sunday or Monday, start on Jan 3
-        if jan.weekday() in [0, 1]:
-            return jan.replace(day=3)
-        return jan + relativedelta(weekday=0)  # first Monday after Jan 1
-
-    def spring_start_date(self, year):
-        start = self.winter_start_date(year) + relativedelta(weeks=11, days=1)
-        return start + relativedelta(weekday=0)  # second Monday after winter
-
-    def summer_start_date(self, year):
-        start = self.spring_start_date(year) + relativedelta(weeks=11, days=1)
-        return start + relativedelta(weekday=0)  # second Monday after spring
-
-    def term_from_datetime(self, dt: datetime):
-        terms = [self.winter_start_date(dt.year),
-                 self.spring_start_date(dt.year),
-                 self.summer_start_date(dt.year),
-                 self.autumn_start_date(dt.year)]
-
-        quarter = 0
-        while quarter < len(terms) and dt >= terms[quarter]:
-            quarter += 1
-
-        return dt.year, quarter if (quarter > 0) else 4
-
-    def current_term(self):
-        return self.term_from_datetime(self.today)
-
-    def next_term(self):
-        year, quarter = self.current_term()
-        if quarter == 4:
-            return year + 1, 1
-        return year, quarter + 1

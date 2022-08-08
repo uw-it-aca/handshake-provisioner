@@ -13,8 +13,8 @@ class HandshakePersonClient(UWPersonClient):
                 self.DB.Student.enroll_status_code == settings.ENROLL_STATUS,
                 self.DB.Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
                 self.DB.Student.class_code.in_(settings.INCLUDE_CLASS_CODES),
-                self.DB.Term.year == academic_term[0],
-                self.DB.Term.quarter == academic_term[1],
+                self.DB.Term.year == academic_term.year,
+                self.DB.Term.quarter == academic_term.quarter,
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
 
