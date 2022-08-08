@@ -184,3 +184,4 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_last_name(' Smith '), 'Smith')
         self.assertEqual(format_last_name(' '), '')
         self.assertEqual(format_last_name(None), '')
+        self.assertEqual(format_last_name('MCDONALD'), 'McDonald')
