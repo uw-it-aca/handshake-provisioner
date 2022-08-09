@@ -121,6 +121,17 @@ def get_ethnicity_name(ethnicities):
         pass
 
 
+def format_name(first_name, surname):
+    first_name = str(first_name) if first_name else ''
+    surname = str(surname) if surname else ''
+
+    full_name = ' '.join([first_name, surname])
+    hname = HumanName(full_name)
+    hname.capitalize(force=True)
+    last = (hname.last + ' ' + hname.suffix) if hname.suffix else hname.last
+    return hname.first, hname.middle, last
+
+
 def format_first_name(first_name):
     try:
         if first_name.isupper():

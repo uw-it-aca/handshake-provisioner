@@ -185,3 +185,18 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_last_name(' '), '')
         self.assertEqual(format_last_name(None), '')
         self.assertEqual(format_last_name('MCDONALD'), 'McDonald')
+
+    def test_format_name(self):
+        self.assertEqual(format_name('John ', 'Doe'), ('John', '', 'Doe'))
+        self.assertEqual(format_name('John', 'Doe Jr'), ('John', '', 'Doe Jr'))
+        self.assertEqual(format_name('JOHN', 'ROY'), ('John', '', 'Roy'))
+        self.assertEqual(format_name('JOHN JAMES', 'ROY Sr'),
+                         ('John', 'James', 'Roy Sr'))
+        self.assertEqual(format_name('Michael', 'Three-names Butcher III'),
+                         ('Michael', 'Three-Names', 'Butcher III'))
+        self.assertEqual(format_name(' ', ''), ('', '', ''))
+        self.assertEqual(format_name(None, ''), ('', '', ''))
+        self.assertEqual(format_name('', None), ('', '', ''))
+        self.assertEqual(format_name(None, None), ('', '', ''))
+        self.assertEqual(format_name('Leland M', 'McDonald'),
+                         ('Leland', 'M', 'McDonald'))
