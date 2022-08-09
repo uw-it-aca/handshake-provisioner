@@ -122,10 +122,11 @@ def get_ethnicity_name(ethnicities):
 
 
 def format_name(first_name, surname):
-    first_name = str(first_name) if first_name else ''
-    surname = str(surname) if surname else ''
+    try:
+        full_name = ' '.join([first_name, surname])
+    except TypeError:
+        full_name = first_name or surname or ''
 
-    full_name = ' '.join([first_name, surname])
     hname = HumanName(full_name)
     hname.capitalize(force=True)
     last = (hname.last + ' ' + hname.suffix) if hname.suffix else hname.last
