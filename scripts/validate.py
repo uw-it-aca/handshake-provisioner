@@ -8,7 +8,7 @@ MISSING_OUTPUT_CSV = 'missing.csv'
 EXTRA_OUTPUT_CSV = 'extra.csv'
 
 
-def validate_csv(column, filepath, example_path):
+def validate_csv(column, filepath, example_path, remove_cols):
     example_df = pd.read_csv(example_path)
     generated_df = pd.read_csv(filepath)
 
@@ -50,9 +50,12 @@ def validate_csv(column, filepath, example_path):
     missing_df.to_csv(MISSING_OUTPUT_CSV, index=False)
     extra_df.to_csv(EXTRA_OUTPUT_CSV, index=False)
 
-    compare_df = matching_df.compare(matching_df2, align_axis=0)\
+    pared_df = matching_df.drop(labels=remove_cols, axis=1)
+    pared_df2 = matching_df2.drop(labels=remove_cols, axis=1)
+
+    compare_df = pared_df.compare(pared_df2, align_axis=0)\
         .rename(index={'self': 'example', 'other': 'generated'})
-    compare_df.insert(0, 'From',
+    compare_df.insert(0, 'from',
                       ['example' if x % 2 else 'generated'
                        for x in range(len(compare_df))])
     compare_df.to_csv('comparison.csv', index=False)
@@ -67,5 +70,8 @@ if __name__ == '__main__':
                         default=EXAMPLE_CSV)
     parser.add_argument('--column', '-c', help='Column to validate',
                         default='username')
+    parser.add_argument('--remove-cols', '-r', nargs='*',
+                        help='Columns to remove from comparison',
+                        default=[])
     args = parser.parse_args()
-    validate_csv(args.column, args.file, args.example)
+    validate_csv(args.column, args.file, args.example, args.remove_cols)
