@@ -160,32 +160,6 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_student_number(''), '0000000')
         self.assertRaises(AttributeError, format_student_number, 1234567)
 
-    def test_format_first_name(self):
-        self.assertEqual(format_first_name('John Doe'), ('John', 'Doe'))
-        self.assertEqual(format_first_name('John Doe Jr'), ('John', 'Doe Jr'))
-        self.assertEqual(format_first_name('JOHN ROY'), ('John', 'Roy'))
-        self.assertEqual(format_first_name('JOHN ROY S'), ('John', 'Roy S'))
-        self.assertEqual(format_first_name('John    Doe'), ('John', 'Doe'))
-        self.assertEqual(format_first_name('John '), ('John', ''))
-        self.assertEqual(format_first_name('JOHN '), ('John', ''))
-        self.assertEqual(format_first_name(' John '), ('John', ''))
-        self.assertEqual(format_first_name('John'), ('John', ''))
-        self.assertEqual(format_first_name(''), ('', ''))
-        self.assertEqual(format_first_name(None), ('', ''))
-
-    def test_format_last_name(self):
-        self.assertEqual(format_last_name('Smith'), 'Smith')
-        self.assertEqual(format_last_name('Smith-Jones'), 'Smith-Jones')
-        self.assertEqual(format_last_name('SMITH JONES'), 'Smith Jones')
-        self.assertEqual(format_last_name('SMITH III'), 'Smith III')
-        self.assertEqual(format_last_name('SMITH'), 'Smith')
-        self.assertEqual(format_last_name('Smith '), 'Smith')
-        self.assertEqual(format_last_name('SMITH '), 'Smith')
-        self.assertEqual(format_last_name(' Smith '), 'Smith')
-        self.assertEqual(format_last_name(' '), '')
-        self.assertEqual(format_last_name(None), '')
-        self.assertEqual(format_last_name('MCDONALD'), 'McDonald')
-
     def test_format_name(self):
         self.assertEqual(format_name('John ', 'Doe'), ('John', '', 'Doe'))
         self.assertEqual(format_name('John', 'Doe Jr'), ('John', '', 'Doe Jr'))
@@ -194,9 +168,11 @@ class HandshakeUtilsTest(TestCase):
                          ('John', 'James', 'Roy Sr'))
         self.assertEqual(format_name('Michael', 'Three-names Butcher III'),
                          ('Michael', 'Three-Names', 'Butcher III'))
+        self.assertEqual(format_name(' Jon Q ', ' Doe '), ('Jon', 'Q', 'Doe'))
         self.assertEqual(format_name(' ', ''), ('', '', ''))
         self.assertEqual(format_name(None, ''), ('', '', ''))
         self.assertEqual(format_name('', None), ('', '', ''))
         self.assertEqual(format_name(None, None), ('', '', ''))
+        self.assertEqual(format_name(0, 0), ('', '', ''))
         self.assertEqual(format_name('Leland M', 'McDonald'),
                          ('Leland', 'M', 'McDonald'))

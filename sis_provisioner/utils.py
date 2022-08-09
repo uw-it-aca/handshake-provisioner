@@ -129,31 +129,4 @@ def format_name(first_name, surname):
 
     hname = HumanName(full_name)
     hname.capitalize(force=True)
-    last = (hname.last + ' ' + hname.suffix) if hname.suffix else hname.last
-    return hname.first, hname.middle, last
-
-
-def format_first_name(first_name):
-    try:
-        if first_name.isupper():
-            hname = HumanName(first_name)
-            hname.capitalize()
-            first_name = str(hname)
-
-        first, middle = first_name.strip().split(' ', 1)
-    except ValueError:
-        first, middle = first_name, ''
-    except AttributeError:
-        first, middle = '', ''
-    return first.strip(), middle.strip()
-
-
-def format_last_name(last_name):
-    try:
-        if last_name.isupper():
-            hname = HumanName(last_name)
-            hname.capitalize()
-            last_name = str(hname)
-        return last_name.strip()
-    except AttributeError:
-        return ''
+    return hname.first, hname.middle, (hname.last + ' ' + hname.suffix).strip()
