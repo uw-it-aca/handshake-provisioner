@@ -176,3 +176,4 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_name(0, 0), ('', '', ''))
         self.assertEqual(format_name('Leland M', 'McDonald'),
                          ('Leland', 'M', 'McDonald'))
+        self.assertEqual(format_name('Joe', 'Le'), ('Joe', '', 'Le'))
