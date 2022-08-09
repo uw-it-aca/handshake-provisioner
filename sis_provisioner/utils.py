@@ -122,8 +122,8 @@ def get_ethnicity_name(ethnicities):
 
 
 def format_name(first_name, surname):
-    first_name = first_name if first_name else ''
-    surname = surname if surname else ''
+    first_name = str(first_name) if first_name else ''
+    surname = str(surname) if surname else ''
 
     full_name = ' '.join([first_name, surname])
     hname = HumanName(full_name)
