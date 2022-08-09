@@ -129,4 +129,5 @@ def format_name(first_name, surname):
 
     hname = HumanName(full_name)
     hname.capitalize(force=True)
-    return hname.first, hname.middle, (hname.last + ' ' + hname.suffix).strip()
+    last = re.sub('^[a-z]', lambda x: x.group().upper(), hname.last)
+    return hname.first, hname.middle, (last + ' ' + hname.suffix).strip()
