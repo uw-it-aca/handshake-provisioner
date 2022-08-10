@@ -89,19 +89,30 @@ class ImportFileManager(models.Manager):
 
 class ImportFile(models.Model):
     path = models.CharField(max_length=128, null=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField()
     processed_date = models.DateTimeField(null=True)
     processed_status = models.CharField(max_length=128, null=True)
 
     objects = ImportFileManager()
 
+    def create_path(self, name):
+        prefix = getattr(settings, 'FILENAME_PREFIX')
+        if prefix is not None and len(prefix):
+            name = '{}-{}'.format(prefix, name)
+
+        if self.created_date is None:
+            self.created_date = datetime.now()
+
+        self.path = self.created_date.strftime(
+            '%Y/%m/%d/{}-%H%M%S.csv'.format(name))
+        return self.path
+
     def sisimport(self):
         pass
 
     def create(self, academic_term):
-        self.path = datetime.now().strftime(
-            '%Y/%m/%d/{}-%H%M%S-%f.csv'.format(academic_term.name))
-        write_file(self.path, self.generate_csv(academic_term))
+        data = self.generate_csv(academic_term)
+        write_file(self.create_path(academic_term.name), data)
         self.save()
 
     def generate_csv(self, academic_term):

@@ -65,6 +65,9 @@ environmentVariables:
   - name: AWS_S3_REGION_NAME
     value: us-east-1
 
+  - name: FILENAME_PREFIX
+    value: TEST
+
 externalSecrets:
   enabled: true
   secrets:

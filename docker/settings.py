@@ -18,6 +18,8 @@ else:
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
 
+FILENAME_PREFIX = os.getenv('FILENAME_PREFIX', '')
+
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
 
 AXDD_PERSON_CLIENT_ENV = os.getenv('AXDD_PERSON_CLIENT_ENV', 'localdev')
