@@ -53,11 +53,18 @@ def validate_csv(column, filepath, example_path, remove_cols):
     pared_df = matching_df.drop(labels=remove_cols, axis=1)
     pared_df2 = matching_df2.drop(labels=remove_cols, axis=1)
 
-    compare_df = pared_df.compare(pared_df2, align_axis=0)\
-        .rename(index={'self': 'example', 'other': 'generated'})
+    compare_df = pared_df.compare(pared_df2, align_axis=0)
+
+    compare_df_copy = pared_df.compare(pared_df2, align_axis=0,
+                                       keep_equal=True, keep_shape=True)
+    compare_df_copy.drop_duplicates(inplace=True, keep=False)
+    netid_col = compare_df_copy['username']
+    compare_df.insert(0, 'username', netid_col)
+
     compare_df.insert(0, 'from',
                       ['example' if x % 2 else 'generated'
                        for x in range(len(compare_df))])
+
     compare_df.to_csv('comparison.csv', index=False)
 
     print('differences: ', round(len(compare_df) / 2))
