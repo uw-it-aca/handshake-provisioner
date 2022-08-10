@@ -59,6 +59,10 @@ def validate_csv(column, filepath, example_path, remove_cols):
     compare_df_copy.drop_duplicates(inplace=True, keep=False)
     netid_col = compare_df_copy['username']
     compare_df.insert(0, 'username', netid_col)
+
+    compare_df.insert(0, 'from',
+                    ['example' if x % 2 else 'generated'
+                    for x in range(len(compare_df))])
     
     compare_df.to_csv('comparison.csv', index=False)
 
