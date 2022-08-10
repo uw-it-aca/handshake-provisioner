@@ -3,6 +3,7 @@
 
 from django.db import models
 from django.conf import settings
+from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
@@ -101,7 +102,7 @@ class ImportFile(models.Model):
             name = '{}-{}'.format(prefix, name)
 
         if self.created_date is None:
-            self.created_date = datetime.now()
+            self.created_date = datetime.utcnow().replace(tzinfo=utc)
 
         self.path = self.created_date.strftime(
             '%Y/%m/%d/{}-%H%M%S.csv'.format(name))
