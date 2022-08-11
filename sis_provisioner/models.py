@@ -123,7 +123,11 @@ class ImportFile(models.Model):
 
         writer.writerow(settings.HANDSHAKE_CSV_HEADER)
 
+        seen_uwnetids = set()
         for person in get_students_for_handshake(academic_term):
+            if person.uwnetid in seen_uwnetids:
+                continue
+
             if not valid_major_codes(person.student.majors):
                 continue
 
@@ -154,5 +158,7 @@ class ImportFile(models.Model):
                 # 'work_study_eligible',  # TODO: get from visa type
                 # 'primary_education:education_level_name',  # TODO: ?
             ])
+
+            seen_uwnetids.add(person.uwnetid)
 
         return s.getvalue()
