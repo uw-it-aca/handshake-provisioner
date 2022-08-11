@@ -76,7 +76,13 @@ def get_college_for_major(major):
 
 
 def get_synced_college_code(codes):
-    return max(codes) if codes else None
+    if not codes:
+        return None
+    if 'J2' in codes:
+        return 'J2'
+    if 'J' in codes:
+        return 'J'
+    return max(codes)
 
 
 def is_no_sync_college(majors):

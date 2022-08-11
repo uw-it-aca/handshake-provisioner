@@ -75,12 +75,32 @@ class HandshakeUtilsTest(TestCase):
         major3 = Major()
         major3.major_abbr_code = '3'
         major3.college = 'C'
-        self.assertEqual(get_synced_college_name([major, major2]),
-                         'The Information School')
-        self.assertEqual(get_synced_college_name([major, major3]),
+        major4 = Major()
+        major4.major_abbr_code = '0-CSE'
+        major4.college = 'C'
+        self.assertEqual(get_synced_college_name([major]),
                          'College of Engineering')
+        self.assertEqual(get_synced_college_name([major2]),
+                         'The Information School')
         self.assertEqual(get_synced_college_name([major3]),
                          'College of Arts & Sciences')
+        self.assertEqual(get_synced_college_name([major, major2]),
+                         'College of Engineering')
+        self.assertEqual(get_synced_college_name([major, major3]),
+                         'College of Engineering')
+        self.assertEqual(get_synced_college_name([major2, major3]),
+                         'The Information School')
+        self.assertEqual(get_synced_college_name([major, major2, major3]),
+                         'College of Engineering')
+        self.assertEqual(get_synced_college_name([major4, major2, major3]),
+                         'School of Computer Science & Engineering')
+        self.assertEqual(get_synced_college_name([major, major2, major4]),
+                         'School of Computer Science & Engineering')
+        self.assertEqual(get_synced_college_name([major, major4, major3]),
+                         'School of Computer Science & Engineering')
+        self.assertEqual(get_synced_college_name(
+                            [major, major2, major3, major4]
+                         ), 'School of Computer Science & Engineering')
         self.assertEqual(get_synced_college_name([]), None)
 
     def test_titleize(self):
