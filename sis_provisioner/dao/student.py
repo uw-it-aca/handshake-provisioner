@@ -18,17 +18,6 @@ class HandshakePersonClient(UWPersonClient):
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
 
-    def get_applicants(self, academic_term, **kwargs):
-        sqla_persons = self.DB.session.query(self.DB.Person).join(
-            self.DB.Student).join(
-            self.DB.Term, self.DB.Student.academic_term).filter(
-                self.DB.Student.application_status_code == settings.APPLICATION_STATUS,  # noqa
-                self.DB.Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
-                self.DB.Term.year == academic_term.year,
-                self.DB.Term.quarter == academic_term.quarter,
-            )
-        return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
-
 
 def get_students_for_handshake(academic_term):
     kwargs = {
@@ -42,7 +31,4 @@ def get_students_for_handshake(academic_term):
         'include_student_requested_majors': False,
     }
     client = HandshakePersonClient()
-
-    students = client.get_registered_students(academic_term, **kwargs)
-    students.extend(client.get_applicants(academic_term, **kwargs))
-    return students
+    return client.get_registered_students(academic_term, **kwargs)
