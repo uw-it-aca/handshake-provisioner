@@ -86,11 +86,9 @@ def get_synced_college_code(codes):
 
 
 def is_no_sync_college(student):
+    majors = get_majors(student, check_sync=False)
     college_code = get_synced_college_code(
-        [get_college_for_major(major) for major in student.majors] +
-        [get_college_for_major(major) for major in student.pending_majors] +
-        [get_college_for_major(major) for major in student.requested_majors] +
-        [get_college_for_major(major) for major in student.intended_majors]
+        [get_college_for_major(major) for major in majors]
     )
     return college_code == 'E' or college_code == 'V'
 
