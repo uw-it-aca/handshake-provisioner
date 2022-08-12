@@ -87,9 +87,9 @@ def get_synced_college_code(codes):
 
 def is_no_sync_college(student):
     college_code = get_synced_college_code(
-        [get_college_for_major(major) for major in student.majors] + \
-        [get_college_for_major(major) for major in student.pending_majors] + \
-        [get_college_for_major(major) for major in student.requested_majors] + \
+        [get_college_for_major(major) for major in student.majors] +
+        [get_college_for_major(major) for major in student.pending_majors] +
+        [get_college_for_major(major) for major in student.requested_majors] +
         [get_college_for_major(major) for major in student.intended_majors]
     )
     return college_code == 'E' or college_code == 'V'
@@ -99,7 +99,7 @@ def get_majors(student, check_sync=True):
     if check_sync and is_no_sync_college(student):
         return []
     majors = student.majors + student.pending_majors + \
-                student.requested_majors + student.intended_majors
+        student.requested_majors + student.intended_majors
     majors.sort(key=lambda m: m.college, reverse=True)
     # remove duplicate majors
     majors = list(dict.fromkeys(majors))

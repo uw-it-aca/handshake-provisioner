@@ -60,9 +60,9 @@ class HandshakeUtilsTest(TestCase):
         major = self._build_major(major_abbr_code='0-BSE', college='F',
                                   major_full_name='Bachelor of Science')
         major2 = self._build_major(major_abbr_code='1', college='A',
-                                  major_full_name='Master of Science')
+                                   major_full_name='Master of Science')
         major3 = self._build_major(major_abbr_code='2', college='E',
-                                  major_full_name='Business Administration')
+                                   major_full_name='Business Administration')
         student1 = self._build_student(majors=[major, major2])
         student2 = self._build_student(majors=[])
         student3 = self._build_student(majors=[major])
