@@ -8,17 +8,47 @@ from sis_provisioner.utils import *
 
 @override_settings()
 class HandshakeUtilsTest(TestCase):
-    def test_valid_major_codes(self):
-        excluded_major = Major()
-        excluded_major.major_abbr_code = '0-GEMBA'
+    def _build_major(self, major_abbr_code=None, college=None,
+                     major_full_name=None):
         major = Major()
-        major.major_abbr_code = '1'
-        major2 = Major()
-        major2.major_abbr_code = '2'
-        majors_1 = [major, excluded_major]
-        majors_2 = [major, major2]
-        self.assertFalse(valid_major_codes(majors_1))
-        self.assertTrue(valid_major_codes(majors_2))
+        major.major_abbr_code = major_abbr_code
+        major.college = college
+        major.major_full_name = major_full_name
+        return major
+
+    def _build_student(self, majors=[], pending_majors=[], requested_majors=[],
+                       intended_majors=[], class_code=None):
+        student = Student()
+        student.majors = majors
+        student.pending_majors = pending_majors
+        student.requested_majors = requested_majors
+        student.intended_majors = intended_majors
+        student.class_code = class_code
+        return student
+
+    def test_get_majors(self):
+        major0 = self._build_major(major_abbr_code='0-GEMBA')
+        major1 = self._build_major(major_abbr_code='A')
+        major2 = self._build_major(major_abbr_code='B')
+        major3 = self._build_major(major_abbr_code='C')
+
+        student = self._build_student(majors=[major0])
+        self.assertEqual(len(get_majors(student)), 0)
+
+        student = self._build_student(pending_majors=[major2])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(requested_majors=[major2])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major0, major2])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major1, major2, major3])
+        self.assertEqual(len(get_majors(student)), 3)
+
+        student = self._build_student(majors=[major0, major1, major2, major3])
+        self.assertEqual(len(get_majors(student)), 3)
 
     def test_is_athlete(self):
         self.assertTrue(is_athlete('30'))
@@ -30,9 +60,7 @@ class HandshakeUtilsTest(TestCase):
         self.assertFalse(is_veteran('0'))
 
     def test_get_college_for_major(self):
-        major = Major()
-        major.major_abbr_code = '0-BSE'
-        major.college = 'C'
+        major = self._build_major(major_abbr_code='0-BSE', college='C')
         self.assertEqual(get_college_for_major(major), 'J')
         major.major_abbr_code = '2'
         major.college = 'S'
@@ -44,18 +72,13 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_code(None), None)
 
     def test_get_major_names(self):
-        major = Major()
-        major.major_full_name = 'Bachelor of Science'
-        major.college = 'F'
-        major.major_abbr_code = '0-BSE'
-        major2 = Major()
-        major2.major_full_name = 'Master of Science'
-        major2.college = 'A'
-        major2.major_abbr_code = '1'
-        major3 = Major()
-        major3.major_full_name = 'Business Administration'
-        major3.college = 'E'
-        major3.major_abbr_code = '2'
+        major = self._build_major(major_abbr_code='0-BSE', college='F',
+                                  major_full_name='Bachelor of Science')
+        major2 = self._build_major(major_abbr_code='1', college='A',
+                                   major_full_name='Master of Science')
+        major3 = self._build_major(major_abbr_code='2', college='E',
+                                   major_full_name='Business Administration')
+
         self.assertEqual(get_major_names([major, major2]),
                          'Bachelor of Science;Master of Science')
         self.assertEqual(get_major_names([]), '')
@@ -64,20 +87,19 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_major_names([major, major3]),
                          'Bachelor of Science;Business Administration')
         self.assertEqual(get_major_names([major]), 'Bachelor of Science')
+        self.assertEqual(get_major_names([major, major3, major2]),
+                         'Bachelor of Science;Business Administration;'
+                         'Master of Science')
+        self.assertEqual(get_major_names([major, major3, major2]),
+                         'Bachelor of Science;Business Administration;'
+                         'Master of Science')
 
     def test_get_synced_college_name(self):
-        major = Major()
-        major.major_abbr_code = '0-BSE'
-        major.college = 'C'
-        major2 = Major()
-        major2.major_abbr_code = '2'
-        major2.college = 'S'
-        major3 = Major()
-        major3.major_abbr_code = '3'
-        major3.college = 'C'
-        major4 = Major()
-        major4.major_abbr_code = '0-CSE'
-        major4.college = 'C'
+        major = self._build_major(major_abbr_code='0-BSE', college='C')
+        major2 = self._build_major(major_abbr_code='2', college='S')
+        major3 = self._build_major(major_abbr_code='3', college='C')
+        major4 = self._build_major(major_abbr_code='0-CSE', college='C')
+
         self.assertEqual(get_synced_college_name([major]),
                          'College of Engineering')
         self.assertEqual(get_synced_college_name([major2]),
@@ -88,7 +110,7 @@ class HandshakeUtilsTest(TestCase):
                          'College of Engineering')
         self.assertEqual(get_synced_college_name([major, major3]),
                          'College of Engineering')
-        self.assertEqual(get_synced_college_name([major2, major3]),
+        self.assertEqual(get_synced_college_name([major3, major2]),
                          'The Information School')
         self.assertEqual(get_synced_college_name([major, major2, major3]),
                          'College of Engineering')
@@ -99,8 +121,8 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_name([major, major4, major3]),
                          'School of Computer Science & Engineering')
         self.assertEqual(get_synced_college_name(
-                            [major, major2, major3, major4]
-                         ), 'School of Computer Science & Engineering')
+            [major, major2, major4, major3]),
+            'School of Computer Science & Engineering')
         self.assertEqual(get_synced_college_name([]), None)
 
     def test_titleize(self):
@@ -130,44 +152,29 @@ class HandshakeUtilsTest(TestCase):
                          'A New, Improved Title')
 
     def test_get_class_desc(self):
-        major1 = Major()
-        major1.major_abbr_code = '0'
-        major1.college = 'C'
-        major2 = Major()
-        major2.major_abbr_code = '0-EMBA'
-        major2.college = 'E'
-        major3 = Major()
-        major3.major_abbr_code = '0-EMBA'
-        major3.college = 'F'
+        major1 = self._build_major(major_abbr_code='0', college='C')
+        major2 = self._build_major(major_abbr_code='0-EMBA', college='E')
+        major3 = self._build_major(major_abbr_code='0-EMBA', college='F')
 
-        student = Student()
-        student.class_code = '1'
-        student.majors = [major1]
+        majors = [major1]
+        self.assertEqual(get_class_desc('1', majors), 'Freshman')
+        self.assertEqual(get_class_desc('2', majors), 'Sophomore')
+        self.assertEqual(get_class_desc('3', majors), 'Junior')
+        self.assertEqual(get_class_desc('4', majors), 'Senior')
+        self.assertEqual(get_class_desc('5', majors), 'Senior')
+        self.assertEqual(get_class_desc('8', majors), 'Masters')
 
-        self.assertEqual(get_class_desc(student), 'Freshman')
-        student.class_code = '2'
-        self.assertEqual(get_class_desc(student), 'Sophomore')
-        student.class_code = '3'
-        self.assertEqual(get_class_desc(student), 'Junior')
-        student.class_code = '4'
-        self.assertEqual(get_class_desc(student), 'Senior')
-        student.class_code = '5'
-        self.assertEqual(get_class_desc(student), 'Senior')
-        student.class_code = '8'
-        self.assertEqual(get_class_desc(student), 'Masters')
-        student.majors = [major2]
-        self.assertEqual(get_class_desc(student),
+        majors = [major2]
+        self.assertEqual(get_class_desc('8', majors),
                          'Masters of Business Administration')
-        student.majors = [major2, major3]
-        self.assertEqual(get_class_desc(student),
-                         'Masters')
-        student.majors = [major1, major2]
-        self.assertEqual(get_class_desc(student),
+        majors = [major2, major3]
+        self.assertEqual(get_class_desc('8', majors), 'Masters')
+
+        majors = [major1, major2]
+        self.assertEqual(get_class_desc('8', majors),
                          'Masters of Business Administration')
-        student.class_code = '9'
-        self.assertEqual(get_class_desc(student), None)
-        student.class_code = 1
-        self.assertEqual(get_class_desc(student), None)
+        self.assertEqual(get_class_desc('9', majors), None)
+        self.assertEqual(get_class_desc(1, majors), None)
 
     def test_format_student_number(self):
         self.assertEqual(format_student_number('1234567'), '1234567')
