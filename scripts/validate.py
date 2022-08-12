@@ -67,7 +67,9 @@ def validate_csv(column, filepath, example_path, remove_cols):
 
     compare_df.to_csv('comparison.csv', index=False)
 
-    print('differences: ', round(len(compare_df) / 2))
+    print('row differences: ', round(len(compare_df) / 2))
+    print('cell differences: ', compare_df.count().drop(
+            labels=['from', 'username']).sum())
 
 
 if __name__ == '__main__':
