@@ -31,7 +31,6 @@ UW_PERSON_DB_PORT = os.getenv('UW_PERSON_DB_PORT', '5432')
 
 # Settings that control student data provisioning
 ENROLL_STATUS = '12'
-APPLICATION_STATUS = '16'
 INCLUDE_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
 INCLUDE_CAMPUS_CODES = ['0', '1', '0.0', '1.0']
 EXCLUDE_MAJOR_CODES = ['0-GEMBA']
