@@ -27,13 +27,28 @@ class HandshakeUtilsTest(TestCase):
         return student
 
     def test_get_majors(self):
-        excluded_major = self._build_major(major_abbr_code='0-GEMBA')
-        major = self._build_major(major_abbr_code='1')
-        major2 = self._build_major(major_abbr_code='2')
-        majors_1 = [major, excluded_major]
-        majors_2 = [major, major2]
+        major0 = self._build_major(major_abbr_code='0-GEMBA')
+        major1 = self._build_major(major_abbr_code='A')
+        major2 = self._build_major(major_abbr_code='B')
+        major3 = self._build_major(major_abbr_code='C')
 
-        # TODO add tests
+        student = self._build_student(majors=[major0])
+        self.assertEqual(len(get_majors(student)), 0)
+
+        student = self._build_student(pending_majors=[major2])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(requested_majors=[major2])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major0, major2])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major1, major2, major3])
+        self.assertEqual(len(get_majors(student)), 3)
+
+        student = self._build_student(majors=[major0, major1, major2, major3])
+        self.assertEqual(len(get_majors(student)), 3)
 
     def test_is_athlete(self):
         self.assertTrue(is_athlete('30'))
