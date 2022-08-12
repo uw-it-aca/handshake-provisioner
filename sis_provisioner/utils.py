@@ -98,7 +98,6 @@ def get_majors(student, check_sync=True):
         return []
     majors = student.majors + student.pending_majors + \
         student.requested_majors + student.intended_majors
-    majors.sort(key=lambda m: m.college, reverse=True)
     # remove duplicate majors
     majors = list(dict.fromkeys(majors))
     # return max 3 majors
