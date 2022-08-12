@@ -8,13 +8,28 @@ from sis_provisioner.utils import *
 
 @override_settings()
 class HandshakeUtilsTest(TestCase):
-    def test_valid_major_codes(self):
-        excluded_major = Major()
-        excluded_major.major_abbr_code = '0-GEMBA'
+    def _build_major(self, major_abbr_code=None, college=None,
+                     major_full_name=None):
         major = Major()
-        major.major_abbr_code = '1'
-        major2 = Major()
-        major2.major_abbr_code = '2'
+        major.major_abbr_code = major_abbr_code
+        major.college = college
+        major.major_full_name = major_full_name
+        return major
+
+    def _build_student(self, majors=[], pending_majors=[], requested_majors=[],
+                       intended_majors=[], class_code=None):
+        student = Student()
+        student.majors = majors
+        student.pending_majors = pending_majors
+        student.requested_majors = requested_majors
+        student.intended_majors = intended_majors
+        student.class_code = class_code
+        return student
+
+    def test_valid_major_codes(self):
+        excluded_major = self._build_major(major_abbr_code='0-GEMBA')
+        major = self._build_major(major_abbr_code='1')
+        major2 = self._build_major(major_abbr_code='2')
         majors_1 = [major, excluded_major]
         majors_2 = [major, major2]
         self.assertFalse(valid_major_codes(majors_1))
@@ -30,9 +45,7 @@ class HandshakeUtilsTest(TestCase):
         self.assertFalse(is_veteran('0'))
 
     def test_get_college_for_major(self):
-        major = Major()
-        major.major_abbr_code = '0-BSE'
-        major.college = 'C'
+        major = self._build_major(major_abbr_code='0-BSE', college='C')
         self.assertEqual(get_college_for_major(major), 'J')
         major.major_abbr_code = '2'
         major.college = 'S'
@@ -44,64 +57,81 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_code(None), None)
 
     def test_get_major_names(self):
-        major = Major()
-        major.major_full_name = 'Bachelor of Science'
-        major.college = 'F'
-        major.major_abbr_code = '0-BSE'
-        major2 = Major()
-        major2.major_full_name = 'Master of Science'
-        major2.college = 'A'
-        major2.major_abbr_code = '1'
-        major3 = Major()
-        major3.major_full_name = 'Business Administration'
-        major3.college = 'E'
-        major3.major_abbr_code = '2'
-        self.assertEqual(get_major_names([major, major2]),
+        major = self._build_major(major_abbr_code='0-BSE', college='F',
+                                  major_full_name='Bachelor of Science')
+        major2 = self._build_major(major_abbr_code='1', college='A',
+                                  major_full_name='Master of Science')
+        major3 = self._build_major(major_abbr_code='2', college='E',
+                                  major_full_name='Business Administration')
+        student1 = self._build_student(majors=[major, major2])
+        student2 = self._build_student(majors=[])
+        student3 = self._build_student(majors=[major])
+        student4 = self._build_student(majors=[major3])
+        student5 = self._build_student(majors=[major, major3])
+        student6 = self._build_student(majors=[], pending_majors=[major])
+        student7 = self._build_student(majors=[major], pending_majors=[major3],
+                                       requested_majors=[major2])
+        student8 = self._build_student(majors=[major], pending_majors=[major3],
+                                       requested_majors=[major],
+                                       intended_majors=[major2])
+
+        self.assertEqual(get_major_names(student1),
                          'Bachelor of Science;Master of Science')
-        self.assertEqual(get_major_names([]), '')
-        self.assertEqual(get_major_names([major]), 'Bachelor of Science')
-        self.assertEqual(get_major_names([major3]), '')
-        self.assertEqual(get_major_names([major, major3]),
+        self.assertEqual(get_major_names(student2), '')
+        self.assertEqual(get_major_names(student3), 'Bachelor of Science')
+        self.assertEqual(get_major_names(student4), '')
+        self.assertEqual(get_major_names(student5),
                          'Bachelor of Science;Business Administration')
-        self.assertEqual(get_major_names([major]), 'Bachelor of Science')
+        self.assertEqual(get_major_names(student6), 'Bachelor of Science')
+        self.assertEqual(get_major_names(student7),
+                         'Bachelor of Science;Business Administration;'
+                         'Master of Science')
+        self.assertEqual(get_major_names(student8),
+                         'Bachelor of Science;Business Administration;'
+                         'Master of Science')
 
     def test_get_synced_college_name(self):
-        major = Major()
-        major.major_abbr_code = '0-BSE'
-        major.college = 'C'
-        major2 = Major()
-        major2.major_abbr_code = '2'
-        major2.college = 'S'
-        major3 = Major()
-        major3.major_abbr_code = '3'
-        major3.college = 'C'
-        major4 = Major()
-        major4.major_abbr_code = '0-CSE'
-        major4.college = 'C'
-        self.assertEqual(get_synced_college_name([major]),
+        major = self._build_major(major_abbr_code='0-BSE', college='C')
+        major2 = self._build_major(major_abbr_code='2', college='S')
+        major3 = self._build_major(major_abbr_code='3', college='C')
+        major4 = self._build_major(major_abbr_code='0-CSE', college='C')
+
+        student1 = self._build_student(majors=[major])
+        student2 = self._build_student(majors=[major2])
+        student3 = self._build_student(majors=[major3])
+        student4 = self._build_student(majors=[major, major2])
+        student5 = self._build_student(majors=[major, major3])
+        student6 = self._build_student(majors=[major3, major2])
+        student7 = self._build_student(majors=[major, major2, major3])
+        student8 = self._build_student(majors=[major4, major2, major3])
+        student9 = self._build_student(majors=[major, major2, major4])
+        student10 = self._build_student(majors=[major, major4, major3])
+        student11 = self._build_student(majors=[major, major2, major4, major3])
+        student12 = self._build_student(majors=[])
+
+        self.assertEqual(get_synced_college_name(student1),
                          'College of Engineering')
-        self.assertEqual(get_synced_college_name([major2]),
+        self.assertEqual(get_synced_college_name(student2),
                          'The Information School')
-        self.assertEqual(get_synced_college_name([major3]),
+        self.assertEqual(get_synced_college_name(student3),
                          'College of Arts & Sciences')
-        self.assertEqual(get_synced_college_name([major, major2]),
+        self.assertEqual(get_synced_college_name(student4),
                          'College of Engineering')
-        self.assertEqual(get_synced_college_name([major, major3]),
+        self.assertEqual(get_synced_college_name(student5),
                          'College of Engineering')
-        self.assertEqual(get_synced_college_name([major2, major3]),
+        self.assertEqual(get_synced_college_name(student6),
                          'The Information School')
-        self.assertEqual(get_synced_college_name([major, major2, major3]),
+        self.assertEqual(get_synced_college_name(student7),
                          'College of Engineering')
-        self.assertEqual(get_synced_college_name([major4, major2, major3]),
+        self.assertEqual(get_synced_college_name(student8),
                          'School of Computer Science & Engineering')
-        self.assertEqual(get_synced_college_name([major, major2, major4]),
+        self.assertEqual(get_synced_college_name(student9),
                          'School of Computer Science & Engineering')
-        self.assertEqual(get_synced_college_name([major, major4, major3]),
+        self.assertEqual(get_synced_college_name(student10),
                          'School of Computer Science & Engineering')
-        self.assertEqual(get_synced_college_name(
-                            [major, major2, major3, major4]
-                         ), 'School of Computer Science & Engineering')
-        self.assertEqual(get_synced_college_name([]), None)
+        self.assertEqual(get_synced_college_name(student11),
+                         'School of Computer Science & Engineering')
+        self.assertEqual(get_synced_college_name(student12), None)
 
     def test_titleize(self):
         self.assertRaises(TypeError, titleize, None)
@@ -130,19 +160,11 @@ class HandshakeUtilsTest(TestCase):
                          'A New, Improved Title')
 
     def test_get_class_desc(self):
-        major1 = Major()
-        major1.major_abbr_code = '0'
-        major1.college = 'C'
-        major2 = Major()
-        major2.major_abbr_code = '0-EMBA'
-        major2.college = 'E'
-        major3 = Major()
-        major3.major_abbr_code = '0-EMBA'
-        major3.college = 'F'
+        major1 = self._build_major(major_abbr_code='0', college='C')
+        major2 = self._build_major(major_abbr_code='0-EMBA', college='E')
+        major3 = self._build_major(major_abbr_code='0-EMBA', college='F')
 
-        student = Student()
-        student.class_code = '1'
-        student.majors = [major1]
+        student = self._build_student(class_code='1', majors=[major1])
 
         self.assertEqual(get_class_desc(student), 'Freshman')
         student.class_code = '2'
