@@ -35,14 +35,6 @@ def titleize(string, andrepl='and'):
     return titled_string
 
 
-def valid_major_codes(majors):
-    excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
-    for major in majors:
-        if major.major_abbr_code in excluded_codes:
-            return False
-    return True
-
-
 def is_athlete(special_program_code):
     athlete_codes = getattr(settings, 'ATHLETE_CODES', [])
     return special_program_code in athlete_codes
@@ -52,13 +44,12 @@ def is_veteran(veteran_benefit_code):
     return veteran_benefit_code != '0'
 
 
-def get_class_desc(student):
-    class_code = student.class_code
-    majors = get_majors(student, check_sync=False)
+def get_class_desc(class_code, majors):
     if class_code not in getattr(settings, 'INCLUDE_CLASS_CODES', []):
         return None
-    if any('MBA' in major.major_abbr_code for major in majors) and \
-            get_synced_college_name(student) == 'Foster School of Business':
+
+    if (any('MBA' in major.major_abbr_code for major in majors) and
+            get_synced_college_name(majors) == 'Foster School of Business'):
         return 'Masters of Business Administration'
     return getattr(settings, 'CLASS_CODES', {}).get(class_code, None)
 
@@ -85,40 +76,36 @@ def get_synced_college_code(codes):
     return max(codes)
 
 
-def is_no_sync_college(student):
-    majors = get_majors(student, check_sync=False)
+def is_no_sync_college(majors):
     college_code = get_synced_college_code(
         [get_college_for_major(major) for major in majors]
     )
     return college_code == 'E' or college_code == 'V'
 
 
-def get_majors(student, check_sync=True):
-    if check_sync and is_no_sync_college(student):
-        return []
-    majors = student.majors + student.pending_majors + \
-        student.requested_majors + student.intended_majors
-    # remove duplicate majors
-    majors = list(dict.fromkeys(majors))
-    # return max 3 majors
-    return majors[:3] if len(majors) > 2 else majors
+def get_majors(student):
+    excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
+    majors = {}
+    for major in (student.majors + student.pending_majors +
+                  student.requested_majors + student.intended_majors):
+        # remove duplicates, skipping the excluded majors
+        if major.major_abbr_code not in excluded_codes:
+            majors[major.major_abbr_code] = major
+    return majors.values()
 
 
-def get_major_names(student):
-    majors = get_majors(student)
-    return ';'.join([m.major_full_name for m in majors])
+def get_major_names(majors):
+    if not is_no_sync_college(majors):
+        return ';'.join([m.major_full_name for m in majors])
+    return ''
 
 
-def get_primary_major_name(student):
-    majors = get_majors(student)
-    try:
+def get_primary_major_name(majors):
+    if len(majors) and not is_no_sync_college(majors):
         return majors[0].major_full_name
-    except (IndexError, AttributeError):
-        pass
 
 
-def get_synced_college_name(student):
-    majors = get_majors(student, check_sync=False)
+def get_synced_college_name(majors):
     college_code = get_synced_college_code(
         [get_college_for_major(major) for major in majors]
     )

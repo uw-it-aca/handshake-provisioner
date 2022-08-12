@@ -7,7 +7,7 @@ from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
-    valid_major_codes, get_major_names, get_primary_major_name, is_athlete,
+    get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_synced_college_name, get_ethnicity_name, get_class_desc,
     format_student_number, format_name)
 from dateutil.relativedelta import relativedelta
@@ -124,7 +124,9 @@ class ImportFile(models.Model):
         writer.writerow(settings.HANDSHAKE_CSV_HEADER)
 
         for person in get_students_for_handshake(academic_term):
-            if not valid_major_codes(person.student.majors):
+            majors = get_majors(person.student)
+
+            if not len(majors):
                 continue
 
             # TODO: don't write for students on requested account deletion list
@@ -136,16 +138,16 @@ class ImportFile(models.Model):
                 person.uwnetid,
                 person.uwnetid,
                 format_student_number(person.student.student_number),
-                get_class_desc(person.student),
+                get_class_desc(person.student.class_code, majors),
                 last_name,
                 first_name,
                 middle_name,
                 person.preferred_first_name,
-                get_synced_college_name(person.student),
+                get_synced_college_name(majors),
                 '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
                 person.student.campus_desc,
-                get_major_names(person.student),
-                get_primary_major_name(person.student),
+                get_major_names(majors),
+                get_primary_major_name(majors),
                 'TRUE',
                 # person.student.gender,
                 # get_ethnicity_name(person.student.ethnicities),
