@@ -67,8 +67,6 @@ def get_college_for_major(major):
 
 
 def get_synced_college_code(codes: list):
-    if None in codes:
-        raise TypeError('None is not a valid college code')
     if not codes:
         return None
     if 'J2' in codes:
