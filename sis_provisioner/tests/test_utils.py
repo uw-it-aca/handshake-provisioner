@@ -50,6 +50,12 @@ class HandshakeUtilsTest(TestCase):
         student = self._build_student(majors=[major0, major1, major2, major3])
         self.assertEqual(len(get_majors(student)), 3)
 
+        student = self._build_student(majors=[None, None])
+        self.assertEqual(len(get_majors(student)), 0)
+
+        student = self._build_student(majors=[major1, None])
+        self.assertEqual(len(get_majors(student)), 1)
+
     def test_is_athlete(self):
         self.assertTrue(is_athlete('30'))
         self.assertFalse(is_athlete('13'))
@@ -65,11 +71,14 @@ class HandshakeUtilsTest(TestCase):
         major.major_abbr_code = '2'
         major.college = 'S'
         self.assertEqual(get_college_for_major(major), 'S')
+        major.college = None
+        self.assertEqual(get_college_for_major(major), None)
 
     def test_get_synced_college_code(self):
         codes = ['A', 'B', 'C']
         self.assertEqual(get_synced_college_code(codes), 'C')
-        self.assertEqual(get_synced_college_code(None), None)
+        self.assertEqual(get_synced_college_code(codes + [None]), 'C')
+        self.assertEqual(get_synced_college_code([None, None]), None)
 
     def test_get_major_names(self):
         major = self._build_major(major_abbr_code='0-BSE', college='F',
@@ -93,6 +102,11 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_major_names([major, major3, major2]),
                          'Bachelor of Science;Business Administration;'
                          'Master of Science')
+        major2.major_full_name = None
+        major.college = None
+        major3.major_abbr_code = None
+        self.assertEqual(get_major_names([major, major3, major2]),
+                         'Bachelor of Science;Business Administration')
 
     def test_get_synced_college_name(self):
         major = self._build_major(major_abbr_code='0-BSE', college='C')

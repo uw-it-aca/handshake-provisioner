@@ -66,7 +66,10 @@ def get_college_for_major(major):
     return major.college
 
 
-def get_synced_college_code(codes):
+def get_synced_college_code(codes: list):
+    # remove Nones from codes
+    codes = [c for c in codes if c is not None]
+
     if not codes:
         return None
     if 'J2' in codes:
@@ -88,15 +91,19 @@ def get_majors(student):
     majors = {}
     for major in (student.majors + student.pending_majors +
                   student.requested_majors + student.intended_majors):
-        # remove duplicates, skipping the excluded majors
-        if major.major_abbr_code not in excluded_codes:
-            majors[major.major_abbr_code] = major
+        # remove duplicates and Nones, skipping the excluded majors
+        try:
+            if major.major_abbr_code not in excluded_codes:
+                majors[major.major_abbr_code] = major
+        except AttributeError:
+            pass
     return majors.values()
 
 
 def get_major_names(majors):
     if not is_no_sync_college(majors):
-        return ';'.join([m.major_full_name for m in majors])
+        return ';'.join([m.major_full_name for m in majors
+                         if m.major_full_name is not None])
     return ''
 
 
