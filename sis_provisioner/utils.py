@@ -3,6 +3,7 @@
 
 from django.conf import settings
 from nameparser import HumanName
+from logging import getLogger
 import re
 
 RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
@@ -10,6 +11,8 @@ RE_UNTITLEIZE = re.compile(r'^(?:and|for|of|the|w)$', re.I)
 RE_TITLE_ABBR = re.compile(r'^(?:bs|ms)$', re.I)
 
 STUDENT_NUM_LEN = 7
+
+logger = getLogger(__name__)
 
 
 def titleize(string, andrepl='and'):
@@ -88,9 +91,16 @@ def get_majors(student):
     majors = {}
     for major in (student.majors + student.pending_majors +
                   student.requested_majors + student.intended_majors):
+
+        if major.major_full_name is None or major.college is None:
+            logger.warning('MISSING data for major: {}'.format(
+                major.major_abbr_code))
+            continue
+
         # remove duplicates, skipping the excluded majors
         if major.major_abbr_code not in excluded_codes:
             majors[major.major_abbr_code] = major
+
     return majors.values()
 
 
