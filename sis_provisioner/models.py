@@ -126,9 +126,6 @@ class ImportFile(models.Model):
         for person in get_students_for_handshake(academic_term):
             majors = get_majors(person.student)
 
-            if not len(majors):
-                continue
-
             # TODO: don't write for students on requested account deletion list
 
             first_name, middle_name, last_name = format_name(person.first_name,

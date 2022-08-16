@@ -28,7 +28,7 @@ class HandshakeUtilsTest(TestCase):
 
     def test_get_majors(self):
         major0 = self._build_major(
-            major_abbr_code='0-GEMBA', major_full_name='Major 0', college='J')
+            major_abbr_code='GEMBA', major_full_name='Major 0', college='J')
         major1 = self._build_major(
             major_abbr_code='A', major_full_name='Major 1', college='A1')
         major2 = self._build_major(
@@ -74,7 +74,7 @@ class HandshakeUtilsTest(TestCase):
         self.assertFalse(is_veteran('0'))
 
     def test_get_college_for_major(self):
-        major = self._build_major(major_abbr_code='0-BSE', college='C')
+        major = self._build_major(major_abbr_code='BSE', college='C')
         self.assertEqual(get_college_for_major(major), 'J')
         major.major_abbr_code = '2'
         major.college = 'S'
@@ -86,7 +86,7 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_code(None), None)
 
     def test_get_major_names(self):
-        major = self._build_major(major_abbr_code='0-BSE', college='F',
+        major = self._build_major(major_abbr_code='BSE', college='F',
                                   major_full_name='Bachelor of Science')
         major2 = self._build_major(major_abbr_code='1', college='A',
                                    major_full_name='Master of Science')
@@ -109,10 +109,10 @@ class HandshakeUtilsTest(TestCase):
                          'Master of Science')
 
     def test_get_synced_college_name(self):
-        major = self._build_major(major_abbr_code='0-BSE', college='C')
+        major = self._build_major(major_abbr_code='BSE', college='C')
         major2 = self._build_major(major_abbr_code='2', college='S')
         major3 = self._build_major(major_abbr_code='3', college='C')
-        major4 = self._build_major(major_abbr_code='0-CSE', college='C')
+        major4 = self._build_major(major_abbr_code='CSE', college='C')
 
         self.assertEqual(get_synced_college_name([major]),
                          'College of Engineering')
