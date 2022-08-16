@@ -93,7 +93,7 @@ def get_majors(student):
                   student.requested_majors + student.intended_majors):
 
         if major.major_full_name is None or major.college is None:
-            logger.info('MISSING data for major: {}'.format(
+            logger.warning('MISSING data for major: {}'.format(
                 major.major_abbr_code))
             continue
 
