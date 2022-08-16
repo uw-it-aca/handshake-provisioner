@@ -46,9 +46,6 @@ class HandshakeUtilsTest(TestCase):
         student = self._build_student(pending_majors=[major2])
         self.assertEqual(len(get_majors(student)), 1)
 
-        student = self._build_student(requested_majors=[major2])
-        self.assertEqual(len(get_majors(student)), 1)
-
         student = self._build_student(majors=[major0, major2])
         self.assertEqual(len(get_majors(student)), 1)
 
