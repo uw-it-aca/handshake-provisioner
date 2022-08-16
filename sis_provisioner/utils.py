@@ -89,8 +89,7 @@ def is_no_sync_college(majors):
 def get_majors(student):
     excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
     majors = {}
-    for major in (student.majors + student.pending_majors +
-                  student.requested_majors + student.intended_majors):
+    for major in student.majors:
 
         if major.major_full_name is None or major.college is None:
             logger.warning('MISSING data for major: {}'.format(
