@@ -101,7 +101,7 @@ def get_majors(student):
         if major.major_abbr_code not in excluded_codes:
             majors[major.major_abbr_code] = major
 
-    return majors.values()
+    return list(majors.values())
 
 
 def get_major_names(majors):
