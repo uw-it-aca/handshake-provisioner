@@ -2,6 +2,10 @@ ARG DJANGO_CONTAINER_VERSION=1.4.1
 
 FROM gcr.io/uwit-mci-axdd/django-container:${DJANGO_CONTAINER_VERSION} as app-container
 
+USER root
+
+RUN apt-get update && apt-get install vim -y
+
 USER acait
 
 ADD --chown=acait:acait . /app/
