@@ -86,7 +86,7 @@ class AcademicTerm():
 
 
 class ImportFileManager(models.Manager):
-    def find_by_requires_import(self):
+    def import_file(self):
         try:
             import_file = super().get_queryset().latest('created_date')
             import_file.sisimport()
