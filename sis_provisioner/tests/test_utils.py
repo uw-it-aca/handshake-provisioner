@@ -116,7 +116,8 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_primary_major_name([major, major2]),
                          'Bachelor of Science')
         self.assertEqual(get_primary_major_name([]), None)
-        self.assertEqual(get_primary_major_name([major]), 'Bachelor of Science')
+        self.assertEqual(get_primary_major_name([major]),
+                         'Bachelor of Science')
         self.assertEqual(get_primary_major_name([major3]), None)
         self.assertEqual(get_primary_major_name([major, major3]),
                          'Bachelor of Science')
@@ -134,7 +135,7 @@ class HandshakeUtilsTest(TestCase):
                                    major_full_name='Master of Science')
         major3 = self._build_major(major_abbr_code='2', college='E',
                                    major_full_name='Business Administration')
-        
+
         self.assertFalse(is_no_sync_college([major, major2]))
         self.assertFalse(is_no_sync_college([]))
         self.assertFalse(is_no_sync_college([major]))
