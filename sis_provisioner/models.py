@@ -5,7 +5,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file
-from sis_provisioner.dao.handshake import write_file as write_handshake
+from sis_provisioner.dao.handshake import HandshakeStorage
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
@@ -118,7 +118,7 @@ class ImportFile(models.Model):
     def sisimport(self):
         data = read_file(self.path)
 
-        response = write_handshake(self.path, data)
+        HandshakeStorage().write_file(self.path, data)
 
         self.processed_date = datetime.utcnow().replace(tzinfo=utc)
         self.processed_status = 200
