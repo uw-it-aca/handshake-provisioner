@@ -3,28 +3,21 @@
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from storages.backends.s3boto import S3BotoStorage
+from storages.backends.s3boto3 import S3Boto3Storage
 
 
-class HandshakeStorage():
-    @property
-    def storage(self):
-        if not hasattr(self, '_storage'):
-            self._storage = S3BotoStorage(
-                'bucket_name': getattr(settings, 'AWS_STORAGE_BUCKET_NAME'),
-                'default_acl': None
-            )
-        return self._storage
+def read_file(path):
+    storage = S3Boto3Storage()
+    if not storage.exists(path):
+        raise ObjectDoesNotExist()
 
-    def read_file(self, path):
-        if not self.storage.exists(path):
-            raise ObjectDoesNotExist()
+    with storage.open(path, mode='r') as f:
+        content = f.read()
 
-        with self.storage.open(path, mode='r') as f:
-            content = f.read()
+    return content
 
-        return content
 
-    def write_file(self, path, data):
-        with self.storage.open(path, mode='wb') as f:
-            f.write(data)
+def write_file(path, data):
+    storage = S3Boto3Storage()
+    with storage.open(path, mode='wb') as f:
+        f.write(data)
