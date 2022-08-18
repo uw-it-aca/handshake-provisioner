@@ -32,6 +32,11 @@ class AcademicTerm():
         self._date = date
         self.current()
 
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, AcademicTerm):
+            return False
+        return self.year == __o.year and self.quarter == __o.quarter
+
     def current(self):
         year, quarter = self._term_from_datetime(self._date)
         self.year = year
