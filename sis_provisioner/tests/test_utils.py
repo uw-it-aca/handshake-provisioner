@@ -105,6 +105,45 @@ class HandshakeUtilsTest(TestCase):
                          'Bachelor of Science;Business Administration;'
                          'Master of Science')
 
+    def test_get_primary_major_name(self):
+        major = self._build_major(major_abbr_code='BSE', college='F',
+                                  major_full_name='Bachelor of Science')
+        major2 = self._build_major(major_abbr_code='1', college='A',
+                                   major_full_name='Master of Science')
+        major3 = self._build_major(major_abbr_code='2', college='E',
+                                   major_full_name='Business Administration')
+
+        self.assertEqual(get_primary_major_name([major, major2]),
+                         'Bachelor of Science')
+        self.assertEqual(get_primary_major_name([]), None)
+        self.assertEqual(get_primary_major_name([major]), 'Bachelor of Science')
+        self.assertEqual(get_primary_major_name([major3]), None)
+        self.assertEqual(get_primary_major_name([major, major3]),
+                         'Bachelor of Science')
+        self.assertEqual(get_primary_major_name([major, major3, major2]),
+                         'Bachelor of Science')
+        major3.college = 'F'
+        self.assertEqual(get_primary_major_name([major3, major2]),
+                         'Business Administration')
+        self.assertEqual(get_primary_major_name([major2]), 'Master of Science')
+
+    def test_is_no_sync_college(self):
+        major = self._build_major(major_abbr_code='BSE', college='F',
+                                  major_full_name='Bachelor of Science')
+        major2 = self._build_major(major_abbr_code='1', college='A',
+                                   major_full_name='Master of Science')
+        major3 = self._build_major(major_abbr_code='2', college='E',
+                                   major_full_name='Business Administration')
+        
+        self.assertFalse(is_no_sync_college([major, major2]))
+        self.assertFalse(is_no_sync_college([]))
+        self.assertFalse(is_no_sync_college([major]))
+        self.assertTrue(is_no_sync_college([major3]))
+        self.assertFalse(is_no_sync_college([major, major3]))
+        self.assertFalse(is_no_sync_college([major, major3, major2]))
+        major3.college = 'F'
+        self.assertFalse(is_no_sync_college([major3, major2]))
+
     def test_get_synced_college_name(self):
         major = self._build_major(major_abbr_code='BSE', college='C')
         major2 = self._build_major(major_abbr_code='2', college='S')
