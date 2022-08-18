@@ -5,6 +5,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file
+from sis_provisioner.dao.handshake import write_file as write_handshake
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
@@ -85,7 +86,13 @@ class AcademicTerm():
 
 
 class ImportFileManager(models.Manager):
-    pass
+    def find_by_requires_import(self):
+        try:
+            import_file = super().get_queryset().latest('created_date')
+            import_file.sisimport()
+
+        except ImportFile.DoesNotExist:
+            pass
 
 
 class ImportFile(models.Model):
@@ -109,7 +116,13 @@ class ImportFile(models.Model):
         return self.path
 
     def sisimport(self):
-        pass
+        data = read_file(self.path)
+
+        response = write_handshake(self.path, data)
+
+        self.processed_date = datetime.utcnow().replace(tzinfo=utc)
+        self.processed_status = 200
+        self.save()
 
     def create(self, academic_term):
         data = self.generate_csv(academic_term)

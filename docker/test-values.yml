@@ -63,7 +63,7 @@ environmentVariables:
     value: uw-person-prod
 
   - name: AWS_S3_REGION_NAME
-    value: us-east-1
+    value: uw-west-2
 
   - name: FILENAME_PREFIX
     value: TEST
@@ -76,6 +76,15 @@ externalSecrets:
       data:
         - name: django-secret
           property: django-secret
+        - name: storage-bucket-name
+          property: storage-bucket-name
+    - name: handshake-test.axdd.s.uw.edu-aws-secrets
+      externalKey: handshake/test/aws-secrets
+      data:
+        - name: access-key-id
+          property: access-key-id
+        - name: secret-access-key
+          property: secret-access-key
         - name: storage-bucket-name
           property: storage-bucket-name
     - name: handshake-test.axdd.s.uw.edu-sql-secrets
@@ -99,15 +108,6 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: handshake-test.axdd.s.uw.edu-aws-secrets
-      externalKey: handshake/shared/aws-secrets
-      data:
-        - name: access-key-id
-          property: access-key-id
-        - name: secret-access-key
-          property: secret-access-key
-        - name: storage-bucket-name
-          property: storage-bucket-name
 
 environmentVariablesSecrets:
   djangoSecret:
