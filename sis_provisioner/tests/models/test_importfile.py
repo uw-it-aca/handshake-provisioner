@@ -14,7 +14,8 @@ class ImportFileTest(TestCase):
 
         impfile.created_date = datetime(2019, 6, 15, 2, 45, 0)
         self.assertEqual(impfile.create_path(name),
-                         '2019/06/15/AUT2019-024500.csv')
+                         '2019/06/AUT2019-20190615-024500.csv')
+        self.assertEqual(impfile.filename, 'AUT2019-20190615-024500.csv')
 
     @override_settings(FILENAME_PREFIX='TEST')
     def test_create_path_prefix(self):
@@ -23,4 +24,5 @@ class ImportFileTest(TestCase):
 
         impfile.created_date = datetime(2019, 6, 15, 2, 45, 0)
         self.assertEqual(impfile.create_path(name),
-                         '2019/06/15/TEST-AUT2019-024500.csv')
+                         '2019/06/TEST-AUT2019-20190615-024500.csv')
+        self.assertEqual(impfile.filename, 'TEST-AUT2019-20190615-024500.csv')

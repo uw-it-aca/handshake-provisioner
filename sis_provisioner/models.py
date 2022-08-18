@@ -15,6 +15,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 import csv
 import io
+import os
 
 
 class AcademicTerm():
@@ -103,6 +104,10 @@ class ImportFile(models.Model):
 
     objects = ImportFileManager()
 
+    @property
+    def filename(self):
+        return os.path.basename(self.path or '')
+
     def create_path(self, name):
         prefix = getattr(settings, 'FILENAME_PREFIX')
         if prefix is not None and len(prefix):
@@ -112,13 +117,13 @@ class ImportFile(models.Model):
             self.created_date = datetime.utcnow().replace(tzinfo=utc)
 
         self.path = self.created_date.strftime(
-            '%Y/%m/%d/{}-%H%M%S.csv'.format(name))
+            '%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))
         return self.path
 
     def sisimport(self):
         data = read_file(self.path)
 
-        write_handshake(self.path, data)
+        write_handshake(self.filename, data)
 
         self.processed_date = datetime.utcnow().replace(tzinfo=utc)
         self.processed_status = 200
