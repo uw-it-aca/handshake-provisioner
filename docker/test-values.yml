@@ -63,7 +63,7 @@ environmentVariables:
     value: uw-person-prod
 
   - name: AWS_S3_REGION_NAME
-    value: uw-west-2
+    value: us-west-2
 
   - name: FILENAME_PREFIX
     value: TEST
