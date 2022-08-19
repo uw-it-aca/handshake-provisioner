@@ -53,7 +53,12 @@ class AcademicTerm():
         return self
 
     def previous(self):
-        raise NotImplementedError()
+        if self.quarter == self.WINTER:
+            self.year = self.year - 1
+            self.quarter = self.AUTUMN
+        else:
+            self.quarter = self.quarter - 1
+        return self
 
     @property
     def name(self):
@@ -61,7 +66,7 @@ class AcademicTerm():
 
     def _autumn_start_date(self, year):
         sept = datetime(year, 9, 24)
-        return sept + relativedelta(weekday=2)  # last Wednesday
+        return sept + relativedelta(weekday=2)  # last Wednesday of Sept
 
     def _winter_start_date(self, year):
         jan = datetime(year, 1, 2)
