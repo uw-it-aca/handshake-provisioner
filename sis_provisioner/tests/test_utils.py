@@ -1,12 +1,11 @@
 # Copyright 2022 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from django.test import TestCase, override_settings
-from uw_person_client.components import Major, Student
+from django.test import TestCase
+from uw_person_client.components import Ethnicity, Major, Student
 from sis_provisioner.utils import *
 
 
-@override_settings()
 class HandshakeUtilsTest(TestCase):
     def _build_major(self, major_abbr_code=None, college=None,
                      major_full_name=None):
@@ -25,6 +24,14 @@ class HandshakeUtilsTest(TestCase):
         student.intended_majors = intended_majors
         student.class_code = class_code
         return student
+
+    def _build_ethnicity(self, ethnic_code=None, ethnic_desc=None,
+                         group_desc=None):
+        ethnicity = Ethnicity()
+        ethnicity.assigned_ethnic_code = ethnic_code
+        ethnicity.assigned_ethnic_desc = ethnic_desc
+        ethnicity.assigned_ethnic_group_desc = group_desc
+        return ethnicity
 
     def test_get_majors(self):
         major0 = self._build_major(
@@ -255,3 +262,19 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_name('Leland M', 'McDonald'),
                          ('Leland', 'M', 'McDonald'))
         self.assertEqual(format_name('Joe', 'Le'), ('Joe', '', 'Le'))
+
+    def test_get_ethnicity_name(self):
+        ethnicity1 = self._build_ethnicity(ethnic_desc='Vietnamese')
+        ethnicity2 = self._build_ethnicity(ethnic_desc='French')
+        ethnicity3 = self._build_ethnicity(ethnic_desc='Turkish')
+
+        self.assertEqual(get_ethnicity_name([ethnicity1]), 'Vietnamese')
+        self.assertEqual(get_ethnicity_name([ethnicity2]), 'French')
+        self.assertEqual(get_ethnicity_name([ethnicity3]), 'Turkish')
+        self.assertEqual(get_ethnicity_name([ethnicity3, ethnicity1]),
+                         'Turkish')
+        self.assertEqual(get_ethnicity_name([ethnicity2, ethnicity1]),
+                         'French')
+        self.assertEqual(get_ethnicity_name([]), None)
+        self.assertEqual(get_ethnicity_name(
+            [ethnicity1, ethnicity2, ethnicity3]), 'Vietnamese')
