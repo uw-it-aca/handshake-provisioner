@@ -20,6 +20,4 @@ class StudentDAOFunctionsTest(TestCase):
             include_student_transfers=False,
             include_student_sports=False,
             include_student_advisers=False,
-            include_student_intended_majors=False,
-            include_student_pending_majors=True,
-            include_student_requested_majors=False)
+            include_student_pending_majors=True)
