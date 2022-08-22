@@ -1,10 +1,10 @@
 resources:
   limits:
+    cpu: 750m
+    memory: 2048Mi
+  requests:
     cpu: 500m
     memory: 768Mi
-  requests:
-    cpu: 50m
-    memory: 384Mi
 targetAverageUtilization: 100
 affinity:
    podsSpanNodes: true
@@ -72,7 +72,7 @@ externalSecrets:
   enabled: true
   secrets:
     - name: handshake.axdd.s.uw.edu-secrets
-      externalKey: handshake/test/secrets
+      externalKey: handshake/prod/secrets
       data:
         - name: django-secret
           property: django-secret

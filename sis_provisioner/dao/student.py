@@ -26,6 +26,7 @@ def get_students_for_handshake(academic_term):
         'include_student_transfers': False,
         'include_student_sports': False,
         'include_student_advisers': False,
+        'include_student_majors': True,
         'include_student_pending_majors': True,
     }
     client = HandshakePersonClient()
