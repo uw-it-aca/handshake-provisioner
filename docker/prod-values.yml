@@ -72,7 +72,7 @@ externalSecrets:
   enabled: true
   secrets:
     - name: handshake.axdd.s.uw.edu-secrets
-      externalKey: handshake/test/secrets
+      externalKey: handshake/prod/secrets
       data:
         - name: django-secret
           property: django-secret
