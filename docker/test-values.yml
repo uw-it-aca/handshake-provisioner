@@ -130,7 +130,7 @@ environmentVariablesSecrets:
     secretKey: storage-bucket-name
   awsStorageBucketPath:
     name: AWS_LOCATION
-    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: storage-bucket-path
   awsAccessKeyID:
     name: AWS_S3_ACCESS_KEY_ID
