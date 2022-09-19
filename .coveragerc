@@ -1,5 +1,5 @@
 [run]
-source = handshake-provisioner
+source = sis_provisioner
 parallel = True
 
 [paths]
