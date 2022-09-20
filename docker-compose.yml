@@ -8,7 +8,9 @@ services:
     restart: always
     container_name: sis_provisioner_app
     environment:
-      - GOOGLE_ANALYTICS_KEY=${GOOGLE_ANALYTICS_KEY}
+      ENV: localdev
+      AUTH: SAML_MOCK
+      GOOGLE_ANALYTICS_KEY: ${GOOGLE_ANALYTICS_KEY}
     volumes:
       - ./sis_provisioner:/app/sis_provisioner
       - statics-volume:/static

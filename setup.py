@@ -26,6 +26,7 @@ setup(
         'boto3',
         'axdd-person-client>=1.0.11,<2.0',
         'nameparser>=1.0.4,<2.0',
+        'UW-Django-SAML2~=1.5',
         'pandas',
     ],
     license='Apache License, Version 2.0',
