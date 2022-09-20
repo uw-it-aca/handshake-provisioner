@@ -1,31 +1,66 @@
 <template>
-  <div class="container-xl">
-    <div class="px-3">
-      <header
-        class="d-flex justify-content-between align-items-center pb-3 my-4 border-bottom"
-      >
-        <div class="h4 flex-fill">
-          <i class="bi bi-cup-straw me-1 text-purple"></i>
-          <a href="/" class="text-reset text-decoration-none">{{ appName }}</a>
-        </div>
-      </header>
+  <!-- layout.vue: this is where you override the layout -->
+  <axdd-sidebar
+    :app-name="appName"
+    :app-root-url="appRootUrl"
+    :page-title="pageTitle"
+    :user-name="userName"
+    :sign-out-url="signOutUrl"
+  >
+    <template #profile>
+      <axdd-profile
+        :user-netid="userName"
+        :signout-url="signOutUrl"
+      ></axdd-profile>
+    </template>
+    <template #navigation>
+      <ul class="nav flex-column mb-5">
+        <li class="nav-item mb-1">
+          <router-link
+            class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"
+            active-class="bg-dark-purple"
+            :to="'/surveys'"
+            ><i class="bi bi-check-lg me-2"></i>Import Files</router-link
+          >
+        </li>
+        <li class="nav-item mb-1">
+          <router-link
+            class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"
+            active-class="bg-dark-purple"
+            :to="'/gradebooks'"
+            ><i class="bi bi-percent me-2"></i>Other...</router-link
+          >
+        </li>
+      </ul>
+    </template>
+    <template #aside>
+      <p class="text-light-gray bg-dark-purple rounded-3 p-3 small">
+        Welcome to the Handshake Import tool!
+        <br /><br />
+        Browse files that have been imported to Handshake.
+        <br /><br />
+      </p>
+    </template>
+    <template #main>
+      <!-- main section override -->
+      <slot name="title">
+        <h1 class="visually-hidden">{{ pageTitle }}</h1>
+      </slot>
 
-      <main>
-        <h1 class="">{{ pageTitle }}</h1>
-        <slot name="content" />
-      </main>
-
-      <footer class="pt-2 mt-5 mb-3 text-muted border-top">
-        Copyright &copy; {{ new Date().getFullYear() }} University of Washington
-      </footer>
-    </div>
-  </div>
+      <slot name="content"></slot>
+    </template>
+    <template #footer> </template>
+  </axdd-sidebar>
 </template>
 
 <script>
+import { Sidebar, Profile } from "axdd-components";
+
 export default {
-  name: "LayoutComp",
-  components: {},
+  components: {
+    "axdd-sidebar": Sidebar,
+    "axdd-profile": Profile,
+  },
   props: {
     pageTitle: {
       type: String,
@@ -35,7 +70,11 @@ export default {
   data() {
     return {
       // minimum application setup overrides
-      appName: "Handshake Provisioner",
+      appName: "Handshake Imports",
+      appRootUrl: "/",
+      userName: document.body.getAttribute("data-user-name"),
+      signOutUrl: document.body.getAttribute("data-signout-url"),
+
       // automatically set year
       currentYear: new Date().getFullYear(),
     };
