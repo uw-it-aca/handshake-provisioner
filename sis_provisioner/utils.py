@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.conf import settings
+from sis_provisioner.dao.student import get_majors_by_code
 from nameparser import HumanName
 from logging import getLogger
 import re
@@ -86,10 +87,24 @@ def is_no_sync_college(majors):
     return college_code == 'E' or college_code == 'V'
 
 
+def get_requested_majors(student):
+    requested = [
+        student.requested_major1_code,
+        student.requested_major2_code,
+        student.requested_major3_code
+    ]
+    # filter out empty codes
+    codes = [code for code in requested if code]
+    if len(codes):
+        return get_majors_by_code(codes)
+    return []
+
+
 def get_majors(student):
     excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
     majors = {}
-    for major in (student.majors or student.pending_majors):
+    for major in (student.majors or student.pending_majors or
+                  get_requested_majors(student)):
 
         if major.major_full_name is None or major.college is None:
             logger.warning('MISSING data for major: {}'.format(
