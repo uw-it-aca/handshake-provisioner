@@ -12,8 +12,8 @@
       <tr v-for="(file, index) in files" :key="index">
         <td>
           <div>
-            <span v-if="file.name == null" class="">null</span>
-            <span v-else>{{ file.path }}</span>
+            <span v-if="file.name == null" class=""></span>
+            <span v-else>{{ file.name }}</span>
           </div>
         </td>
         <td class="align-middle">
@@ -31,8 +31,11 @@
         </td>
         <td>
           <div class="small text-muted">
-            <span v-if="file.processed == null" class="">null</span>
-            <span v-else>{{ formatDate(file.processed_date) }}</span>
+            <span v-if="file.processed_date == null" class=""></span>
+            <span v-else>
+              {{ formatDate(file.processed_date) }}
+              ( {{file.processed_status}} )
+            </span>
           </div>
         </td>
       </tr>
