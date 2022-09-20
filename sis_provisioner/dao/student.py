@@ -42,6 +42,7 @@ def get_students_for_handshake(academic_term):
     client = HandshakePersonClient()
     return client.get_registered_students(academic_term, **kwargs)
 
+
 def get_majors_by_code(codes: list):
     client = HandshakePersonClient()
     return client.get_requested_majors(codes)
