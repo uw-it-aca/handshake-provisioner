@@ -18,6 +18,16 @@ class HandshakePersonClient(UWPersonClient):
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
 
+    def get_requested_majors(self, abbr_codes: list):
+        sqla_majors = self.DB.session.query(self.DB.Major).filter(
+            self.DB.Major.abbr_code.in_(abbr_codes),
+            self.DB.Major.major_pathway == 0,
+            self.DB.Major.major_full_name != '',
+            self.DB.Major.major_full_name.is_not(None),
+            self.DB.Major.major_last_yr.is_not(None),
+        )
+        return [self._map_major(m) for m in sqla_majors.all()]
+
 
 def get_students_for_handshake(academic_term):
     kwargs = {
@@ -31,3 +41,7 @@ def get_students_for_handshake(academic_term):
     }
     client = HandshakePersonClient()
     return client.get_registered_students(academic_term, **kwargs)
+
+def get_majors_by_code(codes: list):
+    client = HandshakePersonClient()
+    return client.get_requested_majors(codes)
