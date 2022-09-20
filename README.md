@@ -5,58 +5,94 @@
 
 Provisions UW data to Handshake through a CSV file.
 
-## Getting Started
 
-### Prerequisites
+## System Requirements
 
+- Python (3+)
 - Docker
-- docker-compose
-- git
+- Node
 
-## How to Run
+## Development Stack
 
-Clone the app to a directory of your choice:
+- [Django](https://www.djangoproject.com) (3.2)
+- Vue (3.2)
+- Vite (2.9)
+- Vitest (0.10.2)
 
-```$ git@github.com:uw-it-aca/handshake-provisioner.git```
+## Design Stack
 
-Then run the following to start the app:
+- Bootstrap (5.2)
+- Bootstrap Icons (1.9.0)
 
-```$ docker-compose up --build```
+## Installation
 
-## Additional Settings and Commands
+Clone the repository
 
-There are additiional settings that can be configured in a `.env` file. A sample.env file is included in the repository.
-Run `$ cp sample.env .env` to use the sample file for your settings. You can edit the file to change the settings and
-each group of settings is explained in the file itself.
+        $ git clone git@github.com:uw-it-aca/app_name.git
+
+Go to your working directory
+
+        $ cd app_name
+
+Copy the sample .env file so that your environment can be run.
+
+        $ cp .env.sample .env
+
+Update any .env variables for local development purposes
+
+## Development (using Docker)
+
+Docker/Docker Compose is used to containerize your local build environment and deploy it to an 'app' container which is exposed to your localhost so you can view your application. Docker Compose creates a 'devtools' container - which is used for local development. Changes made locally are automatically syncd to the 'app' container.
+
+        $ docker-compose up --build
+
+View your application using your specified port number in the .env file
+
+        Demo: http://localhost:8000/
+
+## Testing
+
+### Front-end Testing (using Vitest)
+
+Run Vitest test scripts and generate coverage report
+
+        $ npm run test
+        $ npm run coverage
+
+### Linting (using ESLint and Stylelint)
+
+Run ESLint for JS linting
+
+        $ npm run eslint
+
+Run Stylelint for CSS linting
+
+         $ npm run stylelint
+
+### Python Testing (using Django)
+
+Run unittest locally,
+
+        $ docker-compose run --rm app bin/python manage.py test
+
+or from anywhere:
+
+        $ docker exec -ti sis_provisioner_app bin/python manage.py test
 
 ### Validation
 
 There is a script to validate and compare CSV files with the file produced by this app. The script is run by running the following:
 
-```$ python3 scripts/validate.py my_generated.csv [--example/-e example_file.csv --column/c column_name --remove-cols/-r column_names]```
+        $ python3 scripts/validate.py my_generated.csv [--example/-e example_file.csv --column/c column_name --remove-cols/-r column_names]
 
 By default, the script will compare the generated CSV file with a file in the `handshake-provisioner` directory called `example.csv`.
 You can change the file name by passing the file name as an argument to the script through `--example` or `-e`. You can also specify the column name to compare by by passing the column name as an argument to the script through `--column` or `-c`. By default, this is the 'username' column. You can specify the column names to remove from the comparison output by passing the column names as an argument to the script through `--remove-cols` or `-r` like
 
-```... -r auth_identifier last_name ...```
-
-## Running Tests
-
-You can run tests by running the following within the app directory:
-
-```$ docker-compose run --rm app bin/python manage.py test```
-
-or this from anywhere:
-
-```$ docker exec -ti app-handshake bin/python manage.py test```
+        ... -r auth_identifier last_name ...
 
 ## Deployment
 
 To be completed.
-
-## Built With
-
-- [Django](https://www.djangoproject.com)
 
 ## Authors
 

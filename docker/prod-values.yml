@@ -10,7 +10,21 @@ affinity:
    podsSpanNodes: true
 
 ingress:
-  enabled: false
+  enabled: true
+  tls:
+    handshake:
+      secretName: handshake.axdd.s.uw.edu-ingress-cert
+      hosts:
+        - handshake.axdd.s.uw.edu
+  hosts:
+    handshake:
+      host: handshake.axdd.s.uw.edu
+      paths:
+        - "/"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
+    nginx.ingress.kubernetes.io/proxy-body-size: "20M"
 
 lifecycle:
   enabled: true
@@ -19,7 +33,7 @@ lifecycle:
 readiness:
   enabled: true
 securityPolicy:
-  enabled: true
+  enabled: false
 
 repo: handshake
 instance: prod
@@ -50,6 +64,10 @@ environmentVariables:
   - name: ENV
     value: prod
 
+  - name: AUTH
+    value: SAML
+  - name: SAML_ENTITY_ID
+    value: https://handshake.axdd.s.uw.edu/saml2
   - name: CLUSTER_CNAME
     value: handshake.axdd.s.uw.edu
 
@@ -110,6 +128,18 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
+    - name: handshake.axdd.s.uw.edu-ic-certs
+      externalKey: handshake/prod/ic-certs
+      data:
+        - name: handshake.axdd.s.uw.edu-ic.cert
+          property: handshake.axdd.s.uw.edu-ic.cert
+        - name: handshake.axdd.s.uw.edu-ic.key
+          property: handshake.axdd.s.uw.edu-ic.key
+      - name: handshake.axdd.s.uw.edu-uw-idp-cert
+      externalKey: idp-cert
+      data:
+        - name: uw-idp-cert
+          property: cert
 
 environmentVariablesSecrets:
   djangoSecret:
@@ -148,3 +178,11 @@ environmentVariablesSecrets:
     name: UW_PERSON_DB_PASSWORD
     secretName: handshake.axdd.s.uw.edu-shared-secrets
     secretKey: person-db-pass
+  samlSPCert:
+    name: SP_CERT
+    secretName: handshake.axdd.s.uw.edu-ic-certs
+    secretKey: handshake.axdd.s.uw.edu-ic.cert
+  samlIDPCert:
+    name: IDP_CERT
+    secretName: handshake.axdd.s.uw.edu-uw-idp-cert
+    secretKey: uw-idp-cert
