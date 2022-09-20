@@ -2,9 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.views.generic import TemplateView
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 import datetime
 
 
+@method_decorator(login_required, name='dispatch')
 class PageView(TemplateView):
     template_name = "index.html"
 
