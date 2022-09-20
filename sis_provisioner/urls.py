@@ -4,11 +4,11 @@
 from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
-from sis_provisioner.views.pages import DefaultPageView
-from sis_provisioner.views.pages import PageView
-
+from sis_provisioner.views.pages import HomeView
+from sis_provisioner.views.api import ImportFileList, ImportFile
 
 urlpatterns = []
+
 
 # add debug routes for developing error pages
 if settings.DEBUG:
@@ -28,5 +28,9 @@ if settings.DEBUG:
 urlpatterns += [
     # add default Vue page routes here
     # re_path(r"^(customize|page2|page3)$", DefaultPageView.as_view()),
-    re_path(r"^$", DefaultPageView.as_view()),
+    re_path(r'^api/v1/file$',
+        ImportFileList.as_view(), name='import-file-list'),
+    re_path(r'^api/v1/file/(?P<file_id>[\d]+)$',
+        ImportFile.as_view(), name='import-file'),
+    re_path(r"^$", HomeView.as_view()),
 ]

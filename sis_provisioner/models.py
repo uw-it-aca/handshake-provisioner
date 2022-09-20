@@ -3,6 +3,7 @@
 
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
@@ -149,6 +150,8 @@ class ImportFile(models.Model):
         return {
             'id': self.pk,
             'path': self.path,
+            'download_url': reverse('import-file', kwargs={
+                'file_id': self.pk}),
             'created_date': self.created_date.isoformat(),
             'processed_date': self.processed_date.isoformat() if (
                 self.processed_date is not None) else None,
