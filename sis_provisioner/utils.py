@@ -88,14 +88,16 @@ def is_no_sync_college(majors):
 
 
 def get_requested_majors(student):
-    codes = [student.requested_major1_code, student.requested_major2_code,
-             student.requested_major3_code]
+    requested = [
+        student.requested_major1_code,
+        student.requested_major2_code,
+        student.requested_major3_code
+    ]
     # filter out empty codes
-    codes = [code for code in codes if code]
-    majors = get_majors_by_code(codes)
-    if len(majors) == 0 or len(majors) > 3:
-        raise Exception('Invalid number of requested majors')
-    return majors
+    codes = [code for code in requested if code]
+    if len(codes):
+        return get_majors_by_code(codes)
+    return []
 
 
 def get_majors(student):
