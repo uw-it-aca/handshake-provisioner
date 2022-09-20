@@ -118,6 +118,10 @@ class ImportFile(models.Model):
     def filename(self):
         return os.path.basename(self.path or '')
 
+    @property
+    def content(self):
+        return read_file(self.path)
+
     def create_path(self, name):
         prefix = getattr(settings, 'FILENAME_PREFIX')
         if prefix is not None and len(prefix):
@@ -131,10 +135,7 @@ class ImportFile(models.Model):
         return self.path
 
     def sisimport(self):
-        data = read_file(self.path)
-
-        write_handshake(self.filename, data)
-
+        write_handshake(self.filename, self.content)
         self.processed_date = datetime.utcnow().replace(tzinfo=utc)
         self.processed_status = 200
         self.save()
@@ -143,6 +144,16 @@ class ImportFile(models.Model):
         data = self.generate_csv(academic_term)
         write_file(self.create_path(academic_term.name), data)
         self.save()
+
+    def json_data(self):
+        return {
+            'id': self.pk,
+            'path': self.path,
+            'created_date': self.created_date.isoformat(),
+            'processed_date': self.processed_date.isoformat() if (
+                self.processed_date is not None) else None,
+            'processed_status': self.processed_status,
+        }
 
     def generate_csv(self, academic_term):
         s = io.StringIO()
