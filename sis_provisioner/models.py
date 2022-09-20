@@ -149,7 +149,7 @@ class ImportFile(models.Model):
     def json_data(self):
         return {
             'id': self.pk,
-            'path': self.path,
+            'name': self.filename,
             'download_url': reverse('import-file', kwargs={
                 'file_id': self.pk}),
             'created_date': self.created_date.isoformat(),
