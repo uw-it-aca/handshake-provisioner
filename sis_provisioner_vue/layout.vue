@@ -2,33 +2,17 @@
   <div class="container-xl">
     <div class="px-3">
       <header
-        class="
-          d-flex
-          justify-content-between
-          align-items-center
-          pb-3
-          my-4
-          border-bottom
-        "
+        class="d-flex justify-content-between align-items-center pb-3 my-4 border-bottom"
       >
         <div class="h4 flex-fill">
-          <i class="bi bi-box me-2 text-purple"></i>
+          <i class="bi bi-cup-straw me-1 text-purple"></i>
           <a href="/" class="text-reset text-decoration-none">{{ appName }}</a>
-        </div>
-        <div class="me-3">
-          <nav class="nav">nav here</nav>
         </div>
       </header>
 
       <main>
-        <h1 class="">
-          <slot name="title">
-            {{ pageTitle }}
-          </slot>
-        </h1>
+        <h1 class="">{{ pageTitle }}</h1>
 
-        <slot name="description" />
-        <hr class="mb-5 w-25 d-inline-block" />
         <slot name="content" />
       </main>
 
@@ -52,7 +36,7 @@ export default {
   data() {
     return {
       // minimum application setup overrides
-      appName: "AXDD Django+Vue",
+      appName: "Handshake Provisioner",
       // automatically set year
       currentYear: new Date().getFullYear(),
     };
