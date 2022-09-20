@@ -133,9 +133,7 @@ externalSecrets:
       data:
         - name: handshake-test.axdd.s.uw.edu-ic.cert
           property: handshake-test.axdd.s.uw.edu-ic.cert
-        - name: handshake-test.axdd.s.uw.edu-ic.key
-          property: handshake-test.axdd.s.uw.edu-ic.key
-      - name: handshake-test.axdd.s.uw.edu-uw-idp-cert
+    - name: handshake-test.axdd.s.uw.edu-uw-idp-cert
       externalKey: idp-cert
       data:
         - name: uw-idp-cert
