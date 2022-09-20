@@ -39,13 +39,14 @@ class APIView(View):
         return response
 
 
-class ImportFileList(APIView):
+class FileListView(APIView):
     def get(self, request, *args, **kwargs):
-        data = [f.json_data() for f in ImportFile.objects.all()]
+        files = ImportFile.objects.all()
+        data = [f.json_data() for f in files]
         return self.json_response(data)
 
 
-class ImportFile(APIView):
+class FileView(APIView):
     def get(self, request, *args, **kwargs):
         file_id = kwargs.get('file_id')
 

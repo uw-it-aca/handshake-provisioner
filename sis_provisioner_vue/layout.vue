@@ -19,7 +19,7 @@
           <router-link
             class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"
             active-class="bg-dark-purple"
-            :to="'/surveys'"
+            :to="'/'"
             ><i class="bi bi-check-lg me-2"></i>Import Files</router-link
           >
         </li>
@@ -27,7 +27,7 @@
           <router-link
             class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"
             active-class="bg-dark-purple"
-            :to="'/gradebooks'"
+            :to="'/'"
             ><i class="bi bi-percent me-2"></i>Other...</router-link
           >
         </li>
