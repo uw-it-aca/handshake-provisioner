@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from sis_provisioner.models import ImportFile
 from logging import getLogger
 import json
+import re
 
 logger = getLogger(__name__)
 
@@ -41,7 +42,7 @@ class APIView(View):
 
 class FileListView(APIView):
     def get(self, request, *args, **kwargs):
-        files = ImportFile.objects.all()
+        files = ImportFile.objects.all().order_by('-created_date')
         data = [f.json_data() for f in files]
         return self.json_response(data)
 
