@@ -12,7 +12,6 @@
 
       <main>
         <h1 class="">{{ pageTitle }}</h1>
-
         <slot name="content" />
       </main>
 
