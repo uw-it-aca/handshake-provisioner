@@ -43,7 +43,7 @@ class APIView(View):
 class FileListView(APIView):
     def get(self, request, *args, **kwargs):
         files = ImportFile.objects.all().order_by('-created_date')
-        data = [f.json_data() for f in ]
+        data = [f.json_data() for f in files]
         return self.json_response(data)
 
 
