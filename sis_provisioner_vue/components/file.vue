@@ -5,7 +5,7 @@
         <th scope="col" class="w-50">Name</th>
         <th scope="col">&nbsp;</th>
         <th scope="col">Created</th>
-        <th scope="col">Processed</th>
+        <th scope="col">Imported</th>
       </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -31,10 +31,9 @@
         </td>
         <td>
           <div class="small text-muted">
-            <span v-if="file.processed_date == null" class=""></span>
+            <span v-if="file.processed_date == null" class="">No</span>
             <span v-else>
               {{ formatDate(file.processed_date) }}
-              ( {{file.processed_status}} )
             </span>
           </div>
         </td>

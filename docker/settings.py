@@ -31,6 +31,8 @@ UW_PERSON_DB_HOSTNAME = os.getenv('UW_PERSON_DB_HOSTNAME', 'localhost')
 UW_PERSON_DB_DATABASE = os.getenv('UW_PERSON_DB_DATABASE', 'uw-person')
 UW_PERSON_DB_PORT = os.getenv('UW_PERSON_DB_PORT', '5432')
 
+HANDSHAKE_IMPORT_ADMIN_GROUP = 'u_acadev_handshake_admins'
+
 # Settings that control student data provisioning
 ENROLL_STATUS = '12'
 INCLUDE_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
@@ -121,6 +123,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "sis_provisioner.context_processors.auth_user",
                 "sis_provisioner.context_processors.google_analytics",
                 "sis_provisioner.context_processors.django_debug",
             ],

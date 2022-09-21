@@ -58,6 +58,6 @@ class FileView(APIView):
 
         try:
             return self.file_response(import_file.content,
-                                      import_file.filename),
+                                      import_file.filename)
         except ObjectDoesNotExist:
             return self.error_response(404, 'Not Available')
