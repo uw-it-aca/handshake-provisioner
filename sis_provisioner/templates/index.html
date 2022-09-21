@@ -19,7 +19,7 @@
     {% vite_styles 'sis_provisioner_vue/main.js' %}
 </head>
 
-<body {% if google_analytics %}data-google-analytics="{{ google_analytics }}"{% endif %} {% if logout_url %}data-logout-url="{{ logout_url }}"{% endif %} data-django-debug="{{ django_debug|lower}}" class="bg-light">
+<body data-django-debug="{{ django_debug|lower}}" data-user-name="{{ username }}" data-signout-url="{{ signout_url }}"{% if google_analytics %} data-google-analytics="{{ google_analytics }}"{% endif %} class="bg-light">
     {% csrf_token %}
 
     <!-- vue app will be injected here -->

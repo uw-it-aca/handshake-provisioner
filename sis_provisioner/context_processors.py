@@ -2,15 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.conf import settings
+from uw_saml.utils import get_user
+from django.urls import reverse
 
+
+def auth_user(request):
+    return {
+        'username': get_user(request),
+        'signout_url': reverse('saml_logout'),
+    }
 
 def google_analytics(request):
-
-    ga_key = getattr(settings, "GOOGLE_ANALYTICS_KEY", " ")
-    return {"google_analytics": ga_key}
+    return {'google_analytics': getattr(settings, 'GOOGLE_ANALYTICS_KEY', ' ')}
 
 
 def django_debug(request):
-
-    django_debug = getattr(settings, "DEBUG", False)
-    return {"django_debug": django_debug}
+    return {'django_debug': getattr(settings, 'DEBUG', False)}
