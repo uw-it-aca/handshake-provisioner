@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase, override_settings
-from sis_provisioner.models import AcademicTerm
+from sis_provisioner.dao.term import AcademicTerm
 from datetime import datetime
 
 

@@ -8,93 +8,65 @@ from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
 from sis_provisioner.dao.student import get_students_for_handshake
+from sis_provisioner.dao.term import AcademicTerm
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_synced_college_name, get_ethnicity_name, get_class_desc,
     format_student_number, format_name)
-from dateutil.relativedelta import relativedelta
 from datetime import datetime
 import csv
 import io
 import os
 
 
-class AcademicTerm():
+class TermManager(models.Manager):
+    def current(self):
+        academic_term = AcademicTerm()
+
+        term, _ = Term.objects.get_or_create(
+            year=academic_term.year, quarter=academic_term.quarter)
+        return term
+
+    def next(self):
+        academic_term = AcademicTerm().next()
+
+        term, _ = Term.objects.get_or_create(
+            year=academic_term.year, quarter=academic_term.quarter)
+        return term
+
+
+class Term(models.Model):
     WINTER = 1
     SPRING = 2
     SUMMER = 3
     AUTUMN = 4
 
-    QTR_NAMES = {WINTER: 'WIN', SPRING: 'SPR', SUMMER: 'SUM', AUTUMN: 'AUT'}
+    QUARTER_CHOICES = (
+        (WINTER, 'WIN'), (SPRING, 'SPR'), (SUMMER, 'SUM'), (AUTUMN, 'AUT')
+    )
 
-    def __init__(self, date=None):
-        if date is None:
-            date = datetime.now()
+    year = models.SmallIntegerField()
+    quarter = models.SmallIntegerField(choices=QUARTER_CHOICES)
 
-        self._date = date
-        self.current()
+    objects = TermManager()
 
-    def __eq__(self, __o: object) -> bool:
-        if not isinstance(__o, AcademicTerm):
-            return False
-        return self.year == __o.year and self.quarter == __o.quarter
-
-    def current(self):
-        year, quarter = self._term_from_datetime(self._date)
-        self.year = year
-        self.quarter = quarter
-        return self
-
-    def next(self):
-        if self.quarter == self.AUTUMN:
-            self.year = self.year + 1
-            self.quarter = self.WINTER
-        else:
-            self.quarter = self.quarter + 1
-        return self
-
-    def previous(self):
-        if self.quarter == self.WINTER:
-            self.year = self.year - 1
-            self.quarter = self.AUTUMN
-        else:
-            self.quarter = self.quarter - 1
-        return self
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['year', 'quarter'],
+                                    name='unique_term')
+        ]
 
     @property
     def name(self):
-        return '{}{}'.format(self.QTR_NAMES.get(self.quarter), self.year)
+        return '{}{}'.format(
+            dict(self.QUARTER_CHOICES).get(self.quarter), self.year)
 
-    def _autumn_start_date(self, year):
-        sept = datetime(year, 9, 24)
-        return sept + relativedelta(weekday=2)  # last Wednesday of Sept
-
-    def _winter_start_date(self, year):
-        jan = datetime(year, 1, 2)
-        # if Jan 1 is Sunday or Monday, start on Jan 3
-        if jan.weekday() in [0, 1]:
-            return jan.replace(day=3)
-        return jan + relativedelta(weekday=0)  # first Monday after Jan 1
-
-    def _spring_start_date(self, year):
-        start = self._winter_start_date(year) + relativedelta(weeks=11, days=1)
-        return start + relativedelta(weekday=0)  # second Monday after winter
-
-    def _summer_start_date(self, year):
-        start = self._spring_start_date(year) + relativedelta(weeks=11, days=1)
-        return start + relativedelta(weekday=0)  # second Monday after spring
-
-    def _term_from_datetime(self, dt: datetime):
-        terms = [self._winter_start_date(dt.year),
-                 self._spring_start_date(dt.year),
-                 self._summer_start_date(dt.year),
-                 self._autumn_start_date(dt.year)]
-
-        quarter = 0
-        while quarter < len(terms) and dt >= terms[quarter]:
-            quarter += 1
-
-        return dt.year, quarter if (quarter > 0) else self.AUTUMN
+    def json_data(self):
+        return {
+            'id': self.pk,
+            'year': self.year,
+            'quarter': dict(self.QUARTER_CHOICES).get(self.quarter),
+        }
 
 
 class ImportFileManager(models.Manager):
@@ -109,6 +81,8 @@ class ImportFileManager(models.Manager):
 
 class ImportFile(models.Model):
     path = models.CharField(max_length=128, null=True)
+    term = models.ForeignKey(Term, on_delete=models.CASCADE)
+    is_test_file = models.BooleanField(default=False)
     created_date = models.DateTimeField()
     processed_date = models.DateTimeField(null=True)
     processed_status = models.CharField(max_length=128, null=True)
@@ -123,9 +97,10 @@ class ImportFile(models.Model):
     def content(self):
         return read_file(self.path)
 
-    def create_path(self, name):
+    def create_path(self):
+        name = self.term.name
         prefix = getattr(settings, 'FILENAME_PREFIX')
-        if prefix is not None and len(prefix):
+        if self.is_test_file and prefix is not None and len(prefix):
             name = '{}-{}'.format(prefix, name)
 
         if self.created_date is None:
@@ -141,15 +116,16 @@ class ImportFile(models.Model):
         self.processed_status = 200
         self.save()
 
-    def create(self, academic_term):
-        data = self.generate_csv(academic_term)
-        write_file(self.create_path(academic_term.name), data)
+    def create(self):
+        write_file(self.create_path(), self._generate_csv())
         self.save()
 
     def json_data(self):
         return {
             'id': self.pk,
             'name': self.filename,
+            'term': self.term.json_data(),
+            'is_test_file': self.is_test_file,
             'download_url': reverse('import-file', kwargs={
                 'file_id': self.pk}),
             'created_date': self.created_date.isoformat(),
@@ -158,14 +134,14 @@ class ImportFile(models.Model):
             'processed_status': self.processed_status,
         }
 
-    def generate_csv(self, academic_term):
+    def _generate_csv(self):
         s = io.StringIO()
         csv.register_dialect('unix_newline', lineterminator='\n')
         writer = csv.writer(s, dialect='unix_newline')
 
         writer.writerow(settings.HANDSHAKE_CSV_HEADER)
 
-        for person in get_students_for_handshake(academic_term):
+        for person in get_students_for_handshake(self.term):
             majors = get_majors(person.student)
 
             first_name, middle_name, last_name = format_name(person.first_name,
