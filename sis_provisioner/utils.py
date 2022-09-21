@@ -51,8 +51,8 @@ def get_class_desc(class_code, majors):
     if class_code not in getattr(settings, 'INCLUDE_CLASS_CODES', []):
         return None
 
-    if (any('MBA' in major.major_abbr_code for major in majors) and
-            get_synced_college_name(majors) == 'Foster School of Business'):
+    if (any('MBA' in major.major_abbr_code and major.college == 'E'
+            for major in majors)):
         return 'Masters of Business Administration'
     return getattr(settings, 'CLASS_CODES', {}).get(class_code, None)
 
@@ -69,13 +69,11 @@ def get_college_for_major(major):
     return major.college
 
 
-def get_synced_college_code(codes):
+def get_synced_college_code(codes: list):
     if not codes:
         return None
     if 'J2' in codes:
         return 'J2'
-    if 'J' in codes:
-        return 'J'
     return max(codes)
 
 
@@ -114,10 +112,12 @@ def get_primary_major_name(majors):
         return majors[0].major_full_name
 
 
-def get_synced_college_name(majors):
+def get_synced_college_name(majors, campus='0'):
     college_code = get_synced_college_code(
         [get_college_for_major(major) for major in majors]
     )
+    if college_code is None and campus == '1':
+        college_code = 'V'
     college_dict = getattr(settings, 'COLLEGES', {})
     return college_dict.get(college_code)
 

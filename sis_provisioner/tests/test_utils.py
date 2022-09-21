@@ -165,13 +165,13 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_synced_college_name([major3]),
                          'College of Arts & Sciences')
         self.assertEqual(get_synced_college_name([major, major2]),
-                         'College of Engineering')
+                         'The Information School')
         self.assertEqual(get_synced_college_name([major, major3]),
                          'College of Engineering')
         self.assertEqual(get_synced_college_name([major3, major2]),
                          'The Information School')
         self.assertEqual(get_synced_college_name([major, major2, major3]),
-                         'College of Engineering')
+                         'The Information School')
         self.assertEqual(get_synced_college_name([major4, major2, major3]),
                          'School of Computer Science & Engineering')
         self.assertEqual(get_synced_college_name([major, major2, major4]),
@@ -182,6 +182,7 @@ class HandshakeUtilsTest(TestCase):
             [major, major2, major4, major3]),
             'School of Computer Science & Engineering')
         self.assertEqual(get_synced_college_name([]), None)
+        self.assertEqual(get_synced_college_name([], campus='1'), 'UW Bothell')
 
     def test_titleize(self):
         self.assertRaises(TypeError, titleize, None)
@@ -226,7 +227,8 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_class_desc('8', majors),
                          'Masters of Business Administration')
         majors = [major2, major3]
-        self.assertEqual(get_class_desc('8', majors), 'Masters')
+        self.assertEqual(get_class_desc('8', majors),
+                         'Masters of Business Administration')
 
         majors = [major1, major2]
         self.assertEqual(get_class_desc('8', majors),

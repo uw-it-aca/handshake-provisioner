@@ -179,7 +179,7 @@ class ImportFile(models.Model):
                 first_name,
                 middle_name,
                 person.preferred_first_name,
-                get_synced_college_name(majors),
+                get_synced_college_name(majors, person.student.campus_code),
                 '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
                 person.student.campus_desc,
                 get_major_names(majors),
