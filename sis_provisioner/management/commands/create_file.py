@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models import ImportFile, AcademicTerm
+from sis_provisioner.models import ImportFile, Term
 
 
 class Command(BaseCommand):
@@ -16,9 +16,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         term_str = options.get('term')
 
-        academic_term = AcademicTerm()
         if term_str == 'next':
-            academic_term.next()
+            term = Term.objects.next()
+        else:
+            term = Term.objects.current()
 
-        import_file = ImportFile()
-        import_file.create(academic_term)
+        import_file = ImportFile(term=term, is_test_file=True)
+        import_file.create()
