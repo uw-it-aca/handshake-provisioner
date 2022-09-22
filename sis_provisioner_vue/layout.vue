@@ -13,26 +13,6 @@
         :signout-url="signOutUrl"
       ></axdd-profile>
     </template>
-    <template #navigation>
-      <ul class="nav flex-column mb-5">
-        <li class="nav-item mb-1">
-          <router-link
-            class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"
-            active-class="bg-dark-purple"
-            :to="'/'"
-            ><i class="bi bi-check-lg me-2"></i>Import Files</router-link
-          >
-        </li>
-        <li class="nav-item mb-1">
-          <router-link
-            class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"
-            active-class="bg-dark-purple"
-            :to="'/'"
-            ><i class="bi bi-percent me-2"></i>Other...</router-link
-          >
-        </li>
-      </ul>
-    </template>
     <template #aside>
       <p class="text-light-gray bg-dark-purple rounded-3 p-3 small">
         Welcome to the Handshake Import tool!

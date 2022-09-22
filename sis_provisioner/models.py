@@ -14,9 +14,12 @@ from sis_provisioner.utils import (
     is_veteran, get_synced_college_name, get_ethnicity_name, get_class_desc,
     format_student_number, format_name)
 from datetime import datetime
+from logging import getLogger
 import csv
 import io
 import os
+
+logger = getLogger(__name__)
 
 
 class TermManager(models.Manager):
@@ -84,8 +87,9 @@ class ImportFile(models.Model):
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
     is_test_file = models.BooleanField(default=False)
     created_date = models.DateTimeField()
-    processed_date = models.DateTimeField(null=True)
-    processed_status = models.CharField(max_length=128, null=True)
+    generated_date = models.DateTimeField(null=True)
+    imported_date = models.DateTimeField(null=True)
+    imported_status = models.CharField(max_length=128, null=True)
 
     objects = ImportFileManager()
 
@@ -97,27 +101,28 @@ class ImportFile(models.Model):
     def content(self):
         return read_file(self.path)
 
-    def create_path(self):
-        name = self.term.name
-        prefix = getattr(settings, 'FILENAME_PREFIX')
-        if self.is_test_file and prefix is not None and len(prefix):
-            name = '{}-{}'.format(prefix, name)
-
-        if self.created_date is None:
-            self.created_date = datetime.utcnow().replace(tzinfo=utc)
-
-        self.path = self.created_date.strftime(
-            '%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))
-        return self.path
-
     def sisimport(self):
-        write_handshake(self.filename, self.content)
-        self.processed_date = datetime.utcnow().replace(tzinfo=utc)
-        self.processed_status = 200
+        try:
+            write_handshake(self.filename, self.content)
+            self.imported_status = 200
+        except Exception:
+            logger.critical(e, exc_info=True)
+            self.imported_status = 500
+
+        self.imported_date = datetime.utcnow().replace(tzinfo=utc)
         self.save()
 
     def create(self):
-        write_file(self.create_path(), self._generate_csv())
+        if self.term is None:
+            self.term = Term.objects.current()
+
+        self.created_date = datetime.utcnow().replace(tzinfo=utc)
+        path = self._create_path()
+        self.save()
+
+        write_file(path, self._generate_csv())
+
+        self.generated_date = datetime.utcnow().replace(tzinfo=utc)
         self.save()
 
     def json_data(self):
@@ -129,10 +134,22 @@ class ImportFile(models.Model):
             'download_url': reverse('import-file', kwargs={
                 'file_id': self.pk}),
             'created_date': self.created_date.isoformat(),
-            'processed_date': self.processed_date.isoformat() if (
-                self.processed_date is not None) else None,
-            'processed_status': self.processed_status,
+            'generated_date': self.generated_date.isoformat() if (
+                self.generated_date is not None) else None,
+            'imported_date': self.imported_date.isoformat() if (
+                self.imported_date is not None) else None,
+            'imported_status': self.imported_status,
         }
+
+    def _create_path(self):
+        name = self.term.name
+        prefix = getattr(settings, 'FILENAME_TEST_PREFIX')
+        if self.is_test_file and prefix is not None and len(prefix):
+            name = '{}-{}'.format(prefix, name)
+
+        self.path = self.created_date.strftime(
+            '%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))
+        return self.path
 
     def _generate_csv(self):
         s = io.StringIO()

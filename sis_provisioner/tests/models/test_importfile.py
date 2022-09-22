@@ -12,20 +12,20 @@ class ImportFileTest(TestCase):
         term.save()
         self.term = term
 
-    @override_settings(FILENAME_PREFIX=None)
+    @override_settings(FILENAME_TEST_PREFIX=None)
     def test_create_path(self):
         impfile = ImportFile(term=self.term)
-
         impfile.created_date = datetime(2019, 6, 15, 2, 45, 0)
-        self.assertEqual(impfile.create_path(),
+
+        self.assertEqual(impfile._create_path(),
                          '2019/06/AUT2019-20190615-024500.csv')
         self.assertEqual(impfile.filename, 'AUT2019-20190615-024500.csv')
 
-    @override_settings(FILENAME_PREFIX='TEST')
+    @override_settings(FILENAME_TEST_PREFIX='TEST')
     def test_create_path_prefix(self):
         impfile = ImportFile(term=self.term, is_test_file=True)
-
         impfile.created_date = datetime(2019, 6, 15, 2, 45, 0)
-        self.assertEqual(impfile.create_path(),
+
+        self.assertEqual(impfile._create_path(),
                          '2019/06/TEST-AUT2019-20190615-024500.csv')
         self.assertEqual(impfile.filename, 'TEST-AUT2019-20190615-024500.csv')

@@ -29,8 +29,8 @@ urlpatterns += [
     # add default Vue page routes here
     # re_path(r"^(customize|page2|page3)$", DefaultPageView.as_view()),
     re_path(r'^api/v1/file$',
-        FileListView.as_view(), name='import-file-list'),
+            FileListView.as_view(), name='import-file-list'),
     re_path(r'^api/v1/file/(?P<file_id>[\d]+)$',
-        FileView.as_view(), name='import-file'),
+            FileView.as_view(), name='import-file'),
     re_path(r"^$", HomeView.as_view()),
 ]

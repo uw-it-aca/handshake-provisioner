@@ -18,7 +18,7 @@ else:
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
 
-FILENAME_PREFIX = os.getenv('FILENAME_PREFIX', '')
+FILENAME_TEST_PREFIX = os.getenv('FILENAME_TEST_PREFIX', '')
 
 AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', '')
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
