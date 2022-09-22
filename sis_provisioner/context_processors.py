@@ -12,6 +12,7 @@ def auth_user(request):
         'signout_url': reverse('saml_logout'),
     }
 
+
 def google_analytics(request):
     return {'google_analytics': getattr(settings, 'GOOGLE_ANALYTICS_KEY', ' ')}
 

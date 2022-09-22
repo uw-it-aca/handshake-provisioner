@@ -83,7 +83,7 @@ environmentVariables:
   - name: AWS_S3_REGION_NAME
     value: us-west-2
 
-  - name: FILENAME_PREFIX
+  - name: FILENAME_TEST_PREFIX
     value: TEST
 
 externalSecrets:
