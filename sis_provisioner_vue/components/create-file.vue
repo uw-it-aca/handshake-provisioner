@@ -91,11 +91,9 @@ import dataMixin from "../mixins/data_mixin.js";
 import { Modal } from "bootstrap";
 
 export default {
-
   mixins: [dataMixin],
   emits: ["fileCreated"],
   methods: {
-
     getFormData() {},
     createFile() {
       var fileModal = Modal.getInstance(
@@ -107,15 +105,15 @@ export default {
           fileCreateModal.hide();
         })
         .catch((error) => {
-            this.formErrors = error.response.data;
-        })
-      },
+          this.formErrors = error.response.data;
+        });
     },
-    clearFormErrors() {
-      this.formErrors = {};
-    },
-    resetForm() {
-      this.clearFormErrors();
-    },
-  };
+  },
+  clearFormErrors() {
+    this.formErrors = {};
+  },
+  resetForm() {
+    this.clearFormErrors();
+  },
+};
 </script>
