@@ -4,24 +4,25 @@
       <div class="row my-4">
         <div class="col">
           <axdd-card>
-            <template #body>
+            <template #heading-action>
               <axdd-card-heading :level="2" class="my-2"
                 >Import Files</axdd-card-heading
               >
               <axdd-card-action>
-                <CreateFile
-                  :button-type="'button'"
-                  @fileUpdated="getFileList()"
+                <CreateFile :button-type="'button'" @fileUpdated="getFileList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Create new
-                  file</CreateFile>
+                  file</CreateFile
+                >
               </axdd-card-action>
+            </template>
+            <template #body>
               <axdd-tabs-display :tabs-id="'files'">
                 <template #panels>
                   <table-loading v-if="isLoading"></table-loading>
-                    <div v-if="fileData && fileData.length">
-                      <file :files="fileData" />
-                    </div>
-                    <div v-else>No data</div>
+                  <div v-if="fileData && fileData.length">
+                    <file :files="fileData" />
+                  </div>
+                  <div v-else>No data</div>
                 </template>
               </axdd-tabs-display>
             </template>
@@ -37,6 +38,7 @@ import dataMixin from "../mixins/data_mixin.js";
 import {
   Card,
   CardHeading,
+  CardAction,
   TabsList,
   TabsDisplay,
   TabsItem,
@@ -54,6 +56,7 @@ export default {
     "table-loading": TableLoading,
     "axdd-card": Card,
     "axdd-card-heading": CardHeading,
+    "axdd-card-action": CardAction,
     "axdd-tabs-list": TabsList,
     "axdd-tabs-display": TabsDisplay,
     "axdd-tabs-item": TabsItem,
