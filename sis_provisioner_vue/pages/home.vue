@@ -47,6 +47,7 @@ import ImportFile from "../components/file.vue";
 import TableLoading from "../components/table-loading.vue";
 
 export default {
+  mixins: [dataMixin],
   components: {
     layout: Layout,
     file: ImportFile,

@@ -30,3 +30,5 @@ const dataMixin = {
     },
   },
 };
+
+export default dataMixin;
