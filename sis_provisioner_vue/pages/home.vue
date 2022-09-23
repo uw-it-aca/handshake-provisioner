@@ -8,6 +8,13 @@
               <axdd-card-heading :level="2" class="my-2"
                 >Import Files</axdd-card-heading
               >
+              <axdd-card-action>
+                <CreateFile
+                  :button-type="'button'"
+                  @fileUpdated="getFileList()"
+                  ><i class="bi bi-plus-square text-dark me-2"></i>Create new
+                  file</CreateFile>
+              </axdd-card-action>
               <axdd-tabs-display :tabs-id="'files'">
                 <template #panels>
                   <table-loading v-if="isLoading"></table-loading>
@@ -26,6 +33,7 @@
 </template>
 
 <script>
+import dataMixin from "../mixins/data_mixin.js";
 import {
   Card,
   CardHeading,
@@ -58,8 +66,8 @@ export default {
     };
   },
   methods: {
-    getFileData() {
-      fetch("/api/v1/file")
+    getFileList() {
+      this.getFiles()
         .then((response) => response.json())
         .then((data) => {
           this.fileData = data;
@@ -71,9 +79,7 @@ export default {
     },
   },
   mounted() {
-    // fetch the file data
-    this.getFileData();
-    //setTimeout(this.getFileData, 3000);
+    this.getFileList();
   },
 };
 </script>

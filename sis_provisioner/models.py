@@ -73,6 +73,19 @@ class Term(models.Model):
 
 
 class ImportFileManager(models.Manager):
+    def add_file(self, term_str, is_test_file):
+        if term_str == 'current':
+            term = Term.objects.current()
+        elif term_str == 'next':
+            term = Term.objects.next()
+        else:
+            raise Exception
+
+        import_file = ImportFile(term=term, is_test_file=is_test_file)
+        import_file._create_path()
+        import_file.save()
+        return import_file
+
     def import_file(self):
         try:
             import_file = super().get_queryset().latest('created_date')
@@ -146,6 +159,9 @@ class ImportFile(models.Model):
         prefix = getattr(settings, 'FILENAME_TEST_PREFIX')
         if self.is_test_file and prefix is not None and len(prefix):
             name = '{}-{}'.format(prefix, name)
+
+        if self.created_date is None:
+            self.created_date = datetime.utcnow().replace(tzinfo=utc)
 
         self.path = self.created_date.strftime(
             '%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))

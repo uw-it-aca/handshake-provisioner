@@ -46,6 +46,18 @@ class FileListView(APIView):
         data = [f.json_data() for f in files]
         return self.json_response(data)
 
+    def post(self, request, *args, **kwargs):
+        academic_term = request.data.get('academic_term')
+        is_test_file = request.data.get('is_test_file', True)
+
+        try:
+            import_file = ImportFile.objects.add_file(academic_term,
+                                                      is_test_file)
+        except Exception:
+            pass # TODO
+
+        return self.json_response(import_file.json_data())
+
 
 class FileView(APIView):
     def get(self, request, *args, **kwargs):
