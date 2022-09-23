@@ -40,7 +40,8 @@
                 value="current"
               />
               <label for="academic-term-current" class="form-label"
-                >Current (...)</label><br/>
+                >Current (...)</label
+              ><br />
               <input
                 type="radio"
                 id="academic-term-next"
@@ -48,7 +49,8 @@
                 value="next"
               />
               <label for="academic-term-next" class="form-label"
-                >Next (...)</label><br/>
+                >Next (...)</label
+              ><br />
             </div>
           </div>
           <div class="row">
@@ -60,7 +62,8 @@
                 value="true"
               />
               <label for="is-test-file" class="form-label"
-                >This is a TEST file.</label><br/>
+                >This is a TEST file.</label
+              ><br />
             </div>
           </div>
         </div>
@@ -73,11 +76,7 @@
             >
               Close
             </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="saveFile()"
-            >
+            <button type="button" class="btn btn-primary" @click="saveFile()">
               Create file
             </button>
           </div>
@@ -92,11 +91,12 @@ import dataMixin from "../mixins/data_mixin.js";
 import { Modal } from "bootstrap";
 
 export default {
+
   mixins: [dataMixin],
   emits: ["fileCreated"],
   methods: {
-    getFormData() {
-    },
+
+    getFormData() {},
     createFile() {
       var fileModal = Modal.getInstance(
         document.getElementById("createFileModal")
@@ -108,8 +108,8 @@ export default {
         })
         .catch((error) => {
             this.formErrors = error.response.data;
-          }
-        });
+        })
+      },
     },
     clearFormErrors() {
       this.formErrors = {};
@@ -117,4 +117,5 @@ export default {
     resetForm() {
       this.clearFormErrors();
     },
+  };
 </script>
