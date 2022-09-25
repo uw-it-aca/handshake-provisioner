@@ -56,7 +56,6 @@
 import { formatDate } from "../helpers/utils";
 
 export default {
-  name: "file",
   props: {
     files: {
       type: Array,

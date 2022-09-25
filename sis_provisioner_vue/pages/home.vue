@@ -1,5 +1,5 @@
 <template>
-  <layout :page-title="pageTitle">
+  <Layout :page-title="pageTitle">
     <template #content>
       <div class="row my-4">
         <div class="col">
@@ -21,9 +21,9 @@
             <template #body>
               <axdd-tabs-display :tabs-id="'files'">
                 <template #panels>
-                  <table-loading v-if="isLoading"></table-loading>
+                  <TableLoading v-if="isLoading"></TableLoading>
                   <div v-if="fileData && fileData.length">
-                    <file :files="fileData" />
+                    <ImportFile :files="fileData" />
                   </div>
                   <div v-else>No data</div>
                 </template>
@@ -33,7 +33,7 @@
         </div>
       </div>
     </template>
-  </layout>
+  </Layout>
 </template>
 
 <script>
@@ -48,17 +48,19 @@ import {
   TabsPanel,
 } from "axdd-components";
 import Layout from "../layout.vue";
-import ImportFile from "../components/file.vue";
 import TableLoading from "../components/table-loading.vue";
+import ImportFile from "../components/import-file.vue";
 import CreateFile from "../components/create-file.vue";
 
 export default {
   mixins: [dataMixin],
   components: {
-    layout: Layout,
-    file: ImportFile,
+    // app components
+    Layout,
+    TableLoading,
+    ImportFile,
     CreateFile,
-    "table-loading": TableLoading,
+    // axdd-components
     "axdd-card": Card,
     "axdd-card-heading": CardHeading,
     "axdd-card-action": CardAction,
