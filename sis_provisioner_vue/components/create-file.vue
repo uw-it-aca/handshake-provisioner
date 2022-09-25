@@ -2,26 +2,26 @@
   <a
     role="button"
     data-bs-toggle="modal"
-    :data-bs-target="#createFileModal"
-    class="btn text-nowrap"
+    :data-bs-target="'#createFileModal'"
+    class="btn text-nowrap btn-sm btn-outline-gray text-dark rounded-3 px-3 py-2"
     @click="getFormData()"
-    :class="['btn-sm btn-outline-gray text-dark rounded-3 px-3 py-2']"
   >
-    <slot>Create File</slot>
+    <slot></slot>
   </a>
 
+  <!-- create file modal -->
   <div
     ref="createFileModal"
     class="modal fade text-start"
-    :id="createFileModal"
+    :id="'createFileModal'"
     tabindex="-1"
-    aria-labelledby="fileModalLabel"
+    aria-labelledby="createFileModalLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="fileModalLabel">Create a file</h5>
+          <h5 class="modal-title" id="createFileModalLabel">Create a file</h5>
           <button
             type="button"
             class="btn-close"
@@ -93,8 +93,16 @@ import { Modal } from "bootstrap";
 export default {
   mixins: [dataMixin],
   emits: ["fileCreated"],
+  props: {},
+  data() {
+    return {
+      file: this.getFormData(),
+    };
+  },
   methods: {
-    getFormData() {},
+    getFormData() {
+      return true;
+    },
     createFile() {
       var fileModal = Modal.getInstance(
         document.getElementById("createFileModal")

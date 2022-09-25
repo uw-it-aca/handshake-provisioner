@@ -9,10 +9,13 @@
                 >Import Files</axdd-card-heading
               >
               <axdd-card-action>
-                <CreateFile :button-type="'button'" @fileUpdated="getFileList()"
+
+                <CreateFile @fileUpdated="getFileList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Create new
                   file</CreateFile
                 >
+
+
               </axdd-card-action>
             </template>
             <template #body>
@@ -47,12 +50,14 @@ import {
 import Layout from "../layout.vue";
 import ImportFile from "../components/file.vue";
 import TableLoading from "../components/table-loading.vue";
+import CreateFile from "../components/create-file.vue";
 
 export default {
   mixins: [dataMixin],
   components: {
     layout: Layout,
     file: ImportFile,
+    CreateFile,
     "table-loading": TableLoading,
     "axdd-card": Card,
     "axdd-card-heading": CardHeading,
