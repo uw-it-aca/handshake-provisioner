@@ -6,7 +6,8 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from sis_provisioner.models import ImportFile
+from sis_provisioner.models import ImportFile, Term
+from uw_saml.utils import get_user
 from logging import getLogger
 import json
 import re
@@ -45,6 +46,21 @@ class FileListView(APIView):
         files = ImportFile.objects.all().order_by('-created_date')
         data = [f.json_data() for f in files]
         return self.json_response(data)
+
+    def post(self, request, *args, **kwargs):
+        term_str = request.data.get('academic_term')
+        is_test_file = request.data.get('is_test_file', True)
+
+        if term_str == 'current':
+            term = Term.objects.current()
+        elif term_str == 'next':
+            term = Term.objects.next()
+        else:
+            return self.error_response(400, 'Invalid term')
+
+        import_file = ImportFile.objects.add_file(
+            term, is_test_file, created_by=get_user(request))
+        return self.json_response(import_file.json_data())
 
 
 class FileView(APIView):

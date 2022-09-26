@@ -1,20 +1,31 @@
 <template>
-  <layout :page-title="pageTitle">
+  <Layout :page-title="pageTitle">
     <template #content>
       <div class="row my-4">
         <div class="col">
           <axdd-card>
-            <template #body>
+            <template #heading-action>
               <axdd-card-heading :level="2" class="my-2"
                 >Import Files</axdd-card-heading
               >
+              <axdd-card-action>
+
+                <CreateFile @fileUpdated="getFileList()"
+                  ><i class="bi bi-plus-square text-dark me-2"></i>Create new
+                  file</CreateFile
+                >
+
+
+              </axdd-card-action>
+            </template>
+            <template #body>
               <axdd-tabs-display :tabs-id="'files'">
                 <template #panels>
-                  <table-loading v-if="isLoading"></table-loading>
-                    <div v-if="fileData && fileData.length">
-                      <file :files="fileData" />
-                    </div>
-                    <div v-else>No data</div>
+                  <TableLoading v-if="isLoading"></TableLoading>
+                  <div v-if="fileData && fileData.length">
+                    <ImportFile :files="fileData" />
+                  </div>
+                  <div v-else>No data</div>
                 </template>
               </axdd-tabs-display>
             </template>
@@ -22,29 +33,37 @@
         </div>
       </div>
     </template>
-  </layout>
+  </Layout>
 </template>
 
 <script>
+import dataMixin from "../mixins/data_mixin.js";
 import {
   Card,
   CardHeading,
+  CardAction,
   TabsList,
   TabsDisplay,
   TabsItem,
   TabsPanel,
 } from "axdd-components";
 import Layout from "../layout.vue";
-import ImportFile from "../components/file.vue";
 import TableLoading from "../components/table-loading.vue";
+import ImportFile from "../components/import-file.vue";
+import CreateFile from "../components/create-file.vue";
 
 export default {
+  mixins: [dataMixin],
   components: {
-    layout: Layout,
-    file: ImportFile,
-    "table-loading": TableLoading,
+    // app components
+    Layout,
+    TableLoading,
+    ImportFile,
+    CreateFile,
+    // axdd-components
     "axdd-card": Card,
     "axdd-card-heading": CardHeading,
+    "axdd-card-action": CardAction,
     "axdd-tabs-list": TabsList,
     "axdd-tabs-display": TabsDisplay,
     "axdd-tabs-item": TabsItem,
@@ -58,8 +77,8 @@ export default {
     };
   },
   methods: {
-    getFileData() {
-      fetch("/api/v1/file")
+    getFileList() {
+      this.getFiles()
         .then((response) => response.json())
         .then((data) => {
           this.fileData = data;
@@ -71,9 +90,7 @@ export default {
     },
   },
   mounted() {
-    // fetch the file data
-    this.getFileData();
-    //setTimeout(this.getFileData, 3000);
+    this.getFileList();
   },
 };
 </script>

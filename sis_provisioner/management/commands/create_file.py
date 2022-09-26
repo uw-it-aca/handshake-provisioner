@@ -6,7 +6,7 @@ from sis_provisioner.models import ImportFile, Term
 
 
 class Command(BaseCommand):
-    help = 'Creates the Handshake import file for an academic term'
+    help = 'Creates a TEST Handshake import file for an academic term'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -21,5 +21,5 @@ class Command(BaseCommand):
         else:
             term = Term.objects.current()
 
-        import_file = ImportFile(term=term, is_test_file=True)
-        import_file.create()
+        import_file = ImportFile.objects.add_file(term=term, is_test_file=True)
+        import_file.build()
