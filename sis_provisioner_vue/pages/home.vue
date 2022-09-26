@@ -9,25 +9,18 @@
                 >Import Files</axdd-card-heading
               >
               <axdd-card-action>
-
                 <CreateFile @fileUpdated="getFileList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Create new
                   file</CreateFile
                 >
-
-
               </axdd-card-action>
             </template>
             <template #body>
-              <axdd-tabs-display :tabs-id="'files'">
-                <template #panels>
-                  <TableLoading v-if="isLoading"></TableLoading>
-                  <div v-if="fileData && fileData.length">
-                    <ImportFile :files="fileData" />
-                  </div>
-                  <div v-else>No data</div>
-                </template>
-              </axdd-tabs-display>
+              <TableLoading v-if="isLoading"></TableLoading>
+              <div v-if="fileData && fileData.length">
+                <ImportFile :files="fileData" />
+              </div>
+              <div v-else>No data</div>
             </template>
           </axdd-card>
         </div>
@@ -38,15 +31,7 @@
 
 <script>
 import dataMixin from "../mixins/data_mixin.js";
-import {
-  Card,
-  CardHeading,
-  CardAction,
-  TabsList,
-  TabsDisplay,
-  TabsItem,
-  TabsPanel,
-} from "axdd-components";
+import { Card, CardHeading, CardAction } from "axdd-components";
 import Layout from "../layout.vue";
 import TableLoading from "../components/table-loading.vue";
 import ImportFile from "../components/import-file.vue";
@@ -64,10 +49,6 @@ export default {
     "axdd-card": Card,
     "axdd-card-heading": CardHeading,
     "axdd-card-action": CardAction,
-    "axdd-tabs-list": TabsList,
-    "axdd-tabs-display": TabsDisplay,
-    "axdd-tabs-item": TabsItem,
-    "axdd-tabs-panel": TabsPanel,
   },
   data() {
     return {
