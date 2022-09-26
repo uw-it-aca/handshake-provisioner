@@ -33,16 +33,17 @@
           <div class="row">
             <div class="col">
               <label class="form-label">Choose the term:</label>
+              <br/>
               <input
                 type="radio"
                 id="academic-term-current"
                 name="academic_term"
                 value="current"
                 v-model="file.academic_term"
-              /><br/><br/>
+              />
               <label for="academic-term-current" class="form-label"
                 > Current term (...)</label
-              >
+              >&hbsp;&nbsp;
               <input
                 type="radio"
                 id="academic-term-next"
@@ -114,7 +115,7 @@ export default {
       var fileCreateModal = Modal.getInstance(
         document.getElementById("createFileModal")
       );
-      this.saveFile(this.file.academic_term, this.file.is_test_file)
+      this.saveFile(this.file)
         .then(() => {
           this.$emit("fileCreated");
           fileCreateModal.hide();
