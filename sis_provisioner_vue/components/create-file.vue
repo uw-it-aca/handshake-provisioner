@@ -48,7 +48,6 @@
                 id="academic-term-next"
                 name="academic_term"
                 value="next"
-                checked="checked"
                 v-model="file.academic_term"
               />
               <label for="academic-term-next" class="form-label"
@@ -63,7 +62,6 @@
                 id="is-test-file"
                 name="is_test_file"
                 value="true"
-                checked="checked"
                 v-model="file.is_test_file"
               />
               <label for="is-test-file" class="form-label"
@@ -101,13 +99,16 @@ export default {
   props: {},
   data() {
     return {
-      file: this.getFormData(),
+      file: this.getDefaultFile(),
       formErrors: {},
     };
   },
   methods: {
-    getFormData() {
-      return true;
+    getDefaultFile() {
+      return {
+        academic_term: "next",
+        is_test_file: "true",
+      };
     },
     createFile() {
       var fileCreateModal = Modal.getInstance(
