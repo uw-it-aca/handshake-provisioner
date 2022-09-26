@@ -10,7 +10,7 @@
       </tr>
     </thead>
     <tbody class="table-group-divider">
-      <tr v-for="(file, index) in files" :key="index">
+      <tr v-for="file in files" :key="file.id">
         <td>
           <div>
             <span v-if="file.name == null" class=""></span>

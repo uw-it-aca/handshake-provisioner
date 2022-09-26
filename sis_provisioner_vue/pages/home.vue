@@ -9,7 +9,7 @@
                 >Import Files</axdd-card-heading
               >
               <axdd-card-action>
-                <CreateFile @fileUpdated="getFileList()"
+                <CreateFile @fileUpdated="loadFileList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Create new
                   file</CreateFile
                 >
@@ -58,20 +58,24 @@ export default {
     };
   },
   methods: {
-    getFileList() {
-      this.getFiles()
-        .then((response) => response.json())
-        .then((data) => {
-          this.fileData = data;
-          this.isLoading = false;
-        })
-        .catch((error) => {
+    loadFileList: function () {
+      this.getFiles().then(
+        (response) => {
+          if (response.data) {
+            this.fileData = response.data;
+            this.isLoading = false;
+          }
+        }
+      ).catch(
+        (error) => {
           this.requestError = error;
-        });
+          this.isLoading = false;
+        }
+      );
     },
   },
   mounted() {
-    this.getFileList();
+    this.loadFileList();
   },
 };
 </script>
