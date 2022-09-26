@@ -32,24 +32,27 @@
         <div class="modal-body" v-if="file">
           <div class="row">
             <div class="col">
-              <label class="form-label">Academic term:</label>
+              <label class="form-label">Choose the term:</label>
               <input
                 type="radio"
                 id="academic-term-current"
                 name="academic_term"
                 value="current"
-              />
+                v-model="file.academic_term"
+              /><br/><br/>
               <label for="academic-term-current" class="form-label"
-                >Current (...)</label
-              ><br />
+                > Current term (...)</label
+              >
               <input
                 type="radio"
                 id="academic-term-next"
                 name="academic_term"
                 value="next"
+                checked="checked"
+                v-model="file.academic_term"
               />
               <label for="academic-term-next" class="form-label"
-                >Next (...)</label
+                > Next term (...)</label
               ><br />
             </div>
           </div>
@@ -60,9 +63,11 @@
                 id="is-test-file"
                 name="is_test_file"
                 value="true"
+                checked="checked"
+                v-model="file.is_test_file"
               />
               <label for="is-test-file" class="form-label"
-                >This is a TEST file.</label
+                > This is a <strong>TEST</strong> file.</label
               ><br />
             </div>
           </div>
@@ -76,7 +81,7 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary" @click="saveFile()">
+            <button type="button" class="btn btn-primary" @click="createFile()">
               Create file
             </button>
           </div>
@@ -97,6 +102,7 @@ export default {
   data() {
     return {
       file: this.getFormData(),
+      formErrors: {},
     };
   },
   methods: {
@@ -104,10 +110,10 @@ export default {
       return true;
     },
     createFile() {
-      var fileModal = Modal.getInstance(
+      var fileCreateModal = Modal.getInstance(
         document.getElementById("createFileModal")
       );
-      this.saveFile(this.file)
+      this.saveFile(this.file.academic_term, this.file.is_test_file)
         .then(() => {
           this.$emit("fileCreated");
           fileCreateModal.hide();
