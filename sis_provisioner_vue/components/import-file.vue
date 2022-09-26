@@ -28,7 +28,8 @@
         </td>
         <td>
           <div class="small text-muted">
-            {{ formatDate(file.created_date) }}
+            {{ formatDate(file.created_date) }}<br/>
+            {{ file.created_by }}
           </div>
         </td>
         <td>
