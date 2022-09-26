@@ -73,36 +73,25 @@ class Term(models.Model):
 
 
 class ImportFileManager(models.Manager):
-    def add_file(self, term_str, is_test_file):
-        if term_str == 'current':
-            term = Term.objects.current()
-        elif term_str == 'next':
-            term = Term.objects.next()
-        else:
-            raise Exception
-
-        import_file = ImportFile(term=term, is_test_file=is_test_file)
+    def add_file(self, term, is_test_file, created_by='internal'):
+        import_file = ImportFile(
+            term=term, is_test_file=is_test_file, created_by=created_by)
         import_file._create_path()
         import_file.save()
         return import_file
-
-    def import_file(self):
-        try:
-            import_file = super().get_queryset().latest('created_date')
-            import_file.sisimport()
-
-        except ImportFile.DoesNotExist:
-            pass
 
 
 class ImportFile(models.Model):
     path = models.CharField(max_length=128, null=True)
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
     is_test_file = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=32, default='internal')
     created_date = models.DateTimeField()
     generated_date = models.DateTimeField(null=True)
+    import_progress = models.SmallIntegerField(default=0)
     imported_date = models.DateTimeField(null=True)
     imported_status = models.CharField(max_length=128, null=True)
+    process_id = models.CharField(max_length=64, null=True)
 
     objects = ImportFileManager()
 
@@ -125,16 +114,8 @@ class ImportFile(models.Model):
         self.imported_date = datetime.utcnow().replace(tzinfo=utc)
         self.save()
 
-    def create(self):
-        if self.term is None:
-            self.term = Term.objects.current()
-
-        self.created_date = datetime.utcnow().replace(tzinfo=utc)
-        path = self._create_path()
-        self.save()
-
-        write_file(path, self._generate_csv())
-
+    def build(self):
+        write_file(self.path, self._generate_csv())
         self.generated_date = datetime.utcnow().replace(tzinfo=utc)
         self.save()
 
@@ -146,9 +127,11 @@ class ImportFile(models.Model):
             'is_test_file': self.is_test_file,
             'download_url': reverse('import-file', kwargs={
                 'file_id': self.pk}),
+            'created_by': self.created_by,
             'created_date': self.created_date.isoformat(),
             'generated_date': self.generated_date.isoformat() if (
                 self.generated_date is not None) else None,
+            'import_progress': self.import_progress,
             'imported_date': self.imported_date.isoformat() if (
                 self.imported_date is not None) else None,
             'imported_status': self.imported_status,
