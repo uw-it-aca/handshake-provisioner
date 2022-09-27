@@ -42,8 +42,7 @@
               <a
                 role="button"
                 class="btn btn-outline-dark-beige btn-sm rounded-circle"
-                :file-id="file.id"
-                @click="saveImport()"
+                v-on:click="saveImport(file.id)"
               ><i class="bi bi-cloud-upload"></i></a>
             </span>
             <span v-else>
@@ -56,8 +55,7 @@
             <a
               role="button"
               class="btn btn-outline-dark-beige btn-sm rounded-circle"
-              :file-id="file.id"
-              @click="saveDelete()"
+              v-on:click="saveDelete(file.id)"
             ><i class="bi bi-trash-fill"></i></a>
           </div>
         </td>
@@ -85,16 +83,16 @@ export default {
   },
   methods: {
     formatDate,
-    saveImport() {
-      this.importFile(this.fileId)
+    saveImport(fileId) {
+      this.importFile(fileId)
         .then(() => {
           this.$emit("fileUpdated");
         })
         .catch((error) => {
         });
     },
-    saveDelete() {
-      this.deleteFile(this.fileId)
+    saveDelete(fileId) {
+      this.deleteFile(fileId)
         .then(() => {
           this.$emit("fileUpdated");
         })
