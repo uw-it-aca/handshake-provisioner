@@ -18,13 +18,20 @@
           </div>
         </td>
         <td class="align-middle">
+
           <a
-            v-show="file.generated_date != null"
-            v-bind:href="file.api_path"
+            role="button"
+             v-show="file.generated_date != null"
+            :href="file.api_path"
             title="Download file"
             class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
             >Download
           </a>
+
+          <a href="#" role="button" class="btn btn-outline-dark-beige btn-sm rounded-circle"><i class="bi bi-download"></i></a>
+          <a href="#" role="button" class="btn btn-outline-dark-beige btn-sm rounded-circle"><i class="bi bi-trash-fill"></i></a>
+          <a href="#" role="button" class="btn btn-outline-dark-beige btn-sm rounded-circle"><i class="bi bi-cloud-upload"></i></a>
+
         </td>
         <td>
           <div class="small text-muted">
