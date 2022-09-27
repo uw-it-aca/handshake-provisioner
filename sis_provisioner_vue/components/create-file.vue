@@ -42,8 +42,8 @@
                 v-model="file.academic_term"
               />
               <label for="academic-term-current" class="form-label"
-                > Current term (...)</label
-              >&hbsp;&nbsp;
+                > {{ term.current }}</label
+              ><br/>
               <input
                 type="radio"
                 id="academic-term-next"
@@ -52,7 +52,7 @@
                 v-model="file.academic_term"
               />
               <label for="academic-term-next" class="form-label"
-                > Next term (...)</label
+                > {{ term.next }}</label
               ><br />
             </div>
           </div>
@@ -62,7 +62,6 @@
                 type="checkbox"
                 id="is-test-file"
                 name="is_test_file"
-                value="true"
                 v-model="file.is_test_file"
               />
               <label for="is-test-file" class="form-label"
@@ -100,6 +99,10 @@ export default {
   props: {},
   data() {
     return {
+      term: {
+        current: window.handshake.current_term,
+        next: window.handshake.next_term
+      },
       file: this.getDefaultFile(),
       formErrors: {},
     };
@@ -108,7 +111,7 @@ export default {
     getDefaultFile() {
       return {
         academic_term: "next",
-        is_test_file: "true",
+        is_test_file: true,
       };
     },
     createFile() {

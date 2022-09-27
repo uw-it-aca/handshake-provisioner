@@ -24,7 +24,7 @@ const dataMixin = {
     saveFile: async function (file) {
       return axios.post(
         "/api/v1/file/",
-        { "file": file },
+        { file: file },
         this._getAxiosConfig()
       );
     },

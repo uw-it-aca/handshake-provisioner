@@ -4,6 +4,7 @@
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from sis_provisioner.models import Term
 
 
 @method_decorator(login_required, name='dispatch')
@@ -12,4 +13,6 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['current_term'] = Term.objects.current().name
+        context['next_term'] = Term.objects.next().name
         return context
