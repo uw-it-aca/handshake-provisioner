@@ -48,7 +48,7 @@ class FileListView(APIView):
         return self.json_response(data)
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
+        data = json.loads(request.body).get('file', {})
         term_str = data.get('academic_term')
         is_test_file = data.get('is_test_file', True)
 

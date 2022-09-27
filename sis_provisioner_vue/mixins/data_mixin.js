@@ -21,10 +21,10 @@ const dataMixin = {
         this._getAxiosConfig()
       );
     },
-    saveFile: async function (academic_term, is_test_file) {
+    saveFile: async function (file) {
       return axios.post(
         "/api/v1/file/",
-        { academic_term: academic_term, is_test_file: is_test_file },
+        { "file": file },
         this._getAxiosConfig()
       );
     },
