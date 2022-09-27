@@ -119,13 +119,17 @@ class ImportFile(models.Model):
         self.generated_date = datetime.utcnow().replace(tzinfo=utc)
         self.save()
 
+    def delete(self, **kwargs):
+        delete_file(self.path)
+        super().delete(**kwargs)
+
     def json_data(self):
         return {
             'id': self.pk,
             'name': self.filename,
             'term': self.term.json_data(),
             'is_test_file': self.is_test_file,
-            'download_url': reverse('import-file', kwargs={
+            'api_path': reverse('import-file', kwargs={
                 'file_id': self.pk}),
             'created_by': self.created_by,
             'created_date': self.created_date.isoformat(),

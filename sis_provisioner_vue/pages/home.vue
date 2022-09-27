@@ -9,7 +9,8 @@
                 >Import Files</axdd-card-heading
               >
               <axdd-card-action>
-                <CreateFile @fileUpdated="loadFileList()"
+                <CreateFile
+                  @fileCreated="loadFileList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Create new
                   file</CreateFile
                 >
