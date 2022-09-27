@@ -28,6 +28,12 @@
     <!-- vite js bundle -->
     {% vite_scripts 'sis_provisioner_vue/main.js' %}
 
+    <script type="text/javascript">
+        window.handshake = {
+          current_term: "{% current_term %}",
+          next_term: "{% next_term %}"
+        };
+    </script>
 </body>
 
 </html>
