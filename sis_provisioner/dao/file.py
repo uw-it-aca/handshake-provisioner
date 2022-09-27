@@ -18,3 +18,10 @@ def read_file(path):
 def write_file(path, data):
     with default_storage.open(path, mode='wb') as f:
         f.write(data)
+
+
+def delete_file(path):
+    if not default_storage.exists(path):
+        raise ObjectDoesNotExist()
+
+    default_storage.delete(path)

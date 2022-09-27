@@ -28,6 +28,13 @@ const dataMixin = {
         this._getAxiosConfig()
       );
     },
+    deleteFile: async function (file_id) {
+      return axios.delete(
+        "/api/v1/file/" + file_id,
+        {},
+        this._getAxiosConfig()
+      );
+    },
   },
 };
 

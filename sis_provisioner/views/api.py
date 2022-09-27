@@ -78,3 +78,15 @@ class FileView(APIView):
                                       import_file.filename)
         except ObjectDoesNotExist:
             return self.error_response(404, 'Not Available')
+
+    def delete(self, request, *args, **kwargs):
+        file_id = kwargs.get('file_id')
+
+        try:
+            import_file = ImportFile.objects.get(pk=file_id)
+            import_file.delete()
+        except ImportFile.DoesNotExist:
+            return self.error_response(404, 'Not Found')
+        except ObjectDoesNotExist:
+            return self.error_response(404, 'Not Available')
+        return self.json_response(status=204)
