@@ -28,16 +28,16 @@ const dataMixin = {
         this._getAxiosConfig()
       );
     },
-    importFile: async function (file_id) {
+    importFile: async function (fileId) {
       return axios.put(
-        "/api/v1/file/" + file_id,
+        "/api/v1/file/" + fileId,
         {},
         this._getAxiosConfig()
       );
     },
-    deleteFile: async function (file_id) {
+    deleteFile: async function (fileId) {
       return axios.delete(
-        "/api/v1/file/" + file_id,
+        "/api/v1/file/" + fileId,
         {},
         this._getAxiosConfig()
       );
