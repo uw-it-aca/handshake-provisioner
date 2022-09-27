@@ -21,10 +21,17 @@ const dataMixin = {
         this._getAxiosConfig()
       );
     },
-    saveFile: async function (file) {
+    createFile: async function (file) {
       return axios.post(
         "/api/v1/file/",
         { file: file },
+        this._getAxiosConfig()
+      );
+    },
+    importFile: async function (file_id) {
+      return axios.put(
+        "/api/v1/file/" + file_id,
+        {},
         this._getAxiosConfig()
       );
     },
