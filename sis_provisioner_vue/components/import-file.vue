@@ -2,11 +2,11 @@
   <table class="table mb-0">
     <thead class="small">
       <tr>
-        <th scope="col" class="w-30">Name</th>
-        <th scope="col">&nbsp;</th>
+        <th scope="col">Name</th>
         <th scope="col">Created</th>
         <th scope="col">Generated</th>
         <th scope="col">Imported</th>
+        <th scope="col">&nbsp;</th>
       </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -17,15 +17,6 @@
             <span v-else>{{ file.name }}</span>
           </div>
         </td>
-        <td class="align-middle">
-          <a
-            v-show="file.generated_date != null"
-            v-bind:href="file.api_path"
-            title="Download file"
-            class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
-            >Download
-          </a>
-        </td>
         <td>
           <div class="small text-muted">
             {{ formatDate(file.created_date) }}<br/>
@@ -34,18 +25,40 @@
         </td>
         <td>
           <div class="small text-muted">
-            <span v-if="file.generated_date == null" class=""></span>
-            <span v-else>
+            <span v-if="file.generated_date != null" class="">
               {{ formatDate(file.generated_date) }}
+              <a
+                role="button"
+                :href="file.api_path"
+                title="Download file"
+                class="btn btn-outline-dark-beige btn-sm rounded-circle"
+              ><i class="bi bi-download"></i></a>
             </span>
           </div>
         </td>
         <td>
           <div class="small text-muted">
-            <span v-if="file.imported_date == null" class=""></span>
+            <span v-if="file.imported_date == null" class="">
+              <a
+                role="button"
+                class="btn btn-outline-dark-beige btn-sm rounded-circle"
+                :file-id="file.id"
+                @click="saveImport()"
+              ><i class="bi bi-cloud-upload"></i></a>
+            </span>
             <span v-else>
               {{ formatDate(file.imported_date) }}
             </span>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div>
+            <a
+              role="button"
+              class="btn btn-outline-dark-beige btn-sm rounded-circle"
+              :file-id="file.id"
+              @click="saveDelete()"
+            ><i class="bi bi-trash-fill"></i></a>
           </div>
         </td>
       </tr>
@@ -54,9 +67,12 @@
 </template>
 
 <script>
+import dataMixin from "../mixins/data_mixin.js";
 import { formatDate } from "../helpers/utils";
 
 export default {
+  mixins: [dataMixin],
+  emits: ["fileUpdated"],
   props: {
     files: {
       type: Array,
@@ -69,6 +85,22 @@ export default {
   },
   methods: {
     formatDate,
+    saveImport() {
+      this.importFile(this.fileId)
+        .then(() => {
+          this.$emit("fileUpdated");
+        })
+        .catch((error) => {
+        });
+    },
+    saveDelete() {
+      this.deleteFile(this.fileId)
+        .then(() => {
+          this.$emit("fileUpdated");
+        })
+        .catch((error) => {
+        });
+    },
   },
 };
 </script>
