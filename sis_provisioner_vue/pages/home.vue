@@ -10,7 +10,7 @@
               >
               <axdd-card-action>
                 <CreateFile
-                  @fileCreated="loadFileList()"
+                  @fileUpdated="loadFileList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Create new
                   file</CreateFile
                 >

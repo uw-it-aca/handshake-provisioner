@@ -80,6 +80,16 @@ class ImportFileManager(models.Manager):
         import_file.save()
         return import_file
 
+    def build_file(self):
+        import_file = super().get_queryset().filter(
+            generated_date__isnull=True, process_id__isnull=True
+        ).order_by('created_date').first()
+
+        if import_file:
+            import_file.process_id = os.getpid()
+            import_file.save()
+            import_file.build()
+
 
 class ImportFile(models.Model):
     path = models.CharField(max_length=128, null=True)
@@ -117,6 +127,7 @@ class ImportFile(models.Model):
     def build(self):
         write_file(self.path, self._generate_csv())
         self.generated_date = datetime.utcnow().replace(tzinfo=utc)
+        self.process_id = None
         self.save()
 
     def delete(self, **kwargs):

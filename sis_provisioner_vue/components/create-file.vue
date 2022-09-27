@@ -79,7 +79,7 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary" @click="createFile()">
+            <button type="button" class="btn btn-primary" @click="saveFile()">
               Create file
             </button>
           </div>
@@ -95,7 +95,7 @@ import { Modal } from "bootstrap";
 
 export default {
   mixins: [dataMixin],
-  emits: ["fileCreated"],
+  emits: ["fileUpdated"],
   props: {},
   data() {
     return {
@@ -114,13 +114,13 @@ export default {
         is_test_file: true,
       };
     },
-    createFile() {
+    saveFile() {
       var fileCreateModal = Modal.getInstance(
         document.getElementById("createFileModal")
       );
-      this.saveFile(this.file)
+      this.createFile(this.file)
         .then(() => {
-          this.$emit("fileCreated");
+          this.$emit("fileUpdated");
           fileCreateModal.hide();
         })
         .catch((error) => {
