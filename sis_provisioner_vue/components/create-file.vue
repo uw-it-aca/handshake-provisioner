@@ -63,7 +63,7 @@
                 id="is-test-file"
                 name="is_test_file"
                 v-model="file.is_test_file"
-              />&hbsp;
+              />&nbsp;
               <label for="is-test-file" class="form-label">
                 This is a <strong>TEST</strong> file.
               </label><br />

@@ -131,7 +131,8 @@ class ImportFile(models.Model):
         self.save()
 
     def delete(self, **kwargs):
-        delete_file(self.path)
+        if self.generated_date is not None:
+            delete_file(self.path)
         super().delete(**kwargs)
 
     def json_data(self):
