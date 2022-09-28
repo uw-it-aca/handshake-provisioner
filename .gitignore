@@ -26,6 +26,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.DS_Store
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -127,3 +128,21 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# private connection settings
+constring.txt
+
+# node
+node_modules/
+package-lock.json
+
+# vite bundle
+assets/
+manifest.json
+
+# cypress image snapshots diffs
+screenshots/
+__diff_output__/
+
+# coverage
+coverage

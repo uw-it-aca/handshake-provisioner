@@ -1,0 +1,189 @@
+ingress:
+  enabled: true
+  tls:
+    handshake:
+      secretName: handshake.axdd.s.uw.edu-ingress-cert
+      hosts:
+        - handshake.axdd.s.uw.edu
+  hosts:
+    handshake:
+      host: handshake.axdd.s.uw.edu
+      paths:
+        - "/"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
+    nginx.ingress.kubernetes.io/proxy-body-size: "20M"
+
+lifecycle:
+  enabled: true
+  preStop:
+    enabled: true
+affinity:
+   podsSpanNodes: true
+readiness:
+  enabled: true
+securityPolicy:
+  enabled: false
+
+repo: handshake
+instance: prod
+
+externalService:
+  enabled: true
+  name: handshake-db-service
+  type: ClusterIP
+  serviceAddress: 172.18.1.73
+  servicePort: 5432
+database:
+  engine: postgres
+  name: handshake-prod
+  hostname: handshake-db-service
+  secretName: handshake.axdd.s.uw.edu-sql-secrets
+
+memcached:
+  enabled: false
+
+cronjob:
+  enabled: true
+  jobs:
+    - name: build-file
+      schedule: "*/10 15-23 * * 1-5"
+      command: ["/scripts/management_command.sh"]
+      args: ["build_file"]
+      resources:
+        limits:
+          cpu: 750m
+          memory: 2048Mi
+        requests:
+          cpu: 500m
+          memory: 768Mi
+
+gcsCredentials:
+  mounted: true
+  secretName: handshake.axdd.s.uw.edu-gcs-credentials
+
+environmentVariables:
+  - name: ENV
+    value: prod
+
+  - name: AUTH
+    value: SAML
+  - name: SAML_ENTITY_ID
+    value: https://handshake.axdd.s.uw.edu/saml2
+  - name: CLUSTER_CNAME
+    value: handshake.axdd.s.uw.edu
+
+  - name: AXDD_PERSON_CLIENT_ENV
+    value: PROD
+
+  - name: UW_PERSON_DB_HOSTNAME
+    value: 172.18.1.67
+
+  - name: UW_PERSON_DB_DATABASE
+    value: uw-person-prod
+
+  - name: AWS_S3_REGION_NAME
+    value: us-east-1
+
+  - name: FILENAME_TEST_PREFIX
+    value: TEST
+
+externalSecrets:
+  enabled: true
+  secrets:
+    - name: handshake.axdd.s.uw.edu-secrets
+      externalKey: handshake/prod/secrets
+      data:
+        - name: django-secret
+          property: django-secret
+        - name: storage-bucket-name
+          property: storage-bucket-name
+    - name: handshake.axdd.s.uw.edu-aws-secrets
+      externalKey: handshake/prod/aws-secrets
+      data:
+        - name: access-key-id
+          property: access-key-id
+        - name: secret-access-key
+          property: secret-access-key
+        - name: storage-bucket-name
+          property: storage-bucket-name
+        - name: storage-bucket-path
+          property: storage-bucket-path
+    - name: handshake.axdd.s.uw.edu-sql-secrets
+      externalKey: handshake/shared/sql-secrets
+      data:
+        - name: username
+          property: username
+        - name: password
+          property: password
+    - name: handshake.axdd.s.uw.edu-shared-secrets
+      externalKey: handshake/shared/secrets
+      data:
+        - name: storage-project-id
+          property: storage-project-id
+        - name: person-db-user
+          property: person-db-user
+        - name: person-db-pass
+          property: person-db-pass
+    - name: handshake.axdd.s.uw.edu-gcs-credentials
+      externalKey: handshake/shared/gcs-credentials
+      data:
+        - name: credentials.json
+          property: credentials.json
+    - name: handshake.axdd.s.uw.edu-ic-certs
+      externalKey: handshake/prod/ic-certs
+      data:
+        - name: handshake.axdd.s.uw.edu-ic.cert
+          property: handshake.axdd.s.uw.edu-ic.cert
+    - name: handshake.axdd.s.uw.edu-uw-idp-cert
+      externalKey: idp-cert
+      data:
+        - name: uw-idp-cert
+          property: cert
+
+environmentVariablesSecrets:
+  djangoSecret:
+    name: DJANGO_SECRET
+    secretName: handshake.axdd.s.uw.edu-secrets
+    secretKey: django-secret
+  storageBucketName:
+    name: STORAGE_BUCKET_NAME
+    secretName: handshake.axdd.s.uw.edu-secrets
+    secretKey: storage-bucket-name
+  storageProjectId:
+    name: STORAGE_PROJECT_ID
+    secretName: handshake.axdd.s.uw.edu-shared-secrets
+    secretKey: storage-project-id
+  awsStorageBucketName:
+    name: AWS_STORAGE_BUCKET_NAME
+    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretKey: storage-bucket-name
+  awsStorageBucketPath:
+    name: AWS_LOCATION
+    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretKey: storage-bucket-path
+  awsAccessKeyID:
+    name: AWS_S3_ACCESS_KEY_ID
+    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretKey: access-key-id
+  awsSecretAccessKey:
+    name: AWS_S3_SECRET_ACCESS_KEY
+    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretKey: secret-access-key
+  personDBUser:
+    name: UW_PERSON_DB_USERNAME
+    secretName: handshake.axdd.s.uw.edu-shared-secrets
+    secretKey: person-db-user
+  personDBPass:
+    name: UW_PERSON_DB_PASSWORD
+    secretName: handshake.axdd.s.uw.edu-shared-secrets
+    secretKey: person-db-pass
+  samlSPCert:
+    name: SP_CERT
+    secretName: handshake.axdd.s.uw.edu-ic-certs
+    secretKey: handshake.axdd.s.uw.edu-ic.cert
+  samlIDPCert:
+    name: IDP_CERT
+    secretName: handshake.axdd.s.uw.edu-uw-idp-cert
+    secretKey: uw-idp-cert
