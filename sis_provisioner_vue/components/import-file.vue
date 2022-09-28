@@ -47,6 +47,7 @@
                   v-on:click="saveImport(file.id)"
                 >Import to Handshake</a>
               </span>
+            </span>
             <span v-else>
               {{ formatDate(file.imported_date) }}
             </span>
