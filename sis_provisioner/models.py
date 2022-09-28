@@ -5,7 +5,7 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django.utils.timezone import utc
-from sis_provisioner.dao.file import read_file, write_file
+from sis_provisioner.dao.file import read_file, write_file, delete_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
 from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.dao.term import AcademicTerm
