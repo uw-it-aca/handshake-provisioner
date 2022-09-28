@@ -19,7 +19,10 @@
             <template #body>
               <TableLoading v-if="isLoading"></TableLoading>
               <div v-if="fileData && fileData.length">
-                <ImportFile :files="fileData" />
+                <ImportFile
+                  :files="fileData"
+                  @fileUpdated="loadFileList()"
+                />
               </div>
               <div v-else>No data</div>
             </template>
