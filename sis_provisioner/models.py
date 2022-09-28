@@ -151,6 +151,7 @@ class ImportFile(models.Model):
             'imported_date': self.imported_date.isoformat() if (
                 self.imported_date is not None) else None,
             'imported_status': self.imported_status,
+            'process_id': self.process_id,
         }
 
     def _create_path(self):
