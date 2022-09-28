@@ -32,7 +32,12 @@
         </td>
         <td>
           <div class="small text-muted">
-            <span v-if="file.generated_date != null" class="">
+            <span v-if="file.generated_date == null" class="">
+              <span v-if="file.process_id != null" class="">
+                <i>In progress</i>
+              </span>
+            </span>
+            <span v-else>
               {{ formatDate(file.generated_date) }}
             </span>
           </div>
