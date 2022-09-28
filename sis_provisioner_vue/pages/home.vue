@@ -59,6 +59,7 @@ export default {
       pageTitle: "Import Files",
       fileData: [],
       isLoading: true,
+      timer: '',
     };
   },
   methods: {
@@ -80,6 +81,10 @@ export default {
   },
   mounted() {
     this.loadFileList();
+    this.timer = setInterval(this.loadFileList, 60000);
   },
+  beforeUnmount() {
+    clearInterval(this.timer);
+  }
 };
 </script>
