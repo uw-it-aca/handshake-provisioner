@@ -40,12 +40,13 @@
         <td>
           <div class="small text-muted">
             <span v-if="file.imported_date == null" class="">
-              <a
-                title="Import this file"
-                class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
-                v-on:click="saveImport(file.id)"
-              >Import to Handshake</a>
-            </span>
+              <span v-if="file.generated_date != null" class="">
+                <a
+                  title="Import this file to Handshake"
+                  class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
+                  v-on:click="saveImport(file.id)"
+                >Import to Handshake</a>
+              </span>
             <span v-else>
               {{ formatDate(file.imported_date) }}
             </span>
@@ -55,6 +56,7 @@
           <div>
             <a
               role="button"
+              title="Delete this file"
               class="btn btn-outline-dark-beige btn-sm rounded-circle"
               v-on:click="saveDelete(file.id)"
             ><i class="bi bi-trash-fill"></i></a>
