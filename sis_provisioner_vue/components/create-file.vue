@@ -32,28 +32,28 @@
         <div class="modal-body" v-if="file">
           <div class="row">
             <div class="col">
-              <label class="form-label">Choose the term:</label>
-              <br/>
+              <label class="form-label">Select the term:</label>
+              &nbsp;&nbsp;
               <input
                 type="radio"
                 id="academic-term-current"
                 name="academic_term"
                 value="current"
                 v-model="file.academic_term"
-              />
-              <label for="academic-term-current" class="form-label"
-                > {{ term.current }}</label
-              ><br/>
+              />&nbsp;
+              <label for="academic-term-current" class="form-label">
+                {{ term.current }}
+              </label>&nbsp;&nbsp;
               <input
                 type="radio"
                 id="academic-term-next"
                 name="academic_term"
                 value="next"
                 v-model="file.academic_term"
-              />
-              <label for="academic-term-next" class="form-label"
-                > {{ term.next }}</label
-              ><br />
+              />&nbsp;
+              <label for="academic-term-next" class="form-label">
+                {{ term.next }}
+              </label><br />
             </div>
           </div>
           <div class="row">
@@ -63,10 +63,10 @@
                 id="is-test-file"
                 name="is_test_file"
                 v-model="file.is_test_file"
-              />
-              <label for="is-test-file" class="form-label"
-                > This is a <strong>TEST</strong> file.</label
-              ><br />
+              />&hbsp;
+              <label for="is-test-file" class="form-label">
+                This is a <strong>TEST</strong> file.
+              </label><br />
             </div>
           </div>
         </div>
@@ -76,8 +76,7 @@
               type="button"
               class="btn btn-secondary me-2"
               data-bs-dismiss="modal"
-            >
-              Close
+            >Close
             </button>
             <button type="button" class="btn btn-primary" @click="saveFile()">
               Create file

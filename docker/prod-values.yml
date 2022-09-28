@@ -1,14 +1,3 @@
-resources:
-  limits:
-    cpu: 750m
-    memory: 2048Mi
-  requests:
-    cpu: 500m
-    memory: 768Mi
-targetAverageUtilization: 100
-affinity:
-   podsSpanNodes: true
-
 ingress:
   enabled: true
   tls:
@@ -30,6 +19,8 @@ lifecycle:
   enabled: true
   preStop:
     enabled: true
+affinity:
+   podsSpanNodes: true
 readiness:
   enabled: true
 securityPolicy:
@@ -54,7 +45,19 @@ memcached:
   enabled: false
 
 cronjob:
-  enabled: false
+  enabled: true
+  jobs:
+    - name: build-file
+      schedule: "*/10 15-23 * * 1-5"
+      command: ["/scripts/management_command.sh"]
+      args: ["build_file"]
+      resources:
+        limits:
+          cpu: 750m
+          memory: 2048Mi
+        requests:
+          cpu: 500m
+          memory: 768Mi
 
 gcsCredentials:
   mounted: true
