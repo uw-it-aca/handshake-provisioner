@@ -13,8 +13,15 @@
       <tr v-for="file in files" :key="file.id">
         <td>
           <div>
-            <span v-if="file.name == null" class=""></span>
-            <span v-else>{{ file.name }}</span>
+            <span>{{ file.name }}</span>
+            <span v-if="file.generated_date != null" class="">&nbsp;
+              <a
+                role="button"
+                :href="file.api_path"
+                title="Download this file"
+                class="btn btn-outline-dark-beige btn-sm rounded-circle"
+              ><i class="bi bi-download"></i></a>
+            </span>
           </div>
         </td>
         <td>
@@ -27,12 +34,6 @@
           <div class="small text-muted">
             <span v-if="file.generated_date != null" class="">
               {{ formatDate(file.generated_date) }}
-              <a
-                role="button"
-                :href="file.api_path"
-                title="Download file"
-                class="btn btn-outline-dark-beige btn-sm rounded-circle"
-              ><i class="bi bi-download"></i></a>
             </span>
           </div>
         </td>
@@ -40,17 +41,17 @@
           <div class="small text-muted">
             <span v-if="file.imported_date == null" class="">
               <a
-                role="button"
-                class="btn btn-outline-dark-beige btn-sm rounded-circle"
+                title="Import this file"
+                class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
                 v-on:click="saveImport(file.id)"
-              ><i class="bi bi-cloud-upload"></i></a>
+              >Import to Handshake</a>
             </span>
             <span v-else>
               {{ formatDate(file.imported_date) }}
             </span>
           </div>
         </td>
-        <td class="align-middle">
+        <td>
           <div>
             <a
               role="button"
