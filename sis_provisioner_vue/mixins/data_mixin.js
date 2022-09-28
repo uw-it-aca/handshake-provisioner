@@ -38,7 +38,6 @@ const dataMixin = {
     deleteFile: async function (fileId) {
       return axios.delete(
         "/api/v1/file/" + fileId,
-        {},
         this._getAxiosConfig()
       );
     },
