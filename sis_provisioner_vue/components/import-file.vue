@@ -96,12 +96,14 @@ export default {
         });
     },
     saveDelete(fileId) {
-      this.deleteFile(fileId)
-        .then(() => {
-          this.$emit("fileUpdated");
-        })
-        .catch((error) => {
-        });
+      if (confirm("Delete this file? This action is permanent.")) {
+        this.deleteFile(fileId)
+          .then(() => {
+            this.$emit("fileUpdated");
+          })
+          .catch((error) => {
+          });
+      }
     },
   },
 };
