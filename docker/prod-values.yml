@@ -15,6 +15,11 @@ ingress:
     nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
     nginx.ingress.kubernetes.io/proxy-body-size: "20M"
 
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+targetAverageUtilization: 100
 lifecycle:
   enabled: true
   preStop:

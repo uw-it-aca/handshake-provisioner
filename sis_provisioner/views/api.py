@@ -86,6 +86,8 @@ class FileView(APIView):
             return self.json_response(content=import_file.json_data())
         except ImportFile.DoesNotExist:
             return self.error_response(404, 'Not Found')
+        except ObjectDoesNotExist:
+            return self.error_response(404, 'Not Available')
         except Exception as ex:
             return self.error_response(500, ex)
 
