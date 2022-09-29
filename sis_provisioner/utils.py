@@ -111,7 +111,7 @@ def get_majors(student):
 
         # remove duplicates, skipping the excluded majors
         if major.major_abbr_code not in excluded_codes:
-            majors[major.major_abbr_code] = major
+            majors[major.major_full_name] = major
 
     return list(majors.values())
 
