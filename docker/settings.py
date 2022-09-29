@@ -131,6 +131,7 @@ TEMPLATES = [
     }
 ]
 
+LOGGING['loggers']['']['level'] = 'DEBUG'
 
 if os.getenv("ENV") == "localdev":
     DEBUG = True
