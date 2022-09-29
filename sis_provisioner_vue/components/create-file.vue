@@ -60,13 +60,13 @@
             <div class="col">
               <label class="form-label">
                 Is this a <strong>TEST</strong> file?
-              </label>
+              </label>&nbsp;&nbsp;
               <input
                 type="checkbox"
                 id="is-test-file"
                 name="is_test_file"
                 v-model="file.is_test_file"
-              />&nbsp;&nbsp;
+              />&nbsp;
               <label for="is-test-file" class="form-label">Yes</label>
               <br />
             </div>
