@@ -4,7 +4,7 @@
       <tr>
         <th scope="col">Name</th>
         <th scope="col">Created</th>
-        <th scope="col">Generated</th>
+        <th scope="col">CSV Generated</th>
         <th scope="col">Imported</th>
         <th scope="col">&nbsp;</th>
       </tr>
