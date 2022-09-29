@@ -3,6 +3,7 @@
 
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file, delete_file
@@ -85,10 +86,19 @@ class ImportFileManager(models.Manager):
             generated_date__isnull=True, process_id__isnull=True
         ).order_by('created_date').first()
 
-        if import_file:
-            import_file.process_id = os.getpid()
-            import_file.save()
+        if import_file is None:
+            return
+
+        import_file.process_id = os.getpid()
+        import_file.save()
+        try:
             import_file.build()
+            logger.info('CSV generated for file ID {}'.format(import_file.pk))
+        except Exception as ex:
+            import_file.process_id = None
+            import_file.save()
+            logger.info('CSV failed for file ID {}: {}'.format(
+                import_file.pk, ex))
 
 
 class ImportFile(models.Model):
@@ -114,6 +124,9 @@ class ImportFile(models.Model):
         return read_file(self.path)
 
     def sisimport(self):
+        if self.generated_date is None:
+            raise ObjectDoesNotExist
+
         try:
             write_handshake(self.filename, self.content)
             self.imported_status = 200

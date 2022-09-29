@@ -8,5 +8,11 @@ from sis_provisioner.models import ImportFile
 class Command(BaseCommand):
     help = 'Import a file to Handshake'
 
+    def add_arguments(self, parser):
+        parser.add_argument('file_id', type=int,
+                            help='File ID to import to Handshake')
+
     def handle(self, *args, **options):
-        ImportFile.objects.import_file()
+        file_id = options.get('file_id')
+        import_file = ImportFile.objects.get(pk=file_id)
+        import_file.sisimport()
