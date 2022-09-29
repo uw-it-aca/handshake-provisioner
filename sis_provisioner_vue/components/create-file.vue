@@ -32,7 +32,7 @@
         <div class="modal-body" v-if="file">
           <div class="row">
             <div class="col">
-              <label class="form-label">Select the term:</label>
+              <label class="form-label">Select the enrollment term:</label>
               &nbsp;&nbsp;
               <input
                 type="radio"
@@ -58,15 +58,17 @@
           </div>
           <div class="row">
             <div class="col">
+              <label class="form-label">
+                Is this a <strong>TEST</strong> file?
+              </label>&nbsp;&nbsp;
               <input
                 type="checkbox"
                 id="is-test-file"
                 name="is_test_file"
                 v-model="file.is_test_file"
               />&nbsp;
-              <label for="is-test-file" class="form-label">
-                This is a <strong>TEST</strong> file.
-              </label><br />
+              <label for="is-test-file" class="form-label">Yes</label>
+              <br />
             </div>
           </div>
         </div>

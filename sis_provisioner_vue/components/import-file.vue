@@ -4,7 +4,7 @@
       <tr>
         <th scope="col">Name</th>
         <th scope="col">Created</th>
-        <th scope="col">Generated</th>
+        <th scope="col">CSV Generated</th>
         <th scope="col">Imported</th>
         <th scope="col">&nbsp;</th>
       </tr>
@@ -33,8 +33,11 @@
         <td>
           <div class="small text-muted">
             <span v-if="file.generated_date == null" class="">
-              <span v-if="file.process_id != null" class="">
-                <i>In progress</i>
+              <span v-if="file.process_id == null" class="">
+                <i>Waiting for job to start</i>
+              </span>
+              <span v-else>
+                <i>Job in progress</i>
               </span>
             </span>
             <span v-else>
