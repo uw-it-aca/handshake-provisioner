@@ -63,11 +63,8 @@ def format_student_number(number):
 
 
 def get_college_for_major(major):
-    if major.major_abbr_code in getattr(settings, 'ENGR_COLLEGE_MAJORS', []):
-        return 'J'
-    if major.major_abbr_code in getattr(settings, 'CSE_COLLEGE_MAJORS', []):
-        return 'J2'
-    return major.college
+    return getattr(settings, 'MAJOR_COLLEGE_OVERRIDES', {}).get(
+        major.major_abbr_code, major.college)
 
 
 def get_synced_college_code(codes: list):
