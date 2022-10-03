@@ -38,8 +38,6 @@ ENROLL_STATUS = '12'
 INCLUDE_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
 INCLUDE_CAMPUS_CODES = ['0', '1', '0.0', '1.0']
 EXCLUDE_MAJOR_CODES = ['GEMBA']
-ENGR_COLLEGE_MAJORS = ['BIOEN', 'BSE', 'DATA', 'PHARBX', 'PREBSE', 'TECH I']
-CSE_COLLEGE_MAJORS = ['C SCI', 'CMP E', 'CSE', 'CSE E', 'CSE M']
 
 HANDSHAKE_CSV_HEADER = [
     'username',
@@ -70,6 +68,15 @@ NEW_CSV_HEADERS = [
 ATHLETE_CODES = [
     '25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'
 ]
+
+MAJOR_COLLEGE_OVERRIDES = {
+    'BIOEN': 'J', 'BSE': 'J', 'DATA': 'J', 'PHARBX': 'J', 'PREBSE': 'J',
+    'TECH I': 'J',
+    'C SCI': 'J2', 'CMP E': 'J2', 'CSE': 'J2', 'CSE E': 'J2', 'CSE M': 'J2',
+    'ATM S': 'D', 'ESS': 'D',
+    'NUTR S': 'M',
+    'EEP': 'A',
+}
 
 COLLEGES = {
     'A': 'Interdisciplinary Undergraduate Programs',
@@ -131,6 +138,7 @@ TEMPLATES = [
     }
 ]
 
+LOGGING['loggers']['']['level'] = 'DEBUG'
 
 if os.getenv("ENV") == "localdev":
     DEBUG = True
