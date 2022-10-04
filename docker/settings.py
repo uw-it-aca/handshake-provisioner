@@ -119,9 +119,6 @@ CLASS_CODES = {
 
 EMAIL_DOMAIN = 'uw.edu'
 
-# If you have file data, define the path here
-# DATA_ROOT = os.path.join(BASE_DIR, "app_name/data")
-
 GOOGLE_ANALYTICS_KEY = os.getenv("GOOGLE_ANALYTICS_KEY", default=" ")
 
 TEMPLATES = [

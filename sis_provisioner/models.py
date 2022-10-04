@@ -198,7 +198,7 @@ class ImportFile(models.Model):
                 person.uwnetid,
                 person.uwnetid,
                 format_student_number(person.student.student_number),
-                get_class_desc(person.student.class_code, majors),
+                get_class_desc(person.student, majors),
                 last_name,
                 first_name,
                 middle_name,

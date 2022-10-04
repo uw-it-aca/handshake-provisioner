@@ -7,17 +7,19 @@ from uw_person_client import UWPersonClient
 
 class HandshakePersonClient(UWPersonClient):
     def get_registered_students(self, academic_term, **kwargs):
-        sqla_persons = self.DB.session.query(self.DB.Person).join(
-            self.DB.Student).join(
-            self.DB.Term, self.DB.Student.academic_term).filter(
-                self.DB.Term.year == academic_term.year,
-                self.DB.Term.quarter == academic_term.quarter,
-                self.DB.Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
-                (self.DB.Student.enroll_status_code == settings.ENROLLED_STATUS &
-                    self.DB.Student.class_code.in_(settings.ENROLLED_CLASS_CODES)) |
-                (self.DB.Student.application_status_code == settings.APPLICANT_STATUS &
-                    self.DB.Student.class_code.in_(settings.APPLICANT_CLASS_CODES) &
-                    self.DB.Student.application_type_desc.in_(settings.APPLICANT_TYPES)))
+        Person = self.DB.Person
+        Student = self.DB.Student
+        Term = self.DB.Term
+        sqla_persons = self.DB.session.query(Person).join(Student).join(
+            Term, Student.academic_term).filter(
+                Term.year == academic_term.year,
+                Term.quarter == academic_term.quarter,
+                Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
+                (Student.enroll_status_code == settings.ENROLLED_STATUS &
+                    Student.class_code.in_(settings.ENROLLED_CLASS_CODES)) |
+                (Student.application_status_code == settings.APPLICANT_STATUS &
+                    Student.class_code.in_(settings.APPLICANT_CLASS_CODES) &
+                    Student.application_type_desc.in_(settings.APPLICANT_TYPES))  # noqa
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
 
