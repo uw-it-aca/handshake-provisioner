@@ -48,14 +48,19 @@ def is_veteran(veteran_benefit_code):
     return veteran_benefit_code != '0'
 
 
-def get_class_desc(class_code, majors):
-    if class_code not in getattr(settings, 'INCLUDE_CLASS_CODES', []):
+def get_class_desc(student, majors):
+    if student.application_status_code == settings.APPLICANT_STATUS:
+        return 'Freshman' if (
+            student.application_type_desc == 'FRESHMAN') else 'Transfer'
+
+    if student.class_code not in getattr(settings, 'ENROLLED_CLASS_CODES', []):
         return None
 
     if (any('MBA' in major.major_abbr_code and major.college == 'E'
             for major in majors)):
         return 'Masters of Business Administration'
-    return getattr(settings, 'CLASS_CODES', {}).get(class_code, None)
+
+    return getattr(settings, 'CLASS_CODES', {}).get(student.class_code)
 
 
 def format_student_number(number):
