@@ -34,9 +34,14 @@ UW_PERSON_DB_PORT = os.getenv('UW_PERSON_DB_PORT', '5432')
 HANDSHAKE_IMPORT_ADMIN_GROUP = 'u_acadev_handshake_admins'
 
 # Settings that control student data provisioning
-ENROLL_STATUS = '12'
-INCLUDE_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
-INCLUDE_CAMPUS_CODES = ['0', '1', '0.0', '1.0']
+ENROLLED_STATUS = '12'
+ENROLLED_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
+
+APPLICANT_STATUS = '16'
+APPLICANT_TYPES = ['FRESHMAN', '2YR TRANSFER', '4YR TRANSFER']
+APPLICANT_CLASS_CODES = ['1', '2', '3', '4', '5', '6', '8']
+
+INCLUDE_CAMPUS_CODES = ['0', '1']
 EXCLUDE_MAJOR_CODES = ['GEMBA']
 
 HANDSHAKE_CSV_HEADER = [
