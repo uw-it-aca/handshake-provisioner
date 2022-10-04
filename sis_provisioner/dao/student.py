@@ -21,8 +21,7 @@ class HandshakePersonClient(UWPersonClient):
                         Student.class_code.in_(settings.ENROLLED_CLASS_CODES)),
                     and_(
                         Student.application_status_code == settings.APPLICANT_STATUS,  # noqa
-                        Student.class_code.in_(settings.APPLICANT_CLASS_CODES),
-                        Student.application_type_desc.in_(settings.APPLICANT_TYPES)))  # noqa
+                        Student.class_code.in_(settings.APPLICANT_CLASS_CODES)))  # noqa
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
 
