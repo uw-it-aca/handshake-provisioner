@@ -105,7 +105,7 @@ def get_requested_majors(student):
 def get_majors(student):
     excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
     majors = {}
-    for major in (student.majors or student.pending_majors or
+    for major in (student.majors + student.pending_majors or
                   get_requested_majors(student)):
 
         if major.major_full_name is None or major.college is None:
