@@ -50,7 +50,8 @@ def is_veteran(veteran_benefit_code):
 
 def get_class_desc(student, majors):
     class_code = student.class_code
-    if student.application_status_code == settings.APPLICANT_STATUS:
+    if (student.enroll_status_code != settings.ENROLLED_STATUS and
+            student.application_status_code == settings.APPLICANT_STATUS):
         class_code = getattr(settings, 'APPLICANT_TYPES', {}).get(
             student.application_type_desc, class_code)
 

@@ -17,13 +17,14 @@ class HandshakeUtilsTest(TestCase):
 
     def _build_student(self, majors=[], pending_majors=[], requested_majors=[],
                        intended_majors=[], class_code=None,
-                       application_status_code='12'):
+                       enroll_status_code='12', application_status_code='16'):
         student = Student()
         student.majors = majors
         student.pending_majors = pending_majors
         student.requested_majors = requested_majors
         student.intended_majors = intended_majors
         student.class_code = class_code
+        student.enroll_status_code = enroll_status_code
         student.application_status_code = application_status_code
         return student
 
