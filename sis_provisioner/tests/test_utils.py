@@ -49,6 +49,15 @@ class HandshakeUtilsTest(TestCase):
             major_abbr_code='D', major_full_name=None, college='D4')
         major5 = self._build_major(
             major_abbr_code='E', major_full_name='Major 5', college=None)
+        major6 = self._build_major(
+            major_abbr_code='PREMJR', major_full_name='Major 6', college='G')
+        major7 = self._build_major(
+            major_abbr_code='F', major_full_name='Undeclared Major 7',
+            college='J')
+        major8 = self._build_major(
+            major_abbr_code='N MATR', major_full_name='Unmatriculated Major 8',
+            college='J'
+        )
 
         student = self._build_student(majors=[major0])
         self.assertEqual(len(get_majors(student)), 0)
@@ -69,6 +78,24 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(len(get_majors(student)), 2)
 
         student = self._build_student(majors=[major1, major4, major5])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major2, major6])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major6])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major6, major7])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major7])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major8])
+        self.assertEqual(len(get_majors(student)), 0)
+
+        student = self._build_student(majors=[major6, major8])
         self.assertEqual(len(get_majors(student)), 1)
 
     def test_is_athlete(self):
