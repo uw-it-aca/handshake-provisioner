@@ -43,6 +43,7 @@ APPLICANT_CLASS_CODES = ['1', '2', '3', '4', '5', '6', '8']
 
 INCLUDE_CAMPUS_CODES = ['0', '1']
 EXCLUDE_MAJOR_CODES = ['GEMBA', 'N MATR']
+PRE_MAJOR_CODES = ['EPRMJ', 'PSOCS', 'P SW', 'TPRMAJ']
 
 HANDSHAKE_CSV_HEADER = [
     'username',

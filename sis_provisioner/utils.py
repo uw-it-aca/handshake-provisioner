@@ -103,16 +103,20 @@ def get_requested_majors(student):
 
 
 def is_pre_major(major):
-    return 'PRE' in major.major_abbr_code
+    return (
+        'PRE' in major.major_abbr_code or
+        major.major_abbr_code in getattr(settings, 'PRE_MAJOR_CODES', []))
 
 
-def is_undeclared_major(major):
-    return 'Undeclared' in major.major_full_name
+def is_excluded_major(major):
+    return (
+        'Undeclared' in major.major_full_name or
+        major.major_abbr_code in getattr(settings, 'EXCLUDE_MAJOR_CODES', []))
 
 
 def get_majors(student) -> list:
-    excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
     majors = {}
+    premajors = {}
     for major in (student.majors + student.pending_majors or
                   get_requested_majors(student)):
 
@@ -121,20 +125,14 @@ def get_majors(student) -> list:
                 major.major_abbr_code))
             continue
 
-        # remove duplicates, skipping the excluded majors
-        if major.major_abbr_code not in excluded_codes:
-            majors[major.major_full_name] = major
+        if not is_excluded_major(major):
+            if is_pre_major(major):
+                premajors[major.major_full_name] = major
+            else:
+                majors[major.major_full_name] = major
 
-    major_list = list(majors.values())
-    # if > 1 major, remove any pre-majors
-    if len(major_list) > 1:
-        major_list = list(filter(lambda m: not is_pre_major(m), major_list))
-    # if > 1 major, remove any undeclared majors AFTER pre-majors removed
-    if len(major_list) > 1:
-        major_list = list(filter(lambda m: not is_undeclared_major(m),
-                                 major_list))
-
-    return major_list
+    return list(majors.values()) if (
+        len(majors)) else list(premajors.values())
 
 
 def get_major_names(majors):
