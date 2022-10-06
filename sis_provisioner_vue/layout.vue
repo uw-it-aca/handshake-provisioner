@@ -25,7 +25,7 @@
           <li>The &quot;CSV Generated&quot; column indicates the status of the
           file-creation process</li>
           <li>Once created, click &quot;Import to Handshake&quot; to import the file.</li>
-        <ol>
+        </ol>
       </p>
     </template>
     <template #main>
