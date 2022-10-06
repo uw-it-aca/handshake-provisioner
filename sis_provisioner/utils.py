@@ -105,13 +105,13 @@ def get_requested_majors(student):
 def is_pre_major(major):
     return (
         'PRE' in major.major_abbr_code or
+        'Undeclared' in major.major_full_name or
         major.major_abbr_code in getattr(settings, 'PRE_MAJOR_CODES', []))
 
 
 def is_excluded_major(major):
-    return (
-        'Undeclared' in major.major_full_name or
-        major.major_abbr_code in getattr(settings, 'EXCLUDE_MAJOR_CODES', []))
+    return major.major_abbr_code in getattr(
+        settings, 'EXCLUDE_MAJOR_CODES', [])
 
 
 def get_majors(student) -> list:

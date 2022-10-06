@@ -88,13 +88,13 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(len(get_majors(student)), 1)
 
         student = self._build_student(majors=[major6, major7])
-        self.assertEqual(len(get_majors(student)), 1)
+        self.assertEqual(len(get_majors(student)), 2)
 
         student = self._build_student(majors=[major6, major9])
         self.assertEqual(len(get_majors(student)), 2)
 
         student = self._build_student(majors=[major7])
-        self.assertEqual(len(get_majors(student)), 0)
+        self.assertEqual(len(get_majors(student)), 1)
 
         student = self._build_student(majors=[major8])
         self.assertEqual(len(get_majors(student)), 0)
