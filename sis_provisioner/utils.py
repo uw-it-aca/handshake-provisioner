@@ -114,25 +114,44 @@ def is_excluded_major(major):
         settings, 'EXCLUDE_MAJOR_CODES', [])
 
 
-def get_majors(student) -> list:
-    majors = {}
-    premajors = {}
-    for major in (student.majors + student.pending_majors or
-                  get_requested_majors(student)):
-
+def validate_majors(majors) -> list:
+    cleaned_majors = []
+    for major in majors:
         if major.major_full_name is None or major.college is None:
             logger.warning('MISSING data for major: {}'.format(
                 major.major_abbr_code))
-            continue
+        else:
+            cleaned_majors.append(major)
+    return cleaned_majors
 
+
+def get_majors(student) -> list:
+    majors = {}
+    premajors = {}
+    colleges = set()
+
+    raw_majors = validate_majors(
+        student.majors + student.pending_majors or
+        get_requested_majors(student)
+    )
+    for major in raw_majors:
         if not is_excluded_major(major):
             if is_pre_major(major):
                 premajors[major.major_full_name] = major
             else:
                 majors[major.major_full_name] = major
+                colleges.add(major.college)
 
-    return list(majors.values()) if (
-        len(majors)) else list(premajors.values())
+    majors_list = list(majors.values())
+    premajors_list = list(premajors.values())
+    # add each pre-major to the list of majors if its college is not already in
+    # the list of colleges
+    for premajor in premajors_list:
+        if premajor.college not in colleges:
+            majors_list.append(premajor)
+
+    majors_list.sort(key=lambda m: m.college, reverse=True)
+    return majors_list
 
 
 def get_major_names(majors):
