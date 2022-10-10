@@ -16,13 +16,16 @@ class HandshakeUtilsTest(TestCase):
         return major
 
     def _build_student(self, majors=[], pending_majors=[], requested_majors=[],
-                       intended_majors=[], class_code=None):
+                       intended_majors=[], class_code=None,
+                       enroll_status_code='12', application_status_code='16'):
         student = Student()
         student.majors = majors
         student.pending_majors = pending_majors
         student.requested_majors = requested_majors
         student.intended_majors = intended_majors
         student.class_code = class_code
+        student.enroll_status_code = enroll_status_code
+        student.application_status_code = application_status_code
         return student
 
     def _build_ethnicity(self, ethnic_code=None, ethnic_desc=None,
@@ -46,6 +49,18 @@ class HandshakeUtilsTest(TestCase):
             major_abbr_code='D', major_full_name=None, college='D4')
         major5 = self._build_major(
             major_abbr_code='E', major_full_name='Major 5', college=None)
+        major6 = self._build_major(
+            major_abbr_code='PREMJR', major_full_name='Major 6', college='G')
+        major7 = self._build_major(
+            major_abbr_code='F', major_full_name='Undeclared Major 7',
+            college='J')
+        major8 = self._build_major(
+            major_abbr_code='N MATR', major_full_name='Unmatriculated Major 8',
+            college='J')
+        major9 = self._build_major(
+            major_abbr_code='PSOCS', major_full_name='Premajor 9', college='J')
+        major10 = self._build_major(
+            major_abbr_code='HI', major_full_name='Major 10', college='J')
 
         student = self._build_student(majors=[major0])
         self.assertEqual(len(get_majors(student)), 0)
@@ -66,6 +81,30 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(len(get_majors(student)), 2)
 
         student = self._build_student(majors=[major1, major4, major5])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major2, major6])
+        self.assertEqual(len(get_majors(student)), 2)
+
+        student = self._build_student(majors=[major9, major10])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major6])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major6, major7])
+        self.assertEqual(len(get_majors(student)), 2)
+
+        student = self._build_student(majors=[major6, major9])
+        self.assertEqual(len(get_majors(student)), 2)
+
+        student = self._build_student(majors=[major7])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major8])
+        self.assertEqual(len(get_majors(student)), 0)
+
+        student = self._build_student(majors=[major6, major8])
         self.assertEqual(len(get_majors(student)), 1)
 
     def test_is_athlete(self):
@@ -215,26 +254,35 @@ class HandshakeUtilsTest(TestCase):
         major2 = self._build_major(major_abbr_code='0-EMBA', college='E')
         major3 = self._build_major(major_abbr_code='0-EMBA', college='F')
 
-        majors = [major1]
-        self.assertEqual(get_class_desc('1', majors), 'Freshman')
-        self.assertEqual(get_class_desc('2', majors), 'Sophomore')
-        self.assertEqual(get_class_desc('3', majors), 'Junior')
-        self.assertEqual(get_class_desc('4', majors), 'Senior')
-        self.assertEqual(get_class_desc('5', majors), 'Senior')
-        self.assertEqual(get_class_desc('8', majors), 'Masters')
+        student = self._build_student(class_code='1')
+        self.assertEqual(get_class_desc(student, [major1]), 'Freshman')
+        student = self._build_student(class_code='2')
+        self.assertEqual(get_class_desc(student, [major1]), 'Sophomore')
+        student = self._build_student(class_code='3')
+        self.assertEqual(get_class_desc(student, [major1]), 'Junior')
+        student = self._build_student(class_code='4')
+        self.assertEqual(get_class_desc(student, [major1]), 'Senior')
+        student = self._build_student(class_code='5')
+        self.assertEqual(get_class_desc(student, [major1]), 'Senior')
+        student = self._build_student(class_code='6')
+        self.assertEqual(get_class_desc(student, [major1]), None)
+        student = self._build_student(class_code='8')
+        self.assertEqual(get_class_desc(student, [major1]), 'Masters')
 
-        majors = [major2]
-        self.assertEqual(get_class_desc('8', majors),
+        student = self._build_student(class_code='1')
+        self.assertEqual(get_class_desc(student, [major2]),
                          'Masters of Business Administration')
-        majors = [major2, major3]
-        self.assertEqual(get_class_desc('8', majors),
+        student = self._build_student(class_code='8')
+        self.assertEqual(get_class_desc(student, [major2, major3]),
+                         'Masters of Business Administration')
+        student = self._build_student(class_code='8')
+        self.assertEqual(get_class_desc(student, [major1, major2]),
                          'Masters of Business Administration')
 
-        majors = [major1, major2]
-        self.assertEqual(get_class_desc('8', majors),
-                         'Masters of Business Administration')
-        self.assertEqual(get_class_desc('9', majors), None)
-        self.assertEqual(get_class_desc(1, majors), None)
+        student = self._build_student(class_code='9')
+        self.assertEqual(get_class_desc(student, [major1, major2]), None)
+        student = self._build_student(class_code=1)
+        self.assertEqual(get_class_desc(student, [major1, major2]), None)
 
     def test_format_student_number(self):
         self.assertEqual(format_student_number('1234567'), '1234567')

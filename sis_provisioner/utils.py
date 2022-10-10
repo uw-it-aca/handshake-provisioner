@@ -48,14 +48,21 @@ def is_veteran(veteran_benefit_code):
     return veteran_benefit_code != '0'
 
 
-def get_class_desc(class_code, majors):
-    if class_code not in getattr(settings, 'INCLUDE_CLASS_CODES', []):
+def get_class_desc(student, majors):
+    class_code = student.class_code
+    if (student.enroll_status_code != settings.ENROLLED_STATUS and
+            student.application_status_code == settings.APPLICANT_STATUS):
+        class_code = getattr(settings, 'APPLICANT_TYPES', {}).get(
+            student.application_type_desc, class_code)
+
+    if class_code not in getattr(settings, 'ENROLLED_CLASS_CODES', []):
         return None
 
     if (any('MBA' in major.major_abbr_code and major.college == 'E'
             for major in majors)):
         return 'Masters of Business Administration'
-    return getattr(settings, 'CLASS_CODES', {}).get(class_code, None)
+
+    return getattr(settings, 'CLASS_CODES', {}).get(class_code)
 
 
 def format_student_number(number):
@@ -95,22 +102,56 @@ def get_requested_majors(student):
     return []
 
 
-def get_majors(student):
-    excluded_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
-    majors = {}
-    for major in (student.majors or student.pending_majors or
-                  get_requested_majors(student)):
+def is_pre_major(major):
+    return (
+        'PRE' in major.major_abbr_code or
+        'Undeclared' in major.major_full_name or
+        major.major_abbr_code in getattr(settings, 'PRE_MAJOR_CODES', []))
 
+
+def is_excluded_major(major):
+    return major.major_abbr_code in getattr(
+        settings, 'EXCLUDE_MAJOR_CODES', [])
+
+
+def validate_majors(majors) -> list:
+    cleaned_majors = []
+    for major in majors:
         if major.major_full_name is None or major.college is None:
             logger.warning('MISSING data for major: {}'.format(
                 major.major_abbr_code))
-            continue
+        else:
+            cleaned_majors.append(major)
+    return cleaned_majors
 
-        # remove duplicates, skipping the excluded majors
-        if major.major_abbr_code not in excluded_codes:
-            majors[major.major_full_name] = major
 
-    return list(majors.values())
+def get_majors(student) -> list:
+    majors = {}
+    premajors = {}
+    colleges = set()
+
+    raw_majors = validate_majors(
+        student.majors + student.pending_majors or
+        get_requested_majors(student)
+    )
+    for major in raw_majors:
+        if not is_excluded_major(major):
+            if is_pre_major(major):
+                premajors[major.major_full_name] = major
+            else:
+                majors[major.major_full_name] = major
+                colleges.add(major.college)
+
+    majors_list = list(majors.values())
+    premajors_list = list(premajors.values())
+    # add each pre-major to the list of majors if its college is not already in
+    # the list of colleges
+    for premajor in premajors_list:
+        if premajor.college not in colleges:
+            majors_list.append(premajor)
+
+    majors_list.sort(key=lambda m: m.college, reverse=True)
+    return majors_list
 
 
 def get_major_names(majors):

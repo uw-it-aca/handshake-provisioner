@@ -53,7 +53,7 @@ cronjob:
   enabled: true
   jobs:
     - name: build-file
-      schedule: "*/10 15-23 * * 1-5"
+      schedule: "*/6 15-23 * * 1-5"
       command: ["/scripts/management_command.sh"]
       args: ["build_file"]
       resources:
