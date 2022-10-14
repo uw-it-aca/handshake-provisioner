@@ -86,7 +86,7 @@ def is_no_sync_college(majors):
     college_code = get_synced_college_code(
         [get_college_for_major(major) for major in majors]
     )
-    return college_code == 'E' or college_code == 'V'
+    return college_code == 'E'
 
 
 def get_requested_majors(student):
