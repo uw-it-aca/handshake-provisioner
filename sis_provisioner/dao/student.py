@@ -35,10 +35,17 @@ class HandshakePersonClient(UWPersonClient):
         )
         return [self._map_major(m) for m in sqla_majors.all()]
 
+    def get_active_students(self, **kwargs):
+        sqla_persons = self.DB.session.query(self.DB.Person).filter(
+            self.DB.Person._is_active_student == True  # noqa
+        )
+        return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
+
 
 def get_students_for_handshake(academic_term):
     kwargs = {
         'include_employee': False,
+        'include_student': True,
         'include_student_transcripts': False,
         'include_student_transfers': False,
         'include_student_sports': False,
@@ -53,3 +60,18 @@ def get_students_for_handshake(academic_term):
 def get_majors_by_code(codes: list):
     client = HandshakePersonClient()
     return client.get_requested_majors(codes)
+
+
+def get_active_students():
+    kwargs = {
+        'include_employee': False,
+        'include_student': False,
+        'include_student_transcripts': False,
+        'include_student_transfers': False,
+        'include_student_sports': False,
+        'include_student_advisers': False,
+        'include_student_majors': False,
+        'include_student_pending_majors': False,
+    }
+    client = HandshakePersonClient()
+    return client.get_active_students(**kwargs)
