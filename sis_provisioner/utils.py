@@ -150,7 +150,6 @@ def get_majors(student) -> list:
         if premajor.college not in colleges:
             majors_list.append(premajor)
 
-    majors_list.sort(key=lambda m: m.college, reverse=True)
     return majors_list
 
 
