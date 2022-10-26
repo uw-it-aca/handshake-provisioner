@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models import ImportFile, Term
+from sis_provisioner.models import HandshakeStudentsFile, Term
 
 
 class Command(BaseCommand):
@@ -21,5 +21,6 @@ class Command(BaseCommand):
         else:
             term = Term.objects.current()
 
-        import_file = ImportFile.objects.add_file(term=term, is_test_file=True)
+        import_file = HandshakeStudentsFile.objects.add_file(
+            term=term, is_test_file=True)
         import_file.build()

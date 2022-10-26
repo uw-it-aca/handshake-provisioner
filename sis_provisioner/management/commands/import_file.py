@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models import ImportFile
+from sis_provisioner.models import HandshakeStudentsFile
 
 
 class Command(BaseCommand):
@@ -14,5 +14,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_id = options.get('file_id')
-        import_file = ImportFile.objects.get(pk=file_id)
+        import_file = HandshakeStudentsFile.objects.get(pk=file_id)
         import_file.sisimport()

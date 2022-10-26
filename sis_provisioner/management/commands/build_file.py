@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models import ImportFile
+from sis_provisioner.models import HandshakeStudentsFile
 
 
 class Command(BaseCommand):
     help = 'Build the csv data for an import file.'
 
     def handle(self, *args, **options):
-        ImportFile.objects.build_file()
+        HandshakeStudentsFile.objects.build_file()

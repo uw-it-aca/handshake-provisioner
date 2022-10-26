@@ -8,7 +8,8 @@ from django.urls import reverse
 from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file, delete_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
-from sis_provisioner.dao.student import get_students_for_handshake
+from sis_provisioner.dao.student import (
+    get_students_for_handshake, get_active_students)
 from sis_provisioner.dao.term import AcademicTerm
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
@@ -73,9 +74,74 @@ class Term(models.Model):
         }
 
 
-class ImportFileManager(models.Manager):
+class ImportFile(models.Model):
+    path = models.CharField(max_length=128, null=True)
+    created_by = models.CharField(max_length=32, default='internal')
+    created_date = models.DateTimeField()
+    generated_date = models.DateTimeField(null=True)
+    import_progress = models.SmallIntegerField(default=0)
+    imported_date = models.DateTimeField(null=True)
+    imported_status = models.CharField(max_length=128, null=True)
+    process_id = models.CharField(max_length=64, null=True)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def filename(self):
+        return os.path.basename(self.path or '')
+
+    @property
+    def content(self):
+        return read_file(self.path)
+
+    def build(self):
+        self.process_id = os.getpid()
+        self.save()
+        try:
+            write_file(self.path, self._generate_csv())
+            self.generated_date = datetime.utcnow().replace(tzinfo=utc)
+            logger.info('CSV generated for file ID {}'.format(self.pk))
+        except Exception as ex:
+            logger.info('CSV failed for file ID {}: {}'.format(
+                self.pk, ex))
+
+        self.process_id = None
+        self.save()
+
+    def delete(self, **kwargs):
+        if self.generated_date is not None:
+            delete_file(self.path)
+        super().delete(**kwargs)
+
+    def json_data(self):
+        return {
+            'id': self.pk,
+            'name': self.filename,
+            'created_by': self.created_by,
+            'created_date': self.created_date.isoformat(),
+            'generated_date': self.generated_date.isoformat() if (
+                self.generated_date is not None) else None,
+            'import_progress': self.import_progress,
+            'imported_date': self.imported_date.isoformat() if (
+                self.imported_date is not None) else None,
+            'imported_status': self.imported_status,
+            'process_id': self.process_id,
+        }
+
+    def sisimport(self):
+        raise NotImplemented()
+
+    def _create_path(self):
+        raise NotImplemented()
+
+    def _generate_csv(self):
+        raise NotImplemented()
+
+
+class HandshakeStudentsFileManager(models.Manager):
     def add_file(self, term, is_test_file, created_by='internal'):
-        import_file = ImportFile(
+        import_file = HandshakeStudentsFile(
             term=term, is_test_file=is_test_file, created_by=created_by)
         import_file._create_path()
         import_file.save()
@@ -86,42 +152,19 @@ class ImportFileManager(models.Manager):
             generated_date__isnull=True, process_id__isnull=True
         ).order_by('created_date').first()
 
-        if import_file is None:
-            return
-
-        import_file.process_id = os.getpid()
-        import_file.save()
-        try:
+        if import_file is not None:
             import_file.build()
-            logger.info('CSV generated for file ID {}'.format(import_file.pk))
-        except Exception as ex:
-            import_file.process_id = None
-            import_file.save()
-            logger.info('CSV failed for file ID {}: {}'.format(
-                import_file.pk, ex))
 
 
-class ImportFile(models.Model):
-    path = models.CharField(max_length=128, null=True)
+class HandshakeStudentsFile(ImportFile):
+    '''
+    A file containing enrolled students for a term, used for provisioning
+    student attributes to Handshake.
+    '''
     term = models.ForeignKey(Term, on_delete=models.CASCADE)
     is_test_file = models.BooleanField(default=False)
-    created_by = models.CharField(max_length=32, default='internal')
-    created_date = models.DateTimeField()
-    generated_date = models.DateTimeField(null=True)
-    import_progress = models.SmallIntegerField(default=0)
-    imported_date = models.DateTimeField(null=True)
-    imported_status = models.CharField(max_length=128, null=True)
-    process_id = models.CharField(max_length=64, null=True)
 
-    objects = ImportFileManager()
-
-    @property
-    def filename(self):
-        return os.path.basename(self.path or '')
-
-    @property
-    def content(self):
-        return read_file(self.path)
+    objects = HandshakeStudentsFileManager()
 
     def sisimport(self):
         if self.generated_date is None:
@@ -138,35 +181,13 @@ class ImportFile(models.Model):
         self.imported_date = datetime.utcnow().replace(tzinfo=utc)
         self.save()
 
-    def build(self):
-        write_file(self.path, self._generate_csv())
-        self.generated_date = datetime.utcnow().replace(tzinfo=utc)
-        self.process_id = None
-        self.save()
-
-    def delete(self, **kwargs):
-        if self.generated_date is not None:
-            delete_file(self.path)
-        super().delete(**kwargs)
-
     def json_data(self):
-        return {
-            'id': self.pk,
-            'name': self.filename,
-            'term': self.term.json_data(),
-            'is_test_file': self.is_test_file,
-            'api_path': reverse('import-file', kwargs={
+        data = super().json_data()
+        data['term'] = self.term.json_data()
+        data['is_test_file'] = self.is_test_file
+        data['api_path'] = reverse('handshake-file', kwargs={
                 'file_id': self.pk}),
-            'created_by': self.created_by,
-            'created_date': self.created_date.isoformat(),
-            'generated_date': self.generated_date.isoformat() if (
-                self.generated_date is not None) else None,
-            'import_progress': self.import_progress,
-            'imported_date': self.imported_date.isoformat() if (
-                self.imported_date is not None) else None,
-            'imported_status': self.imported_status,
-            'process_id': self.process_id,
-        }
+        return data
 
     def _create_path(self):
         name = self.term.name
@@ -215,6 +236,60 @@ class ImportFile(models.Model):
                 # is_veteran(person.student.veteran_benefit_code),
                 # 'work_study_eligible',  # TODO: get from visa type
                 # 'primary_education:education_level_name',  # TODO: ?
+            ])
+
+        return s.getvalue()
+
+
+class FosterStudentsFile(ImportFile):
+    '''
+    A file containing Foster School of Business student data (excluding MBAs)
+    containing username, email address, college, major fields
+    '''
+    term = models.ForeignKey(Term, on_delete=models.CASCADE)
+
+    def json_data(self):
+        data = super().json_data()
+        data['term'] = self.term.json_data()
+        return data
+
+    def _create_path(self):
+        if self.created_date is None:
+            self.created_date = datetime.utcnow().replace(tzinfo=utc)
+
+        self.path = self.created_date.strftime(
+            '%Y/%m/{}-foster-students-%Y%m%d-%H%M%S.csv'.format(
+                self.term.name))
+        return self.path
+
+
+class ActiveStudentsFile(ImportFile):
+    '''
+    A file containing all active students, currently used for provisioning
+    uwnetid and uwregid to LinkedIn Learning.
+    '''
+    def _create_path(self):
+        if self.created_date is None:
+            self.created_date = datetime.utcnow().replace(tzinfo=utc)
+
+        self.path = self.created_date.strftime(
+            '%Y/%m/active-students-%Y%m%d-%H%M%S.csv')
+        return self.path
+
+    def _generate_csv(self):
+        s = io.StringIO()
+        csv.register_dialect('unix_newline', lineterminator='\n')
+        writer = csv.writer(s, dialect='unix_newline')
+
+        writer.writerow([
+            'uwnetid', 'uwregid', 'prior_uwnetids', 'prior_uwregids'])
+
+        for person in get_active_students():
+            writer.writerow([
+                person.uwnetid,
+                person.uwregid,
+                ';'.join(person.prior_uwnetids),
+                ';'.join(person.prior_uwregids),
             ])
 
         return s.getvalue()

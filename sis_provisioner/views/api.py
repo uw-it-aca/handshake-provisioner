@@ -6,7 +6,7 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from sis_provisioner.models import ImportFile, Term
+from sis_provisioner.models import HandshakeStudentsFile, Term
 from uw_saml.utils import get_user
 from logging import getLogger
 import json
@@ -43,7 +43,7 @@ class APIView(View):
 
 class FileListView(APIView):
     def get(self, request, *args, **kwargs):
-        files = ImportFile.objects.all().order_by('-created_date')
+        files = HandshakeStudentsFile.objects.all().order_by('-created_date')
         data = [f.json_data() for f in files]
         return self.json_response(data)
 
@@ -59,7 +59,7 @@ class FileListView(APIView):
         else:
             return self.error_response(400, 'Invalid term')
 
-        import_file = ImportFile.objects.add_file(
+        import_file = HandshakeStudentsFile.objects.add_file(
             term, is_test_file, created_by=get_user(request))
         return self.json_response(import_file.json_data())
 
@@ -69,10 +69,10 @@ class FileView(APIView):
         file_id = kwargs.get('file_id')
 
         try:
-            import_file = ImportFile.objects.get(pk=file_id)
+            import_file = HandshakeStudentsFile.objects.get(pk=file_id)
             return self.file_response(import_file.content,
                                       import_file.filename)
-        except ImportFile.DoesNotExist:
+        except HandshakeStudentsFile.DoesNotExist:
             return self.error_response(404, 'Not Found')
         except ObjectDoesNotExist:
             return self.error_response(404, 'Not Available')
@@ -81,10 +81,10 @@ class FileView(APIView):
         file_id = kwargs.get('file_id')
 
         try:
-            import_file = ImportFile.objects.get(pk=file_id)
+            import_file = HandshakeStudentsFile.objects.get(pk=file_id)
             import_file.sisimport()
             return self.json_response(content=import_file.json_data())
-        except ImportFile.DoesNotExist:
+        except HandshakeStudentsFile.DoesNotExist:
             return self.error_response(404, 'Not Found')
         except ObjectDoesNotExist:
             return self.error_response(404, 'Not Available')
@@ -95,10 +95,10 @@ class FileView(APIView):
         file_id = kwargs.get('file_id')
 
         try:
-            import_file = ImportFile.objects.get(pk=file_id)
+            import_file = HandshakeStudentsFile.objects.get(pk=file_id)
             import_file.delete()
             return self.json_response(status=204)
-        except ImportFile.DoesNotExist:
+        except HandshakeStudentsFile.DoesNotExist:
             return self.error_response(404, 'Not Found')
         except ObjectDoesNotExist:
             return self.error_response(404, 'Not Available')
