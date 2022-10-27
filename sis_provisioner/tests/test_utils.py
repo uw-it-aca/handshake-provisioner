@@ -126,7 +126,9 @@ class HandshakeUtilsTest(TestCase):
     def test_get_synced_college_code(self):
         codes = ['A', 'B', 'C']
         self.assertEqual(get_synced_college_code(codes), 'C')
-        self.assertEqual(get_synced_college_code(None), None)
+        self.assertEqual(get_synced_college_code([]), None)
+        self.assertEqual(get_synced_college_code(['V']), None)
+        self.assertEqual(get_synced_college_code(['V'] + codes), 'C')
 
     def test_get_major_names(self):
         major = self._build_major(major_abbr_code='BSE', college='F',

@@ -75,7 +75,9 @@ def get_college_for_major(major):
 
 
 def get_synced_college_code(codes: list):
-    if not codes:
+    if len(codes) > 0 and 'V' in codes:
+        codes.remove('V')
+    if len(codes) == 0:
         return None
     if 'J2' in codes:
         return 'J2'
@@ -165,12 +167,13 @@ def get_primary_major_name(majors):
 
 
 def get_synced_college_name(majors, campus='0'):
+    college_dict = getattr(settings, 'COLLEGES', {})
+
     college_code = get_synced_college_code(
         [get_college_for_major(major) for major in majors]
     )
     if college_code is None and campus == '1':
         college_code = 'V'
-    college_dict = getattr(settings, 'COLLEGES', {})
     return college_dict.get(college_code)
 
 
