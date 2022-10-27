@@ -131,7 +131,7 @@ def get_majors(student) -> list:
     colleges = set()
 
     raw_majors = validate_majors(
-        student.majors + student.pending_majors or
+        student.majors or student.pending_majors or
         get_requested_majors(student)
     )
     for major in raw_majors:
