@@ -9,5 +9,5 @@ class Command(BaseCommand):
     help = 'Build the csv data for an import file.'
 
     def handle(self, *args, **options):
-        HandshakeStudentsFile.objects.build_file() or
-        ActiveStudentsFile.objects.build_file()
+        (HandshakeStudentsFile.objects.build_file() or
+            ActiveStudentsFile.objects.build_file())
