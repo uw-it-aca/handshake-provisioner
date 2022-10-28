@@ -3,7 +3,7 @@
 
 from django.db import models
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, FieldError
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file, delete_file
