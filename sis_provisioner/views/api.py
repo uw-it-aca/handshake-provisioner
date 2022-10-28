@@ -59,8 +59,9 @@ class FileListView(APIView):
         else:
             return self.error_response(400, 'Invalid term')
 
-        import_file = HandshakeStudentsFile.objects.add_file(
-            term, is_test_file, created_by=get_user(request))
+        import_file = HandshakeStudentsFile(term=term,
+                                            is_test_file=is_test_file,
+                                            created_by=get_user(request))
         return self.json_response(import_file.json_data())
 
 

@@ -3,7 +3,7 @@
 
 from django.db import models
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, FieldError
 from django.urls import reverse
 from django.utils.timezone import utc
 from sis_provisioner.dao.file import read_file, write_file, delete_file
@@ -93,7 +93,8 @@ class ImportFile(models.Model):
 
     @property
     def content(self):
-        return read_file(self.path)
+        if self.generated_date is not None:
+            return read_file(self.path)
 
     def build(self):
         self.process_id = os.getpid()
@@ -109,6 +110,13 @@ class ImportFile(models.Model):
         self.process_id = None
         self.save()
 
+    def save(self, *args, **kwargs):
+        if self.created_date is None:
+            self.created_date = datetime.utcnow().replace(tzinfo=utc)
+        if self.path is None:
+            self.path = self._create_path()
+        super().save(*args, **kwargs)
+
     def delete(self, **kwargs):
         if self.generated_date is not None:
             delete_file(self.path)
@@ -119,7 +127,8 @@ class ImportFile(models.Model):
             'id': self.pk,
             'name': self.filename,
             'created_by': self.created_by,
-            'created_date': self.created_date.isoformat(),
+            'created_date': self.created_date.isoformat() if (
+                self.created_date is not None) else None,
             'generated_date': self.generated_date.isoformat() if (
                 self.generated_date is not None) else None,
             'import_progress': self.import_progress,
@@ -140,13 +149,6 @@ class ImportFile(models.Model):
 
 
 class HandshakeStudentsFileManager(models.Manager):
-    def add_file(self, term, is_test_file, created_by='internal'):
-        import_file = HandshakeStudentsFile(
-            term=term, is_test_file=is_test_file, created_by=created_by)
-        import_file._create_path()
-        import_file.save()
-        return import_file
-
     def build_file(self):
         import_file = super().get_queryset().filter(
             generated_date__isnull=True, process_id__isnull=True
@@ -154,6 +156,7 @@ class HandshakeStudentsFileManager(models.Manager):
 
         if import_file is not None:
             import_file.build()
+            return import_file
 
 
 class HandshakeStudentsFile(ImportFile):
@@ -192,15 +195,12 @@ class HandshakeStudentsFile(ImportFile):
     def _create_path(self):
         name = self.term.name
         prefix = getattr(settings, 'FILENAME_TEST_PREFIX')
+
         if self.is_test_file and prefix is not None and len(prefix):
             name = '{}-{}'.format(prefix, name)
 
-        if self.created_date is None:
-            self.created_date = datetime.utcnow().replace(tzinfo=utc)
-
-        self.path = self.created_date.strftime(
+        return self.created_date.strftime(
             '%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))
-        return self.path
 
     def _generate_csv(self):
         s = io.StringIO()
@@ -254,13 +254,20 @@ class FosterStudentsFile(ImportFile):
         return data
 
     def _create_path(self):
-        if self.created_date is None:
-            self.created_date = datetime.utcnow().replace(tzinfo=utc)
-
-        self.path = self.created_date.strftime(
+        return self.created_date.strftime(
             '%Y/%m/{}-foster-students-%Y%m%d-%H%M%S.csv'.format(
                 self.term.name))
-        return self.path
+
+
+class ActiveStudentsFileManager(models.Manager):
+    def build_file(self):
+        import_file = super().get_queryset().filter(
+            generated_date__isnull=True, process_id__isnull=True
+        ).order_by('created_date').first()
+
+        if import_file is not None:
+            import_file.build()
+            return import_file
 
 
 class ActiveStudentsFile(ImportFile):
@@ -268,13 +275,11 @@ class ActiveStudentsFile(ImportFile):
     A file containing all active students, currently used for provisioning
     uwnetid and uwregid to LinkedIn Learning.
     '''
-    def _create_path(self):
-        if self.created_date is None:
-            self.created_date = datetime.utcnow().replace(tzinfo=utc)
+    objects = ActiveStudentsFileManager()
 
-        self.path = self.created_date.strftime(
+    def _create_path(self):
+        return self.created_date.strftime(
             '%Y/%m/active-students-%Y%m%d-%H%M%S.csv')
-        return self.path
 
     def _generate_csv(self):
         s = io.StringIO()

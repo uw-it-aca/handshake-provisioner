@@ -21,6 +21,4 @@ class Command(BaseCommand):
         else:
             term = Term.objects.current()
 
-        import_file = HandshakeStudentsFile.objects.add_file(
-            term=term, is_test_file=True)
-        import_file.build()
+        HandshakeStudentsFile(term=term, is_test_file=True).save()
