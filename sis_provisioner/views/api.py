@@ -62,6 +62,7 @@ class FileListView(APIView):
         import_file = HandshakeStudentsFile(term=term,
                                             is_test_file=is_test_file,
                                             created_by=get_user(request))
+        import_file.save()
         return self.json_response(import_file.json_data())
 
 
