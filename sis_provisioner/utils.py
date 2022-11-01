@@ -75,7 +75,9 @@ def get_college_for_major(major):
 
 
 def get_synced_college_code(codes: list):
-    if not codes:
+    if len(codes) > 0 and 'V' in codes:
+        codes.remove('V')
+    if len(codes) == 0:
         return None
     if 'J2' in codes:
         return 'J2'
@@ -131,7 +133,7 @@ def get_majors(student) -> list:
     colleges = set()
 
     raw_majors = validate_majors(
-        student.majors + student.pending_majors or
+        student.majors or student.pending_majors or
         get_requested_majors(student)
     )
     for major in raw_majors:
@@ -150,7 +152,6 @@ def get_majors(student) -> list:
         if premajor.college not in colleges:
             majors_list.append(premajor)
 
-    majors_list.sort(key=lambda m: m.college, reverse=True)
     return majors_list
 
 
@@ -166,12 +167,13 @@ def get_primary_major_name(majors):
 
 
 def get_synced_college_name(majors, campus='0'):
+    college_dict = getattr(settings, 'COLLEGES', {})
+
     college_code = get_synced_college_code(
         [get_college_for_major(major) for major in majors]
     )
     if college_code is None and campus == '1':
         college_code = 'V'
-    college_dict = getattr(settings, 'COLLEGES', {})
     return college_dict.get(college_code)
 
 
