@@ -76,7 +76,7 @@ class Term(models.Model):
 
 class ImportFile(models.Model):
     path = models.CharField(max_length=128, null=True)
-    created_by = models.CharField(max_length=32, default='internal')
+    created_by = models.CharField(max_length=32, default='automatic')
     created_date = models.DateTimeField()
     generated_date = models.DateTimeField(null=True)
     import_progress = models.SmallIntegerField(default=0)
@@ -287,11 +287,11 @@ class ActiveStudentsFile(ImportFile):
         writer = csv.writer(s, dialect='unix_newline')
 
         writer.writerow([
-            'uwnetid', 'uwregid', 'prior_uwnetids', 'prior_uwregids'])
+            'email', 'uwregid', 'prior_uwnetids', 'prior_uwregids'])
 
         for person in get_active_students():
             writer.writerow([
-                person.uwnetid,
+                '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
                 person.uwregid,
                 ';'.join(person.prior_uwnetids),
                 ';'.join(person.prior_uwregids),
