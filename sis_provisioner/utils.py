@@ -74,21 +74,24 @@ def get_college_for_major(major):
         major.major_abbr_code, major.college)
 
 
-def get_synced_college_code(codes: list):
-    if len(codes) > 0 and 'V' in codes:
-        codes.remove('V')
+def _remove_codes(codes: list, remove_codes: list):
+    return [code for code in codes if code not in remove_codes]
+
+
+def get_college_code(codes: list):
+    excluded_college_codes = getattr(settings, 'EXCLUDE_COLLEGE_CODES', [])
+    codes = _remove_codes(codes, excluded_college_codes)
+
     if len(codes) == 0:
         return None
-    if 'J2' in codes:
-        return 'J2'
-    return max(codes)
+    return codes[0]
 
 
-def is_no_sync_college(majors):
-    college_code = get_synced_college_code(
+def is_excluded_college(majors):
+    college_code = get_college_code(
         [get_college_for_major(major) for major in majors]
     )
-    return college_code == 'E'
+    return college_code is None or college_code == 'E'
 
 
 def get_requested_majors(student):
@@ -99,7 +102,7 @@ def get_requested_majors(student):
     ]
     # filter out empty codes
     codes = [code for code in requested if code]
-    if len(codes):
+    if len(codes) > 0:
         return get_majors_by_code(codes)
     return []
 
@@ -112,8 +115,8 @@ def is_pre_major(major):
 
 
 def is_excluded_major(major):
-    return major.major_abbr_code in getattr(
-        settings, 'EXCLUDE_MAJOR_CODES', [])
+    excluded_major_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
+    return major.major_abbr_code in excluded_major_codes
 
 
 def validate_majors(majors) -> list:
@@ -156,20 +159,20 @@ def get_majors(student) -> list:
 
 
 def get_major_names(majors):
-    if not is_no_sync_college(majors):
+    if not is_excluded_college(majors):
         return ';'.join([m.major_full_name for m in majors])
     return ''
 
 
-def get_primary_major_name(majors):
-    if len(majors) and not is_no_sync_college(majors):
+def get_primary_major_name(majors: list):
+    if len(majors) > 0 and not is_excluded_college(majors):
         return majors[0].major_full_name
 
 
-def get_synced_college_name(majors, campus='0'):
+def get_college_name(majors, campus='0'):
     college_dict = getattr(settings, 'COLLEGES', {})
 
-    college_code = get_synced_college_code(
+    college_code = get_college_code(
         [get_college_for_major(major) for major in majors]
     )
     if college_code is None and campus == '1':
