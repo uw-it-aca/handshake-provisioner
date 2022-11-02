@@ -26,7 +26,7 @@ class HandshakeStudentsFileTest(TestCase):
                          '2019/06/AUT2019-20190615-024500.csv')
         self.assertEqual(impfile.json_data(), {
             'api_path': ('/api/v1/file/1',),
-            'created_by': 'internal',
+            'created_by': 'automatic',
             'created_date': '2019-06-15T02:45:00+00:00',
             'generated_date': None,
             'id': 1,
@@ -50,7 +50,7 @@ class HandshakeStudentsFileTest(TestCase):
                          '2019/06/TEST-AUT2019-20190615-024500.csv')
         self.assertEqual(impfile.json_data(), {
             'api_path': ('/api/v1/file/1',),
-            'created_by': 'internal',
+            'created_by': 'automatic',
             'created_date': '2019-06-15T02:45:00+00:00',
             'generated_date': None,
             'id': 1,
@@ -97,7 +97,7 @@ class ActiveStudentsFileTest(TestCase):
         self.assertEqual(impfile.path,
                          '2019/06/active-students-20190615-024500.csv')
         self.assertEqual(impfile.json_data(), {
-            'created_by': 'internal',
+            'created_by': 'automatic',
             'created_date': '2019-06-15T02:45:00+00:00',
             'generated_date': None,
             'id': 1,

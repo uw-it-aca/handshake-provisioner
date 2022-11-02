@@ -13,7 +13,7 @@ from sis_provisioner.dao.student import (
 from sis_provisioner.dao.term import AcademicTerm
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
-    is_veteran, get_synced_college_name, get_ethnicity_name, get_class_desc,
+    is_veteran, get_college_name, get_ethnicity_name, get_class_desc,
     format_student_number, format_name)
 from datetime import datetime
 from logging import getLogger
@@ -76,7 +76,7 @@ class Term(models.Model):
 
 class ImportFile(models.Model):
     path = models.CharField(max_length=128, null=True)
-    created_by = models.CharField(max_length=32, default='internal')
+    created_by = models.CharField(max_length=32, default='automatic')
     created_date = models.DateTimeField()
     generated_date = models.DateTimeField(null=True)
     import_progress = models.SmallIntegerField(default=0)
@@ -224,7 +224,7 @@ class HandshakeStudentsFile(ImportFile):
                 first_name,
                 middle_name,
                 person.preferred_first_name,
-                get_synced_college_name(majors, person.student.campus_code),
+                get_college_name(majors, person.student.campus_code),
                 '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
                 person.student.campus_desc,
                 get_major_names(majors),
@@ -287,11 +287,11 @@ class ActiveStudentsFile(ImportFile):
         writer = csv.writer(s, dialect='unix_newline')
 
         writer.writerow([
-            'uwnetid', 'uwregid', 'prior_uwnetids', 'prior_uwregids'])
+            'email', 'uwregid', 'prior_uwnetids', 'prior_uwregids'])
 
         for person in get_active_students():
             writer.writerow([
-                person.uwnetid,
+                '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
                 person.uwregid,
                 ';'.join(person.prior_uwnetids),
                 ';'.join(person.prior_uwregids),
