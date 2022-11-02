@@ -84,7 +84,9 @@ def get_college_code(codes: list):
 
     if len(codes) == 0:
         return None
-    return codes[0]
+    if 'J2' in codes:
+        return 'J2'
+    return max(codes)
 
 
 def is_excluded_college(majors):
