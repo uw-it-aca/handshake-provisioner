@@ -81,7 +81,7 @@ MAJOR_COLLEGE_OVERRIDES = {
     'TECH I': 'J',
     'C SCI': 'J2', 'CMP E': 'J2', 'CSE': 'J2', 'CSE E': 'J2', 'CSE M': 'J2',
     'ATM S': 'D', 'ESS': 'D',
-    'NUTR S': 'M',
+    'NUTR S': 'M', 'NUTR': 'M',
     'EEP': 'A',
 }
 
