@@ -12,9 +12,9 @@ class Command(BaseCommand):
         parser.add_argument(
             'term', type=str, default='current', choices=['current', 'next'],
             help='Create file for term <term>')
-        person.add_argument(
-            '-t', '--test', action='store_true', dest='commit',
-            default=False, help='Create TEST file')
+        parser.add_argument(
+            '-t', '--test', action='store_true', dest='commit', default=False,
+            help='Create TEST file')
 
     def handle(self, *args, **options):
         term_str = options.get('term')
