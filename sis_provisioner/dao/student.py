@@ -27,7 +27,7 @@ class HandshakePersonClient(UWPersonClient):
 
     def get_requested_majors(self, abbr_codes: list):
         sqla_majors = self.DB.session.query(self.DB.Major).filter(
-            self.DB.Major.abbr_code.in_(abbr_codes),
+            self.DB.Major.major_abbr_code.in_(abbr_codes),
             self.DB.Major.major_pathway == 0,
             self.DB.Major.major_full_name != '',
             self.DB.Major.major_full_name.is_not(None),
