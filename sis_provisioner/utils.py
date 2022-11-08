@@ -99,16 +99,14 @@ def is_excluded_college(majors):
 
 
 def get_requested_majors(student):
-    requested = [
+    requested_codes = [
         student.requested_major1_code,
         student.requested_major2_code,
         student.requested_major3_code
     ]
-    # filter out empty codes
-    codes = [code for code in requested if code]
-    if len(codes) > 0:
-        return get_majors_by_code(codes)
-    return []
+    if len(requested_codes) == 0:
+        return []
+    return get_majors_by_code(requested_codes)
 
 
 def is_pre_major(major):
@@ -126,10 +124,7 @@ def is_excluded_major(major):
 def validate_majors(majors) -> list:
     cleaned_majors = []
     for major in majors:
-        if major.major_full_name is None or major.college is None:
-            logger.warning('MISSING data for major: {}'.format(
-                major.major_abbr_code))
-        else:
+        if major.major_full_name and major.college:
             cleaned_majors.append(major)
     return cleaned_majors
 
@@ -139,10 +134,16 @@ def get_majors(student) -> list:
     premajors = {}
     colleges = set()
 
-    raw_majors = validate_majors(
-        student.majors or student.pending_majors or
-        get_requested_majors(student)
-    )
+    raw_majors = \
+        validate_majors(student.majors) or \
+        validate_majors(student.pending_majors) or \
+        validate_majors(get_requested_majors(student))
+
+    if len(raw_majors) == 0:
+        logger.warning('No majors found for student: {}'.format(
+            student.uwnetid))
+        return []
+
     for major in raw_majors:
         if not is_excluded_major(major):
             if is_pre_major(major):
