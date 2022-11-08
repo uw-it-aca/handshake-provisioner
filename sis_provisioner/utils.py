@@ -86,6 +86,8 @@ def get_college_code(codes: list):
         return None
     if 'J2' in codes:
         return 'J2'
+    if 'J' in codes:
+        return 'J'
     return max(codes)
 
 

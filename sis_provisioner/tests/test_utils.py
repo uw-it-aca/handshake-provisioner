@@ -21,8 +21,20 @@ class HandshakeUtilsTest(TestCase):
         student = Student()
         student.majors = majors
         student.pending_majors = pending_majors
-        student.requested_majors = requested_majors
-        student.intended_majors = intended_majors
+        if requested_majors:
+            for i in range(3):
+                code = None
+                print(len(requested_majors), i)
+                if len(requested_majors) > i:
+                    code = requested_majors[i].major_abbr_code
+                print(requested_majors, i)
+                setattr(student, f'requested_major{i+1}_code', code)
+        if intended_majors:
+            for i in range(3):
+                setattr(student, f'intended_major{i+1}_code',
+                        intended_majors[i].major_abbr_code)
+                if len(intended_majors) == i:
+                    break
         student.class_code = class_code
         student.enroll_status_code = enroll_status_code
         student.application_status_code = application_status_code
@@ -61,6 +73,9 @@ class HandshakeUtilsTest(TestCase):
             major_abbr_code='PSOCS', major_full_name='Premajor 9', college='J')
         major10 = self._build_major(
             major_abbr_code='HI', major_full_name='Major 10', college='J')
+        major11 = self._build_major(
+            major_abbr_code='EDUC I', major_full_name='Education Certificate',
+            college='H')
 
         student = self._build_student(majors=[major0])
         self.assertEqual(len(get_majors(student)), 0)
@@ -201,6 +216,7 @@ class HandshakeUtilsTest(TestCase):
         major2 = self._build_major(major_abbr_code='2', college='S')
         major3 = self._build_major(major_abbr_code='3', college='C')
         major4 = self._build_major(major_abbr_code='CSE', college='C')
+        major5 = self._build_major(major_abbr_code='BIOEN', college='O')
 
         self.assertEqual(get_college_name([major]),
                          'College of Engineering')
@@ -209,12 +225,12 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_college_name([major3]),
                          'College of Arts & Sciences')
         self.assertEqual(get_college_name([major2, major]),
-                         'The Information School')
+                         'College of Engineering')
         self.assertEqual(get_college_name([major, major3]),
                          'College of Engineering')
         self.assertEqual(get_college_name([major2, major3]),
                          'The Information School')
-        self.assertEqual(get_college_name([major2, major, major3]),
+        self.assertEqual(get_college_name([major2, major3]),
                          'The Information School')
         self.assertEqual(get_college_name([major4, major2, major3]),
                          'School of Computer Science & Engineering')
@@ -223,6 +239,8 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_college_name(
             [major4, major2, major, major3]),
             'School of Computer Science & Engineering')
+        self.assertEqual(get_college_name([major5]),
+                         'College of Engineering')
         self.assertEqual(get_college_name([]), None)
         self.assertEqual(get_college_name([], campus='1'), 'UW Bothell')
 
