@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.timezone import utc
+from sis_provisioner.exceptions import EmptyQueryException
 from sis_provisioner.dao.file import read_file, write_file, delete_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
 from sis_provisioner.dao.student import (
@@ -103,6 +104,9 @@ class ImportFile(models.Model):
             write_file(self.path, self._generate_csv())
             self.generated_date = datetime.utcnow().replace(tzinfo=utc)
             logger.info('CSV generated for file ID {}'.format(self.pk))
+        except EmptyQueryException as ex:
+            logger.info('CSV skipped for file ID {}: No students'.format(
+                self.pk, ex))
         except Exception as ex:
             logger.info('CSV failed for file ID {}: {}'.format(
                 self.pk, ex))
@@ -154,9 +158,17 @@ class HandshakeStudentsFileManager(models.Manager):
             generated_date__isnull=True, process_id__isnull=True
         ).order_by('created_date').first()
 
-        if import_file is not None:
-            import_file.build()
-            return import_file
+        if import_file is None:
+            return
+
+        import_file.build()
+
+        # Automatically created files are automatically imported
+        if (import_file.generated_date is not None and
+                import_file.created_by == 'automatic'):
+            import_file.sisimport()
+
+        return import_file
 
 
 class HandshakeStudentsFile(ImportFile):
