@@ -10,15 +10,15 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
+            '-t', '--test', action='store_true', dest='test', default=False,
+            help='Create TEST file')
+        parser.add_argument(
             'term', type=str, default='current', choices=['current', 'next'],
             help='Create file for term <term>')
-        parser.add_argument(
-            '-t', '--test', action='store_true', dest='commit', default=False,
-            help='Create TEST file')
 
     def handle(self, *args, **options):
-        term_str = options.get('term')
         is_test_file = options.get('test')
+        term_str = options.get('term')
 
         if term_str == 'next':
             term = Term.objects.next()
