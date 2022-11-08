@@ -4,6 +4,7 @@
 from django.conf import settings
 from sqlalchemy import or_, and_
 from uw_person_client import UWPersonClient
+from sis_provisioner.exceptions import EmptyQueryException
 
 
 class HandshakePersonClient(UWPersonClient):
@@ -54,7 +55,10 @@ def get_students_for_handshake(academic_term):
         'include_student_pending_majors': True,
     }
     client = HandshakePersonClient()
-    return client.get_registered_students(academic_term, **kwargs)
+    students = client.get_registered_students(academic_term, **kwargs)
+    if not len(students):
+        raise EmptyQueryException()
+    return students
 
 
 def get_majors_by_code(codes: list):
