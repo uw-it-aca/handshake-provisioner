@@ -5,7 +5,6 @@ from django.conf import settings
 from sqlalchemy import or_, and_
 from uw_person_client import UWPersonClient
 from sis_provisioner.exceptions import EmptyQueryException
-from sis_provisioner.dao.term import AcademicTerm
 
 
 class HandshakePersonClient(UWPersonClient):
