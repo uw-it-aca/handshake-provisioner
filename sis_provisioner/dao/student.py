@@ -8,13 +8,8 @@ from sis_provisioner.exceptions import EmptyQueryException
 
 
 class HandshakePersonClient(UWPersonClient):
-    def get_registered_students(self, academic_term, include_next_term=True,
-                                **kwargs):
-        if include_next_term:
-            next_academic_term = academic_term.objects.next()
-        else:
-            # If we don't want to include the next term, make it redundant
-            next_academic_term = academic_term.objects.current()
+    def get_registered_students(self, academic_term, **kwargs):
+        next_academic_term = academic_term.objects.next()
         Person = self.DB.Person
         Student = self.DB.Student
         Term = self.DB.Term
