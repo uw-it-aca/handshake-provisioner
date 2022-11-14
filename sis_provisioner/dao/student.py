@@ -5,17 +5,28 @@ from django.conf import settings
 from sqlalchemy import or_, and_
 from uw_person_client import UWPersonClient
 from sis_provisioner.exceptions import EmptyQueryException
+from sis_provisioner.dao.term import AcademicTerm
 
 
 class HandshakePersonClient(UWPersonClient):
-    def get_registered_students(self, academic_term, **kwargs):
+    def get_registered_students(self, academic_term, include_next_term=True,
+                                **kwargs):
+        if include_next_term:
+            next_academic_term = academic_term.objects.next()
+        else:
+            # If we don't want to include the next term, make it redundant
+            next_academic_term = academic_term.objects.current()
         Person = self.DB.Person
         Student = self.DB.Student
         Term = self.DB.Term
         sqla_persons = self.DB.session.query(Person).join(Student).join(
             Term, Student.academic_term).filter(
-                Term.year == academic_term.year,
-                Term.quarter == academic_term.quarter,
+                or_(and_(
+                        Term.year == academic_term.year,
+                        Term.quarter == academic_term.quarter),
+                    and_(
+                        Term.year == next_academic_term.year,
+                        Term.quarter == next_academic_term.quarter)),
                 Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
                 or_(and_(
                         Student.enroll_status_code == settings.ENROLLED_STATUS,
