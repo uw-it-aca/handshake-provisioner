@@ -14,6 +14,11 @@ class AcademicTermTest(TestCase):
         self.assertEqual(term.next().name, 'SUM2020')
         self.assertEqual(term.next().name, 'AUT2020')
 
+    def test_term_from_year_quarter(self):
+        term = AcademicTerm(year=2020, quarter=1)
+        self.assertEqual(term.year, 2020)
+        self.assertEqual(term.quarter, 1)
+
     def test_term_from_current_datetime(self):
         term = AcademicTerm()
         self.assertEqual(term.year, datetime.now().year)

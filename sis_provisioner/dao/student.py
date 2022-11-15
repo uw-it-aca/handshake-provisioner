@@ -9,13 +9,18 @@ from sis_provisioner.exceptions import EmptyQueryException
 
 class HandshakePersonClient(UWPersonClient):
     def get_registered_students(self, academic_term, **kwargs):
+        next_academic_term = academic_term.next()
         Person = self.DB.Person
         Student = self.DB.Student
         Term = self.DB.Term
         sqla_persons = self.DB.session.query(Person).join(Student).join(
             Term, Student.academic_term).filter(
-                Term.year == academic_term.year,
-                Term.quarter == academic_term.quarter,
+                or_(and_(
+                        Term.year == academic_term.year,
+                        Term.quarter == academic_term.quarter),
+                    and_(
+                        Term.year == next_academic_term.year,
+                        Term.quarter == next_academic_term.quarter)),
                 Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
                 or_(and_(
                         Student.enroll_status_code == settings.ENROLLED_STATUS,

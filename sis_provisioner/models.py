@@ -74,6 +74,12 @@ class Term(models.Model):
             'quarter': dict(self.QUARTER_CHOICES).get(self.quarter),
         }
 
+    def next(self):
+        next_term = AcademicTerm(year=self.year, quarter=self.quarter).next()
+        term, _ = Term.objects.get_or_create(
+            year=next_term.year, quarter=next_term.quarter)
+        return term
+
 
 class ImportFile(models.Model):
     path = models.CharField(max_length=128, null=True)
