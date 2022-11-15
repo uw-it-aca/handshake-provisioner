@@ -20,7 +20,7 @@ class AcademicTerm():
         else:
             if date is None:
                 date = datetime.now()
-            self._date = date
+            self.year, self.quarter = self._term_from_datetime(date)
             self.current()
 
     def __eq__(self, __o: object) -> bool:
@@ -29,9 +29,6 @@ class AcademicTerm():
         return self.year == __o.year and self.quarter == __o.quarter
 
     def current(self):
-        year, quarter = self._term_from_datetime(self._date)
-        self.year = year
-        self.quarter = quarter
         return self
 
     def next(self):
