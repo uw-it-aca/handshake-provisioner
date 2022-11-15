@@ -259,24 +259,6 @@ class HandshakeStudentsFile(ImportFile):
         return s.getvalue()
 
 
-class FosterStudentsFile(ImportFile):
-    '''
-    A file containing Foster School of Business student data (excluding MBAs)
-    containing username, email address, college, major fields
-    '''
-    term = models.ForeignKey(Term, on_delete=models.CASCADE)
-
-    def json_data(self):
-        data = super().json_data()
-        data['term'] = self.term.json_data()
-        return data
-
-    def _create_path(self):
-        return self.created_date.strftime(
-            '%Y/%m/{}-foster-students-%Y%m%d-%H%M%S.csv'.format(
-                self.term.name))
-
-
 class ActiveStudentsFileManager(models.Manager):
     def build_file(self):
         import_file = super().get_queryset().filter(
