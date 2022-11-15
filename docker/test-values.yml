@@ -47,14 +47,10 @@ memcached:
 cronjob:
   enabled: true
   jobs:
-    - name: create-handshake-curr
+    - name: create-handshake-file
       schedule: "1 9 * * 1,4"
       command: ["/scripts/management_command.sh"]
       args: ["create_handshake_file", "current", "--test"]
-    - name: create-handshake-next
-      schedule: "1 9 * * 2"
-      command: ["/scripts/management_command.sh"]
-      args: ["create_handshake_file", "next", "--test"]
     - name: build-file
       schedule: "*/10 15-23 * * 1-5"
       command: ["/scripts/management_command.sh"]
