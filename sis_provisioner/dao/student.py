@@ -9,7 +9,9 @@ from sis_provisioner.exceptions import EmptyQueryException
 
 class HandshakePersonClient(UWPersonClient):
     def get_registered_students(self, academic_term, **kwargs):
-        next_academic_term = academic_term.objects.next()
+        next_quarter = academic_term.quarter + 1 \
+            if academic_term.quarter < 4 else 1
+        next_year = academic_term.year + academic_term.quarter // 4
         Person = self.DB.Person
         Student = self.DB.Student
         Term = self.DB.Term
@@ -19,8 +21,8 @@ class HandshakePersonClient(UWPersonClient):
                         Term.year == academic_term.year,
                         Term.quarter == academic_term.quarter),
                     and_(
-                        Term.year == next_academic_term.year,
-                        Term.quarter == next_academic_term.quarter)),
+                        Term.year == next_year,
+                        Term.quarter == next_quarter)),
                 Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
                 or_(and_(
                         Student.enroll_status_code == settings.ENROLLED_STATUS,
