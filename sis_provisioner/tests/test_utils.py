@@ -8,11 +8,12 @@ from sis_provisioner.utils import *
 
 class HandshakeUtilsTest(TestCase):
     def _build_major(self, major_abbr_code=None, college=None,
-                     major_full_name=None):
+                     major_full_name=None, major_pathway=None):
         major = Major()
         major.major_abbr_code = major_abbr_code
         major.college = college
         major.major_full_name = major_full_name
+        major.major_pathway = major_pathway
         return major
 
     def _build_student(self, majors=[], pending_majors=[], requested_majors=[],
@@ -155,14 +156,22 @@ class HandshakeUtilsTest(TestCase):
                                    major_full_name='Master of Science')
         major3 = self._build_major(major_abbr_code='2', college='E',
                                    major_full_name='Business Administration')
+        major4 = self._build_major(major_abbr_code='ACCTG', college='E',
+                                   major_full_name='Business Administration',
+                                   major_pathway='1')
 
         self.assertEqual(get_major_names([major, major2]),
                          'Bachelor of Science;Master of Science')
         self.assertEqual(get_major_names([]), '')
         self.assertEqual(get_major_names([major]), 'Bachelor of Science')
-        self.assertEqual(get_major_names([major3]), '')
+        self.assertEqual(get_major_names([major3]), 'Business Administration')
+        self.assertEqual(get_major_names([major4]),
+                         'Business Administration (Accounting) - UW Seattle')
         self.assertEqual(get_major_names([major, major3]),
                          'Bachelor of Science;Business Administration')
+        self.assertEqual(get_major_names([major, major4]),
+                         'Bachelor of Science;'
+                         'Business Administration (Accounting) - UW Seattle')
         self.assertEqual(get_major_names([major]), 'Bachelor of Science')
         self.assertEqual(get_major_names([major, major3, major2]),
                          'Bachelor of Science;Business Administration;'
@@ -178,18 +187,23 @@ class HandshakeUtilsTest(TestCase):
                                    major_full_name='Master of Science')
         major3 = self._build_major(major_abbr_code='2', college='E',
                                    major_full_name='Business Administration')
+        major4 = self._build_major(major_abbr_code='MST', college='E',
+                                   major_full_name='Business Administration',
+                                   major_pathway='0')
 
         self.assertEqual(get_primary_major_name([major, major2]),
                          'Bachelor of Science')
         self.assertEqual(get_primary_major_name([]), None)
         self.assertEqual(get_primary_major_name([major]),
                          'Bachelor of Science')
-        self.assertEqual(get_primary_major_name([major3]), None)
+        self.assertEqual(get_primary_major_name([major3]),
+                         'Business Administration')
+        self.assertEqual(get_primary_major_name([major4]),
+                         'Master of Science in Taxation')
         self.assertEqual(get_primary_major_name([major, major3]),
                          'Bachelor of Science')
-        self.assertEqual(get_primary_major_name([major, major3, major2]),
+        self.assertEqual(get_primary_major_name([major, major4, major2]),
                          'Bachelor of Science')
-        major3.college = 'F'
         self.assertEqual(get_primary_major_name([major3, major2]),
                          'Business Administration')
         self.assertEqual(get_primary_major_name([major2]), 'Master of Science')
@@ -205,7 +219,7 @@ class HandshakeUtilsTest(TestCase):
         self.assertFalse(is_excluded_college([major, major2]))
         self.assertTrue(is_excluded_college([]))
         self.assertFalse(is_excluded_college([major]))
-        self.assertTrue(is_excluded_college([major3]))
+        self.assertFalse(is_excluded_college([major3]))
         self.assertFalse(is_excluded_college([major, major3]))
         self.assertFalse(is_excluded_college([major, major3, major2]))
         major3.college = 'F'

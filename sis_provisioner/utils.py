@@ -95,7 +95,32 @@ def is_excluded_college(majors):
     college_code = get_college_code(
         [get_college_for_major(major) for major in majors]
     )
-    return college_code is None or college_code == 'E'
+    return college_code is None
+
+
+def is_foster_major(major):
+    return major.college == 'E'
+
+
+def get_foster_major_code_pair(major):
+    # return tuple pair of major abbr code and major pathway
+    if major.major_pathway is None:
+        return (major.major_abbr_code, '00')
+    return (major.major_abbr_code, major.major_pathway.zfill(2))
+
+
+def convert_foster_major_name(major):
+    code_pair = get_foster_major_code_pair(major)
+    # find key in MAJOR_NAME_OVERRIDES that matches the major code pair
+    for key, value in getattr(settings, 'MAJOR_NAME_OVERRIDES', {}).items():
+        # return value if key matches "*-major_abbr_code-major_pathway*"
+        regex = r'^.-{}-{}-(.*)$'.format(*code_pair)
+        m = re.search(regex, key)
+        if m is None:
+            continue
+        return value
+    logger.warning('No major name override found for {}'.format(code_pair))
+    return major.major_full_name
 
 
 def get_requested_majors(student):
@@ -129,6 +154,12 @@ def validate_majors(majors) -> list:
     return cleaned_majors
 
 
+def get_major_name(major):
+    if is_foster_major(major):
+        return convert_foster_major_name(major)
+    return major.major_full_name
+
+
 def get_majors(student) -> list:
     majors = {}
     premajors = {}
@@ -147,9 +178,9 @@ def get_majors(student) -> list:
     for major in raw_majors:
         if not is_excluded_major(major):
             if is_pre_major(major):
-                premajors[major.major_full_name] = major
+                premajors[get_major_name(major)] = major
             else:
-                majors[major.major_full_name] = major
+                majors[get_major_name(major)] = major
                 colleges.add(major.college)
 
     majors_list = list(majors.values())
@@ -165,13 +196,13 @@ def get_majors(student) -> list:
 
 def get_major_names(majors):
     if not is_excluded_college(majors):
-        return ';'.join([m.major_full_name for m in majors])
+        return ';'.join([get_major_name(m) for m in majors])
     return ''
 
 
 def get_primary_major_name(majors: list):
     if len(majors) > 0 and not is_excluded_college(majors):
-        return majors[0].major_full_name
+        return get_major_name(majors[0])
 
 
 def get_college_name(majors, campus='0'):
