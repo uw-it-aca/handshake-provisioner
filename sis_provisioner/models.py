@@ -248,12 +248,6 @@ class HandshakeStudentsFile(ImportFile):
                 get_major_names(majors),
                 get_primary_major_name(majors),
                 'TRUE',
-                # person.student.gender,
-                # get_ethnicity_name(person.student.ethnicities),
-                # is_athlete(person.student.special_program_code),
-                # is_veteran(person.student.veteran_benefit_code),
-                # 'work_study_eligible',  # TODO: get from visa type
-                # 'primary_education:education_level_name',  # TODO: ?
             ])
 
         return s.getvalue()
