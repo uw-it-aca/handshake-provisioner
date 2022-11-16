@@ -85,6 +85,26 @@ MAJOR_COLLEGE_OVERRIDES = {
     'EEP': 'A',
 }
 
+MAJOR_NAME_OVERRIDES = {
+    'E-BA-00-12': 'Business Administration (General)',
+    'E-ACCTG-01-1-2': 'Business Administration (Accounting) - UW Seattle',
+    'E-ACCTG-11-12': 'Business Administration (Accounting for Business Professionals)',
+    'E-FINANC-01-1-2': 'Business Administration (Finance)',
+    'E-MKTG-01-1-2': 'Business Administration (Marketing)',
+    'E-ENTRE-01-1-2': 'Business Administration (Entrepreneurship)',
+    'E-HRMGT-01-1-2': 'Business Administration (Human Resources Management)',
+    'E-I S-01-1-2': 'Business Administration (Information Systems)',
+    'E-OSCM-01-1-2': 'Business Administration (Operations & Supply Chain Management)',
+    'E-CISB-00-00': 'Business Administration (Certificate in International Business)',
+    '0-XBSAD-00-00': 'Business Administration (Exchange)',
+    '0-ACCTGX-01-27': 'Master of Professional Accounting',
+    '0-MST-00-26': 'Master of Science in Taxation',
+    '0-I S X-00-26': 'Master of Science in Information Systems',
+    '0-SCM-00-27': 'Master of Supply Chain Management',
+    '0-MSBA-00-26': 'Master of Science in Business Analytics',
+    '0-ENTRE-10-26': 'Master of Science in Entrepreneurship',
+}
+
 COLLEGES = {
     'A': 'Interdisciplinary Undergraduate Programs',
     'B': 'College of Built Environments',

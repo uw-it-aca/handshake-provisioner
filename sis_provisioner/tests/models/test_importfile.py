@@ -3,7 +3,7 @@
 
 from django.test import TestCase, override_settings
 from sis_provisioner.models import (
-    HandshakeStudentsFile, FosterStudentsFile, ActiveStudentsFile, Term)
+    HandshakeStudentsFile, ActiveStudentsFile, Term)
 import datetime
 
 
@@ -62,25 +62,6 @@ class HandshakeStudentsFileTest(TestCase):
             'process_id': None,
             'term': {'id': 1, 'quarter': 'AUT', 'year': 2019}
         })
-
-
-class FosterStudentsFileTest(TestCase):
-    def setUp(self):
-        term = Term(year=2019, quarter=4)
-        term.save()
-        self.term = term
-        self.created_date = datetime.datetime(
-            2019, 6, 15, 2, 45, 0, tzinfo=datetime.timezone.utc)
-
-    def test_create_path(self):
-        impfile = FosterStudentsFile(
-            term=self.term, created_date=self.created_date)
-        impfile.save()
-
-        self.assertEqual(impfile.filename,
-                         'AUT2019-foster-students-20190615-024500.csv')
-        self.assertEqual(impfile.path,
-                         '2019/06/AUT2019-foster-students-20190615-024500.csv')
 
 
 class ActiveStudentsFileTest(TestCase):

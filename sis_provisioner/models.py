@@ -248,33 +248,9 @@ class HandshakeStudentsFile(ImportFile):
                 get_major_names(majors),
                 get_primary_major_name(majors),
                 'TRUE',
-                # person.student.gender,
-                # get_ethnicity_name(person.student.ethnicities),
-                # is_athlete(person.student.special_program_code),
-                # is_veteran(person.student.veteran_benefit_code),
-                # 'work_study_eligible',  # TODO: get from visa type
-                # 'primary_education:education_level_name',  # TODO: ?
             ])
 
         return s.getvalue()
-
-
-class FosterStudentsFile(ImportFile):
-    '''
-    A file containing Foster School of Business student data (excluding MBAs)
-    containing username, email address, college, major fields
-    '''
-    term = models.ForeignKey(Term, on_delete=models.CASCADE)
-
-    def json_data(self):
-        data = super().json_data()
-        data['term'] = self.term.json_data()
-        return data
-
-    def _create_path(self):
-        return self.created_date.strftime(
-            '%Y/%m/{}-foster-students-%Y%m%d-%H%M%S.csv'.format(
-                self.term.name))
 
 
 class ActiveStudentsFileManager(models.Manager):
