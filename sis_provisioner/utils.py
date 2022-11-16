@@ -98,31 +98,6 @@ def is_excluded_college(majors):
     return college_code is None
 
 
-def is_foster_major(major):
-    return major.college == 'E'
-
-
-def get_foster_major_code_pair(major):
-    # return tuple pair of major abbr code and major pathway
-    if major.major_pathway is None:
-        return (major.major_abbr_code, '00')
-    return (major.major_abbr_code, major.major_pathway.zfill(2))
-
-
-def convert_foster_major_name(major):
-    code_pair = get_foster_major_code_pair(major)
-    # find key in MAJOR_NAME_OVERRIDES that matches the major code pair
-    for key, value in getattr(settings, 'MAJOR_NAME_OVERRIDES', {}).items():
-        # return value if key matches "*-major_abbr_code-major_pathway*"
-        regex = r'^.-{}-{}-(.*)$'.format(*code_pair)
-        m = re.search(regex, key)
-        if m is None:
-            continue
-        return value
-    logger.warning('No major name override found for {}'.format(code_pair))
-    return major.major_full_name
-
-
 def get_requested_majors(student):
     requested_codes = [
         student.requested_major1_code,
@@ -155,9 +130,10 @@ def validate_majors(majors) -> list:
 
 
 def get_major_name(major):
-    if is_foster_major(major):
-        return convert_foster_major_name(major)
-    return major.major_full_name
+    override_key = '-'.join([
+        major.major_abbr_code, str(major.major_pathway or 0).zfill(2)])
+    return getattr(settings, 'MAJOR_NAME_OVERRIDES', {}).get(
+        override_key, major.major_full_name)
 
 
 def get_majors(student) -> list:

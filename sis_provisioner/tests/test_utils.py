@@ -159,6 +159,9 @@ class HandshakeUtilsTest(TestCase):
         major4 = self._build_major(major_abbr_code='ACCTG', college='E',
                                    major_full_name='Business Administration',
                                    major_pathway='1')
+        major5 = self._build_major(major_abbr_code='CISB', college='E',
+                                   major_full_name='Business Administration',
+                                   major_pathway='0')
 
         self.assertEqual(get_major_names([major, major2]),
                          'Bachelor of Science;Master of Science')
@@ -179,6 +182,9 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_major_names([major, major3, major2]),
                          'Bachelor of Science;Business Administration;'
                          'Master of Science')
+        self.assertEqual(
+            get_major_names([major5]),
+            'Business Administration (Certificate in International Business)')
 
     def test_get_primary_major_name(self):
         major = self._build_major(major_abbr_code='BSE', college='F',
