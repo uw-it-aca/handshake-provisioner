@@ -40,6 +40,8 @@ ENROLLED_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
 APPLICANT_STATUS = '16'
 APPLICANT_TYPES = {'FRESHMAN': '1', '2YR TRANSFER': '2', '4YR TRANSFER': '4'}
 APPLICANT_CLASS_CODES = ['1', '2', '3', '4', '5', '6', '8']
+ATHLETE_CODES = {'25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'}
+VETERAN_CODES = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '33', '40', '41', '42', '43'}
 
 INCLUDE_CAMPUS_CODES = ['0', '1']
 EXCLUDE_COLLEGE_CODES = ['V', 'Z']
@@ -61,20 +63,14 @@ HANDSHAKE_CSV_HEADER = [
     'primary_education:major_names',
     'primary_education:primary_major_name',
     'primary_education:currently_attending',
-]
-
-NEW_CSV_HEADERS = [
     'gender',
     'ethnicity',
     'athlete',
     'veteran',
-    'work_study_eligible',
-    'primary_education:education_level_name',
 ]
-
-ATHLETE_CODES = [
-    '25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'
-]
+#    TBD student attributes
+#    'work_study_eligible',
+#    'primary_education:education_level_name',
 
 MAJOR_COLLEGE_OVERRIDES = {
     'BIOEN': 'J', 'BSE': 'J', 'DATA': 'J', 'PHARBX': 'J', 'PREBSE': 'J',

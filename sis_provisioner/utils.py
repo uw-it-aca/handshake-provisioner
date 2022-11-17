@@ -39,13 +39,12 @@ def titleize(string, andrepl='and'):
     return titled_string
 
 
-def is_athlete(special_program_code):
-    athlete_codes = getattr(settings, 'ATHLETE_CODES', [])
-    return special_program_code in athlete_codes
+def is_athlete(student):
+    return student.special_program_code in getattr(settings, 'ATHLETE_CODES', {})  # noqa
 
 
-def is_veteran(veteran_benefit_code):
-    return veteran_benefit_code != '0'
+def is_veteran(student):
+    return student.veteran_benefit_code in getattr(settings, 'VETERAN_CODES', {})  # noqa
 
 
 def get_class_desc(student, majors):
