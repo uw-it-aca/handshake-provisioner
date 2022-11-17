@@ -250,6 +250,14 @@ class HandshakeStudentsFile(ImportFile):
                 'TRUE',
             ])
 
+            # TODO  Add additional attributes:
+            # # person.student.gender,
+            # get_ethnicity_name(person.student.ethnicities),
+            # is_athlete(person.student.special_program_code),
+            # is_veteran(person.student.veteran_benefit_code),
+            # 'work_study_eligible',  # get from visa type
+            # 'primary_education:education_level_name', # ?
+
         return s.getvalue()
 
 
