@@ -63,14 +63,12 @@ HANDSHAKE_CSV_HEADER = [
     'primary_education:major_names',
     'primary_education:primary_major_name',
     'primary_education:currently_attending',
+    'primary_education:education_level_name',
     'gender',
     'ethnicity',
     'athlete',
     'veteran',
 ]
-#    TBD student attributes
-#    'work_study_eligible',
-#    'primary_education:education_level_name',
 
 MAJOR_COLLEGE_OVERRIDES = {
     'BIOEN': 'J', 'BSE': 'J', 'DATA': 'J', 'PHARBX': 'J', 'PREBSE': 'J',
@@ -126,7 +124,7 @@ COLLEGES = {
     'Y': 'School of Medicine',
 }
 
-CLASS_CODES = {
+CLASS_CODE_NAMES = {
     '1': 'Freshman',
     '2': 'Sophomore',
     '3': 'Junior',

@@ -61,7 +61,12 @@ def get_class_desc(student, majors):
             for major in majors)):
         return 'Masters of Business Administration'
 
-    return getattr(settings, 'CLASS_CODES', {}).get(class_code)
+    return getattr(settings, 'CLASS_CODE_NAMES', {}).get(class_code)
+
+
+def get_education_level_name(student):
+    if student.class_code in getattr(settings, 'CLASS_CODE_NAMES', {}):
+        return 'Masters' if student.class_code == '8' else 'Bachelors'
 
 
 def format_student_number(number):

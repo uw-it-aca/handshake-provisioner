@@ -336,6 +336,16 @@ class HandshakeUtilsTest(TestCase):
         student = self._build_student(class_code=1)
         self.assertEqual(get_class_desc(student, [major1, major2]), None)
 
+    def test_get_education_level_name(self):
+        student = self._build_student(class_code='9')
+        self.assertEqual(get_education_level_name(student), None)
+
+        student = self._build_student(class_code='2')
+        self.assertEqual(get_education_level_name(student), 'Bachelors')
+
+        student = self._build_student(class_code='8')
+        self.assertEqual(get_education_level_name(student), 'Masters')
+
     def test_format_student_number(self):
         self.assertEqual(format_student_number('1234567'), '1234567')
         self.assertEqual(format_student_number('123456'), '0123456')

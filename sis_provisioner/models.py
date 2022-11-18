@@ -15,7 +15,7 @@ from sis_provisioner.dao.term import AcademicTerm
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_college_name, get_ethnicity_name, get_class_desc,
-    format_student_number, format_name)
+    format_student_number, format_name, get_education_level_name)
 from datetime import datetime
 from logging import getLogger
 import csv
@@ -248,12 +248,12 @@ class HandshakeStudentsFile(ImportFile):
                 get_major_names(majors),
                 get_primary_major_name(majors),
                 'TRUE',  # primary_education:currently_attending
+                get_education_level_name(person.student),
                 person.student.gender,
                 get_ethnicity_name(person.student.ethnicities),
                 'TRUE' if is_athlete(person.student) else 'FALSE',
                 'TRUE' if is_veteran(person.student) else 'FALSE',
-                # 'work_study_eligible',
-                # 'primary_education:education_level_name',
+                # 'work_study_eligible',  # Currently unavailble
             ])
 
         return s.getvalue()
