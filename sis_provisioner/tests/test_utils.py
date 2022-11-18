@@ -376,17 +376,17 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_name('Joe', 'Le'), ('Joe', '', 'Le'))
 
     def test_get_ethnicity_name(self):
-        ethnicity1 = self._build_ethnicity(ethnic_desc='Vietnamese')
-        ethnicity2 = self._build_ethnicity(ethnic_desc='French')
-        ethnicity3 = self._build_ethnicity(ethnic_desc='Turkish')
+        ethnicity1 = self._build_ethnicity(group_desc='Asian American')
+        ethnicity2 = self._build_ethnicity(group_desc='Caucasian')
+        ethnicity3 = self._build_ethnicity(group_desc='African American')
 
-        self.assertEqual(get_ethnicity_name([ethnicity1]), 'Vietnamese')
-        self.assertEqual(get_ethnicity_name([ethnicity2]), 'French')
-        self.assertEqual(get_ethnicity_name([ethnicity3]), 'Turkish')
+        self.assertEqual(get_ethnicity_name([ethnicity1]), 'Asian American')
+        self.assertEqual(get_ethnicity_name([ethnicity2]), 'Caucasian')
+        self.assertEqual(get_ethnicity_name([ethnicity3]), 'African American')
         self.assertEqual(get_ethnicity_name([ethnicity3, ethnicity1]),
-                         'Turkish')
+                         'African American')
         self.assertEqual(get_ethnicity_name([ethnicity2, ethnicity1]),
-                         'French')
+                         'Caucasian')
         self.assertEqual(get_ethnicity_name([]), None)
         self.assertEqual(get_ethnicity_name(
-            [ethnicity1, ethnicity2, ethnicity3]), 'Vietnamese')
+            [ethnicity1, ethnicity2, ethnicity3]), 'Asian American')
