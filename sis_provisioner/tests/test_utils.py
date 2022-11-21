@@ -18,7 +18,8 @@ class HandshakeUtilsTest(TestCase):
 
     def _build_student(self, majors=[], pending_majors=[], requested_majors=[],
                        intended_majors=[], class_code=None,
-                       enroll_status_code='12', application_status_code='16'):
+                       enroll_status_code='12', application_status_code='16',
+                       special_program_code=None, veteran_benefit_code=None):
         student = Student()
         student.majors = majors
         student.pending_majors = pending_majors
@@ -39,6 +40,8 @@ class HandshakeUtilsTest(TestCase):
         student.class_code = class_code
         student.enroll_status_code = enroll_status_code
         student.application_status_code = application_status_code
+        student.special_program_code = special_program_code
+        student.veteran_benefit_code = veteran_benefit_code
         return student
 
     def _build_ethnicity(self, ethnic_code=None, ethnic_desc=None,
@@ -124,13 +127,21 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(len(get_majors(student)), 1)
 
     def test_is_athlete(self):
-        self.assertTrue(is_athlete('30'))
-        self.assertFalse(is_athlete('13'))
-        self.assertFalse(is_athlete(25))
+        student = self._build_student(special_program_code='30')
+        self.assertTrue(is_athlete(student))
+
+        student = self._build_student(special_program_code='13')
+        self.assertFalse(is_athlete(student))
+
+        student = self._build_student(special_program_code='25')
+        self.assertTrue(is_athlete(student))
 
     def test_is_veteran(self):
-        self.assertTrue(is_veteran('1'))
-        self.assertFalse(is_veteran('0'))
+        student = self._build_student(veteran_benefit_code='1')
+        self.assertTrue(is_veteran(student))
+
+        student = self._build_student(veteran_benefit_code='0')
+        self.assertFalse(is_veteran(student))
 
     def test_get_college_for_major(self):
         major = self._build_major(major_abbr_code='BSE', college='C')
@@ -325,6 +336,16 @@ class HandshakeUtilsTest(TestCase):
         student = self._build_student(class_code=1)
         self.assertEqual(get_class_desc(student, [major1, major2]), None)
 
+    def test_get_education_level_name(self):
+        student = self._build_student(class_code='9')
+        self.assertEqual(get_education_level_name(student), None)
+
+        student = self._build_student(class_code='2')
+        self.assertEqual(get_education_level_name(student), 'Bachelors')
+
+        student = self._build_student(class_code='8')
+        self.assertEqual(get_education_level_name(student), 'Masters')
+
     def test_format_student_number(self):
         self.assertEqual(format_student_number('1234567'), '1234567')
         self.assertEqual(format_student_number('123456'), '0123456')
@@ -355,17 +376,17 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_name('Joe', 'Le'), ('Joe', '', 'Le'))
 
     def test_get_ethnicity_name(self):
-        ethnicity1 = self._build_ethnicity(ethnic_desc='Vietnamese')
-        ethnicity2 = self._build_ethnicity(ethnic_desc='French')
-        ethnicity3 = self._build_ethnicity(ethnic_desc='Turkish')
+        ethnicity1 = self._build_ethnicity(group_desc='Asian American')
+        ethnicity2 = self._build_ethnicity(group_desc='Caucasian')
+        ethnicity3 = self._build_ethnicity(group_desc='African American')
 
-        self.assertEqual(get_ethnicity_name([ethnicity1]), 'Vietnamese')
-        self.assertEqual(get_ethnicity_name([ethnicity2]), 'French')
-        self.assertEqual(get_ethnicity_name([ethnicity3]), 'Turkish')
+        self.assertEqual(get_ethnicity_name([ethnicity1]), 'Asian American')
+        self.assertEqual(get_ethnicity_name([ethnicity2]), 'Caucasian')
+        self.assertEqual(get_ethnicity_name([ethnicity3]), 'African American')
         self.assertEqual(get_ethnicity_name([ethnicity3, ethnicity1]),
-                         'Turkish')
+                         'African American')
         self.assertEqual(get_ethnicity_name([ethnicity2, ethnicity1]),
-                         'French')
+                         'Caucasian')
         self.assertEqual(get_ethnicity_name([]), None)
         self.assertEqual(get_ethnicity_name(
-            [ethnicity1, ethnicity2, ethnicity3]), 'Vietnamese')
+            [ethnicity1, ethnicity2, ethnicity3]), 'Asian American')

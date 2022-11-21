@@ -39,13 +39,12 @@ def titleize(string, andrepl='and'):
     return titled_string
 
 
-def is_athlete(special_program_code):
-    athlete_codes = getattr(settings, 'ATHLETE_CODES', [])
-    return special_program_code in athlete_codes
+def is_athlete(student):
+    return student.special_program_code in getattr(settings, 'ATHLETE_CODES', {})  # noqa
 
 
-def is_veteran(veteran_benefit_code):
-    return veteran_benefit_code != '0'
+def is_veteran(student):
+    return student.veteran_benefit_code in getattr(settings, 'VETERAN_CODES', {})  # noqa
 
 
 def get_class_desc(student, majors):
@@ -62,7 +61,12 @@ def get_class_desc(student, majors):
             for major in majors)):
         return 'Masters of Business Administration'
 
-    return getattr(settings, 'CLASS_CODES', {}).get(class_code)
+    return getattr(settings, 'CLASS_CODE_NAMES', {}).get(class_code)
+
+
+def get_education_level_name(student):
+    if student.class_code in getattr(settings, 'CLASS_CODE_NAMES', {}):
+        return 'Masters' if student.class_code == '8' else 'Bachelors'
 
 
 def format_student_number(number):
@@ -194,7 +198,7 @@ def get_college_name(majors, campus='0'):
 
 def get_ethnicity_name(ethnicities):
     try:
-        return ethnicities[0].assigned_ethnic_desc
+        return ethnicities[0].assigned_ethnic_group_desc
     except (IndexError, AttributeError):
         pass
 
