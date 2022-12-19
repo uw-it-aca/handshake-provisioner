@@ -4,17 +4,23 @@
 from django.conf import settings
 from sqlalchemy import or_, and_
 from uw_person_client import UWPersonClient
+from sis_provisioner.exceptions import EmptyQueryException
 
 
 class HandshakePersonClient(UWPersonClient):
     def get_registered_students(self, academic_term, **kwargs):
+        next_academic_term = academic_term.next()
         Person = self.DB.Person
         Student = self.DB.Student
         Term = self.DB.Term
         sqla_persons = self.DB.session.query(Person).join(Student).join(
             Term, Student.academic_term).filter(
-                Term.year == academic_term.year,
-                Term.quarter == academic_term.quarter,
+                or_(and_(
+                        Term.year == academic_term.year,
+                        Term.quarter == academic_term.quarter),
+                    and_(
+                        Term.year == next_academic_term.year,
+                        Term.quarter == next_academic_term.quarter)),
                 Student.campus_code.in_(settings.INCLUDE_CAMPUS_CODES),
                 or_(and_(
                         Student.enroll_status_code == settings.ENROLLED_STATUS,
@@ -27,7 +33,7 @@ class HandshakePersonClient(UWPersonClient):
 
     def get_requested_majors(self, abbr_codes: list):
         sqla_majors = self.DB.session.query(self.DB.Major).filter(
-            self.DB.Major.abbr_code.in_(abbr_codes),
+            self.DB.Major.major_abbr_code.in_(abbr_codes),
             self.DB.Major.major_pathway == 0,
             self.DB.Major.major_full_name != '',
             self.DB.Major.major_full_name.is_not(None),
@@ -54,7 +60,10 @@ def get_students_for_handshake(academic_term):
         'include_student_pending_majors': True,
     }
     client = HandshakePersonClient()
-    return client.get_registered_students(academic_term, **kwargs)
+    students = client.get_registered_students(academic_term, **kwargs)
+    if not len(students):
+        raise EmptyQueryException()
+    return students
 
 
 def get_majors_by_code(codes: list):

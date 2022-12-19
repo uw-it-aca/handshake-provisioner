@@ -40,6 +40,8 @@ ENROLLED_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
 APPLICANT_STATUS = '16'
 APPLICANT_TYPES = {'FRESHMAN': '1', '2YR TRANSFER': '2', '4YR TRANSFER': '4'}
 APPLICANT_CLASS_CODES = ['1', '2', '3', '4', '5', '6', '8']
+ATHLETE_CODES = {'25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'}
+VETERAN_CODES = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '33', '40', '41', '42', '43'}
 
 INCLUDE_CAMPUS_CODES = ['0', '1']
 EXCLUDE_COLLEGE_CODES = ['V', 'Z']
@@ -61,19 +63,11 @@ HANDSHAKE_CSV_HEADER = [
     'primary_education:major_names',
     'primary_education:primary_major_name',
     'primary_education:currently_attending',
-]
-
-NEW_CSV_HEADERS = [
+    'primary_education:education_level_name',
     'gender',
     'ethnicity',
     'athlete',
     'veteran',
-    'work_study_eligible',
-    'primary_education:education_level_name',
-]
-
-ATHLETE_CODES = [
-    '25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'
 ]
 
 MAJOR_COLLEGE_OVERRIDES = {
@@ -81,8 +75,28 @@ MAJOR_COLLEGE_OVERRIDES = {
     'TECH I': 'J',
     'C SCI': 'J2', 'CMP E': 'J2', 'CSE': 'J2', 'CSE E': 'J2', 'CSE M': 'J2',
     'ATM S': 'D', 'ESS': 'D',
-    'NUTR S': 'M',
+    'NUTR S': 'M', 'NUTR': 'M',
     'EEP': 'A',
+}
+
+MAJOR_NAME_OVERRIDES = {
+    'BA-00': 'Business Administration (General)',
+    'ACCTG-01': 'Business Administration (Accounting) - UW Seattle',
+    'ACCTG-11': 'Business Administration (Accounting for Business Professionals)',
+    'FINANC-01': 'Business Administration (Finance)',
+    'MKTG-01': 'Business Administration (Marketing)',
+    'ENTRE-01': 'Business Administration (Entrepreneurship)',
+    'HRMGT-01': 'Business Administration (Human Resources Management)',
+    'I S-01': 'Business Administration (Information Systems)',
+    'OSCM-01': 'Business Administration (Operations & Supply Chain Management)',
+    'CISB-00': 'Business Administration (Certificate in International Business)',
+    'XBSAD-00': 'Business Administration (Exchange)',
+    'ACCTGX-01': 'Master of Professional Accounting',
+    'MST-00': 'Master of Science in Taxation',
+    'I S X-00': 'Master of Science in Information Systems',
+    'SCM-00': 'Master of Supply Chain Management',
+    'MSBA-00': 'Master of Science in Business Analytics',
+    'ENTRE-10': 'Master of Science in Entrepreneurship',
 }
 
 COLLEGES = {
@@ -110,7 +124,7 @@ COLLEGES = {
     'Y': 'School of Medicine',
 }
 
-CLASS_CODES = {
+CLASS_CODE_NAMES = {
     '1': 'Freshman',
     '2': 'Sophomore',
     '3': 'Junior',

@@ -8,24 +8,40 @@ from sis_provisioner.utils import *
 
 class HandshakeUtilsTest(TestCase):
     def _build_major(self, major_abbr_code=None, college=None,
-                     major_full_name=None):
+                     major_full_name=None, major_pathway=None):
         major = Major()
         major.major_abbr_code = major_abbr_code
         major.college = college
         major.major_full_name = major_full_name
+        major.major_pathway = major_pathway
         return major
 
     def _build_student(self, majors=[], pending_majors=[], requested_majors=[],
                        intended_majors=[], class_code=None,
-                       enroll_status_code='12', application_status_code='16'):
+                       enroll_status_code='12', application_status_code='16',
+                       special_program_code=None, veteran_benefit_code=None):
         student = Student()
         student.majors = majors
         student.pending_majors = pending_majors
-        student.requested_majors = requested_majors
-        student.intended_majors = intended_majors
+        if requested_majors:
+            for i in range(3):
+                code = None
+                print(len(requested_majors), i)
+                if len(requested_majors) > i:
+                    code = requested_majors[i].major_abbr_code
+                print(requested_majors, i)
+                setattr(student, f'requested_major{i+1}_code', code)
+        if intended_majors:
+            for i in range(3):
+                setattr(student, f'intended_major{i+1}_code',
+                        intended_majors[i].major_abbr_code)
+                if len(intended_majors) == i:
+                    break
         student.class_code = class_code
         student.enroll_status_code = enroll_status_code
         student.application_status_code = application_status_code
+        student.special_program_code = special_program_code
+        student.veteran_benefit_code = veteran_benefit_code
         return student
 
     def _build_ethnicity(self, ethnic_code=None, ethnic_desc=None,
@@ -61,6 +77,9 @@ class HandshakeUtilsTest(TestCase):
             major_abbr_code='PSOCS', major_full_name='Premajor 9', college='J')
         major10 = self._build_major(
             major_abbr_code='HI', major_full_name='Major 10', college='J')
+        major11 = self._build_major(
+            major_abbr_code='EDUC I', major_full_name='Education Certificate',
+            college='H')
 
         student = self._build_student(majors=[major0])
         self.assertEqual(len(get_majors(student)), 0)
@@ -108,13 +127,21 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(len(get_majors(student)), 1)
 
     def test_is_athlete(self):
-        self.assertTrue(is_athlete('30'))
-        self.assertFalse(is_athlete('13'))
-        self.assertFalse(is_athlete(25))
+        student = self._build_student(special_program_code='30')
+        self.assertTrue(is_athlete(student))
+
+        student = self._build_student(special_program_code='13')
+        self.assertFalse(is_athlete(student))
+
+        student = self._build_student(special_program_code='25')
+        self.assertTrue(is_athlete(student))
 
     def test_is_veteran(self):
-        self.assertTrue(is_veteran('1'))
-        self.assertFalse(is_veteran('0'))
+        student = self._build_student(veteran_benefit_code='1')
+        self.assertTrue(is_veteran(student))
+
+        student = self._build_student(veteran_benefit_code='0')
+        self.assertFalse(is_veteran(student))
 
     def test_get_college_for_major(self):
         major = self._build_major(major_abbr_code='BSE', college='C')
@@ -125,12 +152,13 @@ class HandshakeUtilsTest(TestCase):
 
     def test_get_college_code(self):
         codes = ['A', 'B', 'C']
-        self.assertEqual(get_college_code(codes), 'A')
+        self.assertEqual(get_college_code(codes), 'C')
         self.assertEqual(get_college_code([]), None)
         self.assertEqual(get_college_code(['V']), None)
-        self.assertEqual(get_college_code(['V'] + codes), 'A')
+        self.assertEqual(get_college_code(['V'] + codes), 'C')
         self.assertEqual(get_college_code(['V', 'Z']), None)
         self.assertEqual(get_college_code(['C', 'Z']), 'C')
+        self.assertEqual(get_college_code(['Y', 'J2']), 'J2')
 
     def test_get_major_names(self):
         major = self._build_major(major_abbr_code='BSE', college='F',
@@ -139,14 +167,25 @@ class HandshakeUtilsTest(TestCase):
                                    major_full_name='Master of Science')
         major3 = self._build_major(major_abbr_code='2', college='E',
                                    major_full_name='Business Administration')
+        major4 = self._build_major(major_abbr_code='ACCTG', college='E',
+                                   major_full_name='Business Administration',
+                                   major_pathway='1')
+        major5 = self._build_major(major_abbr_code='CISB', college='E',
+                                   major_full_name='Business Administration',
+                                   major_pathway='0')
 
         self.assertEqual(get_major_names([major, major2]),
                          'Bachelor of Science;Master of Science')
         self.assertEqual(get_major_names([]), '')
         self.assertEqual(get_major_names([major]), 'Bachelor of Science')
-        self.assertEqual(get_major_names([major3]), '')
+        self.assertEqual(get_major_names([major3]), 'Business Administration')
+        self.assertEqual(get_major_names([major4]),
+                         'Business Administration (Accounting) - UW Seattle')
         self.assertEqual(get_major_names([major, major3]),
                          'Bachelor of Science;Business Administration')
+        self.assertEqual(get_major_names([major, major4]),
+                         'Bachelor of Science;'
+                         'Business Administration (Accounting) - UW Seattle')
         self.assertEqual(get_major_names([major]), 'Bachelor of Science')
         self.assertEqual(get_major_names([major, major3, major2]),
                          'Bachelor of Science;Business Administration;'
@@ -154,6 +193,9 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_major_names([major, major3, major2]),
                          'Bachelor of Science;Business Administration;'
                          'Master of Science')
+        self.assertEqual(
+            get_major_names([major5]),
+            'Business Administration (Certificate in International Business)')
 
     def test_get_primary_major_name(self):
         major = self._build_major(major_abbr_code='BSE', college='F',
@@ -162,18 +204,23 @@ class HandshakeUtilsTest(TestCase):
                                    major_full_name='Master of Science')
         major3 = self._build_major(major_abbr_code='2', college='E',
                                    major_full_name='Business Administration')
+        major4 = self._build_major(major_abbr_code='MST', college='E',
+                                   major_full_name='Business Administration',
+                                   major_pathway='0')
 
         self.assertEqual(get_primary_major_name([major, major2]),
                          'Bachelor of Science')
         self.assertEqual(get_primary_major_name([]), None)
         self.assertEqual(get_primary_major_name([major]),
                          'Bachelor of Science')
-        self.assertEqual(get_primary_major_name([major3]), None)
+        self.assertEqual(get_primary_major_name([major3]),
+                         'Business Administration')
+        self.assertEqual(get_primary_major_name([major4]),
+                         'Master of Science in Taxation')
         self.assertEqual(get_primary_major_name([major, major3]),
                          'Bachelor of Science')
-        self.assertEqual(get_primary_major_name([major, major3, major2]),
+        self.assertEqual(get_primary_major_name([major, major4, major2]),
                          'Bachelor of Science')
-        major3.college = 'F'
         self.assertEqual(get_primary_major_name([major3, major2]),
                          'Business Administration')
         self.assertEqual(get_primary_major_name([major2]), 'Master of Science')
@@ -189,7 +236,7 @@ class HandshakeUtilsTest(TestCase):
         self.assertFalse(is_excluded_college([major, major2]))
         self.assertTrue(is_excluded_college([]))
         self.assertFalse(is_excluded_college([major]))
-        self.assertTrue(is_excluded_college([major3]))
+        self.assertFalse(is_excluded_college([major3]))
         self.assertFalse(is_excluded_college([major, major3]))
         self.assertFalse(is_excluded_college([major, major3, major2]))
         major3.college = 'F'
@@ -200,6 +247,7 @@ class HandshakeUtilsTest(TestCase):
         major2 = self._build_major(major_abbr_code='2', college='S')
         major3 = self._build_major(major_abbr_code='3', college='C')
         major4 = self._build_major(major_abbr_code='CSE', college='C')
+        major5 = self._build_major(major_abbr_code='BIOEN', college='O')
 
         self.assertEqual(get_college_name([major]),
                          'College of Engineering')
@@ -208,12 +256,12 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_college_name([major3]),
                          'College of Arts & Sciences')
         self.assertEqual(get_college_name([major2, major]),
-                         'The Information School')
+                         'College of Engineering')
         self.assertEqual(get_college_name([major, major3]),
                          'College of Engineering')
         self.assertEqual(get_college_name([major2, major3]),
                          'The Information School')
-        self.assertEqual(get_college_name([major2, major, major3]),
+        self.assertEqual(get_college_name([major2, major3]),
                          'The Information School')
         self.assertEqual(get_college_name([major4, major2, major3]),
                          'School of Computer Science & Engineering')
@@ -222,6 +270,8 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_college_name(
             [major4, major2, major, major3]),
             'School of Computer Science & Engineering')
+        self.assertEqual(get_college_name([major5]),
+                         'College of Engineering')
         self.assertEqual(get_college_name([]), None)
         self.assertEqual(get_college_name([], campus='1'), 'UW Bothell')
 
@@ -286,6 +336,16 @@ class HandshakeUtilsTest(TestCase):
         student = self._build_student(class_code=1)
         self.assertEqual(get_class_desc(student, [major1, major2]), None)
 
+    def test_get_education_level_name(self):
+        student = self._build_student(class_code='9')
+        self.assertEqual(get_education_level_name(student), None)
+
+        student = self._build_student(class_code='2')
+        self.assertEqual(get_education_level_name(student), 'Bachelors')
+
+        student = self._build_student(class_code='8')
+        self.assertEqual(get_education_level_name(student), 'Masters')
+
     def test_format_student_number(self):
         self.assertEqual(format_student_number('1234567'), '1234567')
         self.assertEqual(format_student_number('123456'), '0123456')
@@ -316,17 +376,17 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_name('Joe', 'Le'), ('Joe', '', 'Le'))
 
     def test_get_ethnicity_name(self):
-        ethnicity1 = self._build_ethnicity(ethnic_desc='Vietnamese')
-        ethnicity2 = self._build_ethnicity(ethnic_desc='French')
-        ethnicity3 = self._build_ethnicity(ethnic_desc='Turkish')
+        ethnicity1 = self._build_ethnicity(group_desc='Asian American')
+        ethnicity2 = self._build_ethnicity(group_desc='Caucasian')
+        ethnicity3 = self._build_ethnicity(group_desc='African American')
 
-        self.assertEqual(get_ethnicity_name([ethnicity1]), 'Vietnamese')
-        self.assertEqual(get_ethnicity_name([ethnicity2]), 'French')
-        self.assertEqual(get_ethnicity_name([ethnicity3]), 'Turkish')
+        self.assertEqual(get_ethnicity_name([ethnicity1]), 'Asian American')
+        self.assertEqual(get_ethnicity_name([ethnicity2]), 'Caucasian')
+        self.assertEqual(get_ethnicity_name([ethnicity3]), 'African American')
         self.assertEqual(get_ethnicity_name([ethnicity3, ethnicity1]),
-                         'Turkish')
+                         'African American')
         self.assertEqual(get_ethnicity_name([ethnicity2, ethnicity1]),
-                         'French')
+                         'Caucasian')
         self.assertEqual(get_ethnicity_name([]), None)
         self.assertEqual(get_ethnicity_name(
-            [ethnicity1, ethnicity2, ethnicity3]), 'Vietnamese')
+            [ethnicity1, ethnicity2, ethnicity3]), 'Asian American')

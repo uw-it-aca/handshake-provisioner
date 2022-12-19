@@ -13,12 +13,13 @@ class AcademicTerm():
 
     QTR_NAMES = {WINTER: 'WIN', SPRING: 'SPR', SUMMER: 'SUM', AUTUMN: 'AUT'}
 
-    def __init__(self, date=None):
-        if date is None:
-            date = datetime.now()
-
+    def __init__(self, year=None, quarter=None, date=None):
         self._date = date
-        self.current()
+        if (year is not None and quarter is not None):
+            self.year = year
+            self.quarter = quarter
+        else:
+            self.current()
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, AcademicTerm):
@@ -26,6 +27,8 @@ class AcademicTerm():
         return self.year == __o.year and self.quarter == __o.quarter
 
     def current(self):
+        if self._date is None:
+            self._date = datetime.now()
         year, quarter = self._term_from_datetime(self._date)
         self.year = year
         self.quarter = quarter

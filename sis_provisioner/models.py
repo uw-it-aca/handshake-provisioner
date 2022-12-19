@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.timezone import utc
+from sis_provisioner.exceptions import EmptyQueryException
 from sis_provisioner.dao.file import read_file, write_file, delete_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
 from sis_provisioner.dao.student import (
@@ -14,7 +15,7 @@ from sis_provisioner.dao.term import AcademicTerm
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_college_name, get_ethnicity_name, get_class_desc,
-    format_student_number, format_name)
+    format_student_number, format_name, get_education_level_name)
 from datetime import datetime
 from logging import getLogger
 import csv
@@ -73,6 +74,12 @@ class Term(models.Model):
             'quarter': dict(self.QUARTER_CHOICES).get(self.quarter),
         }
 
+    def next(self):
+        next_term = AcademicTerm(year=self.year, quarter=self.quarter).next()
+        term, _ = Term.objects.get_or_create(
+            year=next_term.year, quarter=next_term.quarter)
+        return term
+
 
 class ImportFile(models.Model):
     path = models.CharField(max_length=128, null=True)
@@ -103,6 +110,9 @@ class ImportFile(models.Model):
             write_file(self.path, self._generate_csv())
             self.generated_date = datetime.utcnow().replace(tzinfo=utc)
             logger.info('CSV generated for file ID {}'.format(self.pk))
+        except EmptyQueryException as ex:
+            logger.info('CSV skipped for file ID {}: No students'.format(
+                self.pk, ex))
         except Exception as ex:
             logger.info('CSV failed for file ID {}: {}'.format(
                 self.pk, ex))
@@ -154,9 +164,17 @@ class HandshakeStudentsFileManager(models.Manager):
             generated_date__isnull=True, process_id__isnull=True
         ).order_by('created_date').first()
 
-        if import_file is not None:
-            import_file.build()
-            return import_file
+        if import_file is None:
+            return
+
+        import_file.build()
+
+        # Automatically created files are automatically imported
+        if (import_file.generated_date is not None and
+                import_file.created_by == 'automatic'):
+            import_file.sisimport()
+
+        return import_file
 
 
 class HandshakeStudentsFile(ImportFile):
@@ -229,34 +247,16 @@ class HandshakeStudentsFile(ImportFile):
                 person.student.campus_desc,
                 get_major_names(majors),
                 get_primary_major_name(majors),
-                'TRUE',
-                # person.student.gender,
-                # get_ethnicity_name(person.student.ethnicities),
-                # is_athlete(person.student.special_program_code),
-                # is_veteran(person.student.veteran_benefit_code),
-                # 'work_study_eligible',  # TODO: get from visa type
-                # 'primary_education:education_level_name',  # TODO: ?
+                'TRUE',  # primary_education:currently_attending
+                get_education_level_name(person.student),
+                person.student.gender,
+                get_ethnicity_name(person.student.ethnicities),
+                'TRUE' if is_athlete(person.student) else 'FALSE',
+                'TRUE' if is_veteran(person.student) else 'FALSE',
+                # 'work_study_eligible',  # Currently unavailble
             ])
 
         return s.getvalue()
-
-
-class FosterStudentsFile(ImportFile):
-    '''
-    A file containing Foster School of Business student data (excluding MBAs)
-    containing username, email address, college, major fields
-    '''
-    term = models.ForeignKey(Term, on_delete=models.CASCADE)
-
-    def json_data(self):
-        data = super().json_data()
-        data['term'] = self.term.json_data()
-        return data
-
-    def _create_path(self):
-        return self.created_date.strftime(
-            '%Y/%m/{}-foster-students-%Y%m%d-%H%M%S.csv'.format(
-                self.term.name))
 
 
 class ActiveStudentsFileManager(models.Manager):

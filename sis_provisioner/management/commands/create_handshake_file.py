@@ -10,10 +10,14 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'term', type=str, default='next', choices=['current', 'next'],
+            '-t', '--test', action='store_true', dest='test', default=False,
+            help='Create TEST file')
+        parser.add_argument(
+            'term', type=str, default='current', choices=['current', 'next'],
             help='Create file for term <term>')
 
     def handle(self, *args, **options):
+        is_test_file = options.get('test')
         term_str = options.get('term')
 
         if term_str == 'next':
@@ -21,4 +25,4 @@ class Command(BaseCommand):
         else:
             term = Term.objects.current()
 
-        HandshakeStudentsFile(term=term, is_test_file=True).save()
+        HandshakeStudentsFile(term=term, is_test_file=is_test_file).save()
