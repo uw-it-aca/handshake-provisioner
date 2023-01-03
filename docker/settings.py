@@ -96,7 +96,7 @@ MAJOR_NAME_OVERRIDES = {
     'I S-01': 'Business Administration (Information Systems)',
     'OSCM-00': 'Business Administration (Operations & Supply Chain Management)',
     'OSCM-01': 'Business Administration (Operations & Supply Chain Management)',
-    'CISB-00': 'Business Administration (Certificate of International Business)',
+    'CISB-00': 'Business Administration (Certificate in International Business)',
     'XBSAD-00': 'Business Administration (Exchange)',
     'ACCTGX-01': 'Master of Professional Accounting',
     'MST-00': 'Master of Science in Taxation',
