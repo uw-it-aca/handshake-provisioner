@@ -3,7 +3,7 @@
 
 
 from django.test import TestCase
-from uw_person_client.components import Ethnicity, Major, Student
+from uw_person_client.components import Major, Student
 from sis_provisioner.utils import *
 
 
@@ -44,14 +44,6 @@ class HandshakeUtilsTest(TestCase):
         student.special_program_code = special_program_code
         student.veteran_benefit_code = veteran_benefit_code
         return student
-
-    def _build_ethnicity(self, ethnic_code=None, ethnic_desc=None,
-                         group_desc=None):
-        ethnicity = Ethnicity()
-        ethnicity.assigned_ethnic_code = ethnic_code
-        ethnicity.assigned_ethnic_desc = ethnic_desc
-        ethnicity.assigned_ethnic_group_desc = group_desc
-        return ethnicity
 
     def test_get_majors(self):
         major0 = self._build_major(
@@ -375,19 +367,3 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_name('Leland M', 'McDonald'),
                          ('Leland', 'M', 'McDonald'))
         self.assertEqual(format_name('Joe', 'Le'), ('Joe', '', 'Le'))
-
-    def test_get_ethnicity_name(self):
-        ethnicity1 = self._build_ethnicity(group_desc='Asian American')
-        ethnicity2 = self._build_ethnicity(group_desc='Caucasian')
-        ethnicity3 = self._build_ethnicity(group_desc='African American')
-
-        self.assertEqual(get_ethnicity_name([ethnicity1]), 'Asian American')
-        self.assertEqual(get_ethnicity_name([ethnicity2]), 'Caucasian')
-        self.assertEqual(get_ethnicity_name([ethnicity3]), 'African American')
-        self.assertEqual(get_ethnicity_name([ethnicity3, ethnicity1]),
-                         'African American')
-        self.assertEqual(get_ethnicity_name([ethnicity2, ethnicity1]),
-                         'Caucasian')
-        self.assertEqual(get_ethnicity_name([]), None)
-        self.assertEqual(get_ethnicity_name(
-            [ethnicity1, ethnicity2, ethnicity3]), 'Asian American')
