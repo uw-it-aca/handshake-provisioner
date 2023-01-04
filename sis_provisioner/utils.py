@@ -197,13 +197,6 @@ def get_college_name(majors, campus='0'):
     return college_dict.get(college_code)
 
 
-def get_ethnicity_name(ethnicities):
-    try:
-        return ethnicities[0].assigned_ethnic_group_desc
-    except (IndexError, AttributeError):
-        pass
-
-
 def format_name(first_name, surname):
     try:
         full_name = ' '.join([first_name, surname])
