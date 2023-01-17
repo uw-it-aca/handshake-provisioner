@@ -6,7 +6,7 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
-from django.utils.timezone import utc
+from django.utils.timezone import utc, localtime
 from sis_provisioner.exceptions import EmptyQueryException
 from sis_provisioner.dao.file import read_file, write_file, delete_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
@@ -218,7 +218,7 @@ class HandshakeStudentsFile(ImportFile):
         if self.is_test_file and prefix is not None and len(prefix):
             name = '{}-{}'.format(prefix, name)
 
-        return self.created_date.strftime(
+        return localtime(self.created_date).strftime(
             '%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))
 
     def _generate_csv(self):
@@ -279,7 +279,7 @@ class ActiveStudentsFile(ImportFile):
     objects = ActiveStudentsFileManager()
 
     def _create_path(self):
-        return self.created_date.strftime(
+        return localtime(self.created_date).strftime(
             '%Y/%m/active-students-%Y%m%d-%H%M%S.csv')
 
     def _generate_csv(self):

@@ -27,7 +27,6 @@ setup(
         'axdd-person-client~=1.1',
         'nameparser>=1.0.4,<2.0',
         'UW-Django-SAML2~=1.5',
-        'pandas',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports Handshake',
