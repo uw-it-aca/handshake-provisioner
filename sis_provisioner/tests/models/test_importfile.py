@@ -22,9 +22,9 @@ class HandshakeStudentsFileTest(TestCase):
                                         created_date=self.created_date)
         impfile.save()
 
-        self.assertEqual(impfile.filename, 'AUT2019-20190615-024500.csv')
+        self.assertEqual(impfile.filename, 'AUT2019-20190614-194500.csv')
         self.assertEqual(impfile.path,
-                         '2019/06/AUT2019-20190615-024500.csv')
+                         '2019/06/AUT2019-20190614-194500.csv')
         self.assertEqual(impfile.json_data(), {
             'api_path': ('/api/v1/file/1',),
             'created_by': 'automatic',
@@ -35,7 +35,7 @@ class HandshakeStudentsFileTest(TestCase):
             'imported_date': None,
             'imported_status': None,
             'is_test_file': False,
-            'name': 'AUT2019-20190615-024500.csv',
+            'name': 'AUT2019-20190614-194500.csv',
             'process_id': None,
             'term': {'id': 1, 'quarter': 'AUT', 'year': 2019}
         })
@@ -46,9 +46,9 @@ class HandshakeStudentsFileTest(TestCase):
             term=self.term, is_test_file=True, created_date=self.created_date)
         impfile.save()
 
-        self.assertEqual(impfile.filename, 'TEST-AUT2019-20190615-024500.csv')
+        self.assertEqual(impfile.filename, 'TEST-AUT2019-20190614-194500.csv')
         self.assertEqual(impfile.path,
-                         '2019/06/TEST-AUT2019-20190615-024500.csv')
+                         '2019/06/TEST-AUT2019-20190614-194500.csv')
         self.assertEqual(impfile.json_data(), {
             'api_path': ('/api/v1/file/1',),
             'created_by': 'automatic',
@@ -59,7 +59,7 @@ class HandshakeStudentsFileTest(TestCase):
             'imported_date': None,
             'imported_status': None,
             'is_test_file': True,
-            'name': 'TEST-AUT2019-20190615-024500.csv',
+            'name': 'TEST-AUT2019-20190614-194500.csv',
             'process_id': None,
             'term': {'id': 1, 'quarter': 'AUT', 'year': 2019}
         })
@@ -75,9 +75,9 @@ class ActiveStudentsFileTest(TestCase):
         impfile.save()
 
         self.assertEqual(impfile.filename,
-                         'active-students-20190615-024500.csv')
+                         'active-students-20190614-194500.csv')
         self.assertEqual(impfile.path,
-                         '2019/06/active-students-20190615-024500.csv')
+                         '2019/06/active-students-20190614-194500.csv')
         self.assertEqual(impfile.json_data(), {
             'created_by': 'automatic',
             'created_date': '2019-06-15T02:45:00+00:00',
@@ -86,6 +86,6 @@ class ActiveStudentsFileTest(TestCase):
             'import_progress': 0,
             'imported_date': None,
             'imported_status': None,
-            'name': 'active-students-20190615-024500.csv',
+            'name': 'active-students-20190614-194500.csv',
             'process_id': None
         })
