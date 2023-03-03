@@ -104,6 +104,11 @@ MAJOR_NAME_OVERRIDES = {
     'SCM-00': 'Master of Supply Chain Management',
     'MSBA-00': 'Master of Science in Business Analytics',
     'ENTRE-10': 'Master of Science in Entrepreneurship',
+    'EMBA-00': 'Master of Business Administration (Executive)',
+    'MBA EX-00': 'Master of Business Administration (Evening)',
+    'MBA-00': 'Master of Business Administration (Full-Time)',
+    'MBA-20': 'Master of Business Administration (Hybrid)',
+    'TMMBA-00': 'Master of Business Administration (Technology Management)',
 }
 
 COLLEGES = {
