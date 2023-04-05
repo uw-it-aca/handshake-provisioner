@@ -11,6 +11,7 @@ from sis_provisioner.exceptions import EmptyQueryException
 class HandshakePersonClient(UWPersonClient):
     def get_registered_students(self, academic_term, **kwargs):
         next_academic_term = academic_term.next()
+        applicant_types = list(settings.APPLICANT_TYPES.values())
         Person = self.DB.Person
         Student = self.DB.Student
         Term = self.DB.Term
@@ -28,7 +29,8 @@ class HandshakePersonClient(UWPersonClient):
                         Student.class_code.in_(settings.ENROLLED_CLASS_CODES)),
                     and_(
                         Student.application_status_code == settings.APPLICANT_STATUS,  # noqa
-                        Student.class_code.in_(settings.APPLICANT_CLASS_CODES)))  # noqa
+                        Student.class_code.in_(settings.APPLICANT_CLASS_CODES),
+                        Student.application_type_code.in_(applicant_types)))
             )
         return [self._map_person(p, **kwargs) for p in sqla_persons.all()]
 
