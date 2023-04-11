@@ -141,19 +141,18 @@ def get_major_name(major):
         override_key, major.major_full_name)
 
 
-def get_majors(student) -> list:
+def get_majors(student):
     majors = {}
     premajors = {}
     colleges = set()
 
-    raw_majors = \
-        validate_majors(student.majors) or \
-        validate_majors(student.pending_majors) or \
-        validate_majors(get_requested_majors(student))
+    raw_majors = (validate_majors(student.majors) or
+        validate_majors(student.pending_majors) or
+        validate_majors(get_requested_majors(student)))
 
-    if len(raw_majors) == 0:
-        logger.warning('No majors found for student: {}'.format(
-            student.uwnetid))
+    if not len(raw_majors):
+        logger.debug('No majors found for student {}'.format(
+            student.student_number))
         return []
 
     for major in raw_majors:
