@@ -147,9 +147,8 @@ class HandshakeUtilsTest(TestCase):
         codes = ['A', 'B', 'C']
         self.assertEqual(get_college_code(codes), 'C')
         self.assertEqual(get_college_code([]), None)
-        self.assertEqual(get_college_code(['V']), None)
-        self.assertEqual(get_college_code(['V'] + codes), 'C')
-        self.assertEqual(get_college_code(['V', 'Z']), None)
+        self.assertEqual(get_college_code(['Z']), None)
+        self.assertEqual(get_college_code(['Z'] + codes), 'C')
         self.assertEqual(get_college_code(['C', 'Z']), 'C')
         self.assertEqual(get_college_code(['Y', 'J2']), 'J2')
 

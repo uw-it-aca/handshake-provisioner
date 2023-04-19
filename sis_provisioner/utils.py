@@ -79,13 +79,9 @@ def get_college_for_major(major):
         major.major_abbr_code, major.college)
 
 
-def _remove_codes(codes: list, remove_codes: list):
-    return [code for code in codes if code not in remove_codes]
-
-
 def get_college_code(codes: list):
     excluded_college_codes = getattr(settings, 'EXCLUDE_COLLEGE_CODES', [])
-    codes = _remove_codes(codes, excluded_college_codes)
+    codes = [code for code in codes if code not in excluded_college_codes]
 
     if len(codes) == 0:
         return None
@@ -165,8 +161,8 @@ def get_majors(student):
 
     majors_list = list(majors.values())
     premajors_list = list(premajors.values())
-    # add each pre-major to the list of majors if its college is not already in
-    # the list of colleges
+    # add each pre-major to the list of majors, if its college is not
+    # already in the list of colleges
     for premajor in premajors_list:
         if premajor.college not in colleges:
             majors_list.append(premajor)
