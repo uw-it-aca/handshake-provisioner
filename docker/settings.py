@@ -44,7 +44,7 @@ ATHLETE_CODES = {'25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42
 VETERAN_CODES = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '33', '40', '41', '42', '43'}
 
 INCLUDE_CAMPUS_CODES = ['0', '1']
-EXCLUDE_COLLEGE_CODES = ['V', 'Z']
+EXCLUDE_COLLEGE_CODES = ['Z']
 EXCLUDE_MAJOR_CODES = ['GEMBA', 'N MATR']
 PRE_MAJOR_CODES = ['EPRMJ', 'PSOCS', 'P SW', 'TPRMAJ']
 
