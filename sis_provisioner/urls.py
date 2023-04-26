@@ -6,7 +6,9 @@ from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
 from sis_provisioner.views.pages import HomeView
-from sis_provisioner.views.api import FileListView, FileView
+from sis_provisioner.views.api.file import FileListView, FileView
+from sis_provisioner.views.api.blocked_student import (
+    BlockedStudentListView, BlockedStudentView)
 
 urlpatterns = []
 
@@ -31,5 +33,9 @@ urlpatterns += [
             FileListView.as_view(), name='handshake-file-list'),
     re_path(r'^api/v1/file/(?P<file_id>[\d]+)$',
             FileView.as_view(), name='handshake-file'),
+    re_path(r'^api/v1/blocked-student/?$',
+            BlockedStudentListView.as_view(), name='blocked-student-list'),
+    re_path(r'^api/v1/blocked-student/(?P<student_id>[\d]+)$',
+            BlockedStudentView.as_view(), name='blocked-student'),
     re_path(r"^$", HomeView.as_view()),
 ]
