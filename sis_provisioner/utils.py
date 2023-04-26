@@ -143,8 +143,8 @@ def get_majors(student):
     colleges = set()
 
     raw_majors = (validate_majors(student.majors) or
-        validate_majors(student.pending_majors) or
-        validate_majors(get_requested_majors(student)))
+                  validate_majors(student.pending_majors) or
+                  validate_majors(get_requested_majors(student)))
 
     if not len(raw_majors):
         logger.debug('No majors found for student {}'.format(

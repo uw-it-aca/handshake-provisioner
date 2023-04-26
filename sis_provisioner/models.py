@@ -229,7 +229,12 @@ class HandshakeStudentsFile(ImportFile):
 
         writer.writerow(settings.HANDSHAKE_CSV_HEADER)
 
+        blocked_students = BlockedHandshakeStudent.objects.all_usernames()
+
         for person in get_students_for_handshake(self.term):
+            if person.uwnetid in blocked_students:
+                continue
+
             majors = get_majors(person.student)
 
             first_name, middle_name, last_name = format_name(person.first_name,
@@ -259,6 +264,31 @@ class HandshakeStudentsFile(ImportFile):
             ])
 
         return s.getvalue()
+
+
+class BlockedHandshakeStudentManager(models.Manager):
+    def all_usernames(self):
+        usernames = super().get_queryset().all().values_list(
+            'username', flat=True)
+        return set(usernames)
+
+
+class BlockedHandshakeStudent(models.Model):
+    username = models.CharField(max_length=20, null=False, unique=True)
+    added_by = models.CharField(max_length=20)
+    added_date = models.DateTimeField()
+    reason = models.CharField(max_length=250, null=True)
+
+    objects = BlockedHandshakeStudentManager()
+
+    def json_data(self):
+        return {
+            'id': self.pk,
+            'username': self.username,
+            'added_by': self.added_by,
+            'added_date': self.added_date.isoformat(),
+            'reason': self.reason,
+        }
 
 
 class ActiveStudentsFileManager(models.Manager):
