@@ -41,6 +41,26 @@ const dataMixin = {
         this._getAxiosConfig()
       );
     },
+    getBlockedStudents: async function () {
+      return axios.get(
+        "/api/v1/blocked-student/",
+        {},
+        this._getAxiosConfig()
+      );
+    },
+    createBlockedStudent: async function (student) {
+      return axios.post(
+        "/api/v1/blocked-student/",
+        { student: student },
+        this._getAxiosConfig()
+      );
+    },
+    deleteBlockedStudent: async function (studentId) {
+      return axios.delete(
+        "/api/v1/blocked-student/" + studentId,
+        this._getAxiosConfig()
+      );
+    },
   },
 };
 
