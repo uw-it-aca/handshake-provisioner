@@ -12,13 +12,12 @@
       <tr v-for="student in students" :key="student.id">
         <td>
           <div>
-            <span>{{ student.uwnetid }}</span>
+            <span>{{ student.username }}</span>
           </div>
         </td>
         <td>
           <div class="small text-muted">
-            {{ formatDate(student.added_date) }}<br/>
-            {{ student.added_by }}
+            {{ formatDate(student.added_date) }}&nbsp;({{ student.added_by }})
           </div>
         </td>
         <td>
@@ -33,7 +32,7 @@
               title="Unblock this student"
               class="btn btn-outline-dark-beige btn-sm rounded-circle"
               v-on:click="saveDelete(student.id)"
-            ><i class="bi"></i></a>
+            ><i class="bi">Unblock</i></a>
           </div>
         </td>
       </tr>
