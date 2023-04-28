@@ -11,10 +11,10 @@
       </li>
       <li class="nav-item mb-1">
         <router-link
-          :to="'/caseload'"
+          :to="'/blocked-students'"
           class="nav-link text-gray d-block px-3 py-2 bg-dark-purple-hover rounded-3"
           :class="
-            $route.path.includes('/caseload') ? 'bg-dark-purple rounded-3' : ''
+            $route.path.includes('/blocked-students') ? 'bg-dark-purple rounded-3' : ''
           "
           ><i class="bi bi-people-fill me-2"></i>Blocked students</router-link
         >
