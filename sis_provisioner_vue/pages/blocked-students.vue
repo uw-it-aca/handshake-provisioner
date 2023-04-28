@@ -9,10 +9,10 @@
                 >Blocked Students</axdd-card-heading
               >
               <axdd-card-action>
-                <AddBlockedStudent
+                <CreateBlockedStudent
                   @studentUpdated="loadBlockedStudentList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Add student
-                </AddBlockedStudent
+                </CreateBlockedStudent
                 >
               </axdd-card-action>
             </template>

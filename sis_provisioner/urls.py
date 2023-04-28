@@ -37,5 +37,8 @@ urlpatterns += [
             BlockedStudentListView.as_view(), name='blocked-student-list'),
     re_path(r'^api/v1/blocked-student/(?P<student_id>[\d]+)$',
             BlockedStudentView.as_view(), name='blocked-student'),
-    re_path(r"^$", HomeView.as_view()),
+    # vue-router paths
+    re_path(r"^(blocked-student).*$", HomeView.as_view()),
+    # default landing
+    re_path(r"^$", HomeView.as_view(), name='index'),
 ]

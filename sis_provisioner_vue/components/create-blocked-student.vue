@@ -38,9 +38,9 @@
               <input
                 type="text"
                 id="student-uwetid"
-                name="uwnetid"
+                name="username"
                 value="current"
-                v-model="student.uwnetid"
+                v-model="student.username"
               />&nbsp;
             </div>
           </div>
@@ -92,7 +92,7 @@ export default {
   methods: {
     getDefaultStudent() {
       return {
-        uwnetid: "",
+        username: "",
         reason: "",
       };
     },
