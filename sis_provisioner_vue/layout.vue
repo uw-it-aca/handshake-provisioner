@@ -13,22 +13,11 @@
         :signout-url="signOutUrl"
       ></axdd-profile>
     </template>
+    <template #navigation>
+      <NavMenu />
+    </template>
     <template #aside>
-      <p class="text-light-gray bg-dark-purple rounded-3 p-3 small">
-        Welcome to the Handshake Import tool! On this page, you can browse files
-        that have been imported to Handshake.
-        <br /><br />
-        To import a new file:
-        <br/><br/>
-        <ol>
-          <li>Click &quot;Create new file&quot;, and select the enrollment term.</li>
-          <br/>
-          <li>The &quot;CSV Generated&quot; column indicates the status of the
-          file-creation process.</li>
-          <br/>
-          <li>Once created, click &quot;Import to Handshake&quot; to import the file.</li>
-        </ol>
-      </p>
+      <NavMessage />
     </template>
     <template #main>
       <!-- main section override -->
@@ -43,12 +32,13 @@
 </template>
 
 <script>
-import { Sidebar, Profile } from "axdd-components";
+import NavMenu from "./components/nav-menu.vue";
+import NavMessage from "./components/nav-message.vue";
 
 export default {
   components: {
-    "axdd-sidebar": Sidebar,
-    "axdd-profile": Profile,
+    NavMenu,
+    NavMessage
   },
   props: {
     pageTitle: {

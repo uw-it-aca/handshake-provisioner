@@ -6,22 +6,22 @@
           <axdd-card>
             <template #heading-action>
               <axdd-card-heading :level="2" class="my-2"
-                >Import Files</axdd-card-heading
+                >Blocked Students</axdd-card-heading
               >
               <axdd-card-action>
-                <CreateFile
-                  @fileUpdated="loadFileList()"
-                  ><i class="bi bi-plus-square text-dark me-2"></i>Create new
-                  file</CreateFile
+                <AddBlockedStudent
+                  @studentUpdated="loadBlockedStudentList()"
+                  ><i class="bi bi-plus-square text-dark me-2"></i>Add student
+                </AddBlockedStudent
                 >
               </axdd-card-action>
             </template>
             <template #body>
               <TableLoading v-if="isLoading"></TableLoading>
-              <div v-if="fileData && fileData.length">
-                <ImportFile
-                  :files="fileData"
-                  @fileUpdated="loadFileList()"
+              <div v-if="studentData && studentData.length">
+                <BlockedStudent
+                  :students="studentData"
+                  @studentUpdated="loadlockedStudentList()"
                 />
               </div>
               <div v-else>No data</div>
@@ -35,11 +35,10 @@
 
 <script>
 import dataMixin from "../mixins/data_mixin.js";
-import { Card, CardHeading, CardAction } from "axdd-components";
 import Layout from "../layout.vue";
 import TableLoading from "../components/table-loading.vue";
-import ImportFile from "../components/import-file.vue";
-import CreateFile from "../components/create-file.vue";
+import BlockedStudent from "../components/blocked-student.vue";
+import CreateBlockedStudent from "../components/create-blocked-student.vue";
 
 export default {
   mixins: [dataMixin],
@@ -47,27 +46,23 @@ export default {
     // app components
     Layout,
     TableLoading,
-    ImportFile,
-    CreateFile,
-    // axdd-components
-    "axdd-card": Card,
-    "axdd-card-heading": CardHeading,
-    "axdd-card-action": CardAction,
+    BlockedStudent,
+    CreateBlockedStudent,
   },
   data() {
     return {
-      pageTitle: "Import Files",
-      fileData: [],
+      pageTitle: "Blocked Students",
+      studentData: [],
       isLoading: true,
       timer: '',
     };
   },
   methods: {
-    loadFileList: function () {
-      this.getFiles().then(
+    loadBlockedStudentList: function () {
+      this.getBlockedStudents().then(
         (response) => {
           if (response.data) {
-            this.fileData = response.data;
+            this.studentData = response.data;
             this.isLoading = false;
           }
         }
@@ -80,11 +75,11 @@ export default {
     },
   },
   mounted() {
-    this.loadFileList();
-    this.timer = setInterval(this.loadFileList, 60000);
+    this.loadBlockedStudentList();
+    /* this.timer = setInterval(this.loadBlockedStudentList, 60000); */
   },
   beforeUnmount() {
-    clearInterval(this.timer);
+    /* clearInterval(this.timer); */
   }
 };
 </script>
