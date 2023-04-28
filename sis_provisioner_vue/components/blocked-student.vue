@@ -30,9 +30,9 @@
             <a
               role="button"
               title="Unblock this student"
-              class="btn btn-outline-dark-beige btn-sm rounded-circle"
+              class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
               v-on:click="saveDelete(student.id)"
-            ><i class="bi">Unblock</i></a>
+            >Unblock student</a>
           </div>
         </td>
       </tr>
