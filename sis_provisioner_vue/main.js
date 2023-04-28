@@ -9,8 +9,9 @@ import AxddComponents from "axdd-components";
 import VueGtag from "vue-gtag-next";
 import { Vue3Mq, MqResponsive } from "vue3-mq";
 
-// bootstrap js
+// bootstrap js + bootstrap-icons
 import "bootstrap";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 // custom bootstrap theming
 import "./css/custom.scss";
