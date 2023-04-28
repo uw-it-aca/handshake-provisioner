@@ -22,7 +22,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="createBlockedStudentModalLabel">
-            Add a blocked student</h5>
+            Add a blocked student
+          </h5>
           <button
             type="button"
             class="btn-close"
@@ -39,19 +40,20 @@
                 type="text"
                 id="student-uwetid"
                 name="username"
-                value="current"
+                size="10"
                 v-model="student.username"
               />&nbsp;
             </div>
           </div>
           <div class="row">
             <div class="col">
-              <label for="student-reason" class="form-label">Reason:</label>
+              <label for="student-reason" class="form-label">Reason for block:</label>
               &nbsp;&nbsp;
               <input
                 type="text"
                 id="student-reason"
                 name="reason"
+                size="50"
                 v-model="student.reason"
               />&nbsp;
             </div>
@@ -63,9 +65,14 @@
               type="button"
               class="btn btn-secondary me-2"
               data-bs-dismiss="modal"
-            >Close
+            >
+              Close
             </button>
-            <button type="button" class="btn btn-primary" @click="saveStudent()">
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="saveStudent()"
+            >
               Add student to blocked list
             </button>
           </div>
