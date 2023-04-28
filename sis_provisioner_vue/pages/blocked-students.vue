@@ -21,7 +21,7 @@
               <div v-if="studentData && studentData.length">
                 <BlockedStudent
                   :students="studentData"
-                  @studentUpdated="loadlockedStudentList()"
+                  @studentUpdated="loadBlockedStudentList()"
                 />
               </div>
               <div v-else>No data</div>

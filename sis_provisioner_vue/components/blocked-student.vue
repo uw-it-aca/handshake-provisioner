@@ -17,7 +17,7 @@
         </td>
         <td>
           <div class="small text-muted">
-            {{ formatDate(student.added_date) }}&nbsp;({{ student.added_by }})
+            {{ formatDate(student.added_date) }}<br/>{{ student.added_by }}
           </div>
         </td>
         <td>
