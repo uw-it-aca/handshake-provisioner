@@ -1,7 +1,6 @@
 [run]
 source = sis_provisioner
 parallel = True
-service_job_id = None
 
 [paths]
 source =
