@@ -13,8 +13,9 @@ import { Vue3Mq, MqResponsive } from "vue3-mq";
 import "bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-// custom bootstrap theming
+// bootstrap (axdd) and axdd-components
 import "./css/custom.scss";
+import "axdd-components/dist/style.css";
 
 const app = createApp(App);
 
