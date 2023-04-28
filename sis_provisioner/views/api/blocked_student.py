@@ -22,13 +22,15 @@ class BlockedStudentListView(APIView):
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body).get('student', {})
-        username = data.get('username')
+        username = data.get('username').strip().lower()
+        reason = data.get('reason').strip()
 
-        blocked_student = BlockedHandshakeStudent(
-            username=username,
-            added_by=get_user(request),
-            added_date=datetime.utcnow().replace(tzinfo=utc))
-        blocked_student.save()
+        blocked_student, _ = BlockedHandshakeStudent.objects.get_or_create(
+            username=username, defaults={
+                'added_by': get_user(request),
+                'added_date': datetime.utcnow().replace(tzinfo=utc),
+                'reason': reason,
+            })
         return self.json_response(blocked_student.json_data())
 
 
