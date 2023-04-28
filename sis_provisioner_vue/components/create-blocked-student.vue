@@ -40,18 +40,20 @@
                 type="text"
                 id="student-uwetid"
                 name="username"
+                size="10"
                 v-model="student.username"
               />&nbsp;
             </div>
           </div>
           <div class="row">
             <div class="col">
-              <label for="student-reason" class="form-label">Reason:</label>
+              <label for="student-reason" class="form-label">Reason for block:</label>
               &nbsp;&nbsp;
               <input
                 type="text"
                 id="student-reason"
                 name="reason"
+                size="50"
                 v-model="student.reason"
               />&nbsp;
             </div>
