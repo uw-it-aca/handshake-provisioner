@@ -22,10 +22,10 @@
     "homepage": "https://github.com/uw-it-aca/handshake-provisioner#readme",
     "dependencies": {
       "@popperjs/core": "^2.9.2",
-      "axdd-components": "git+https://github.com/uw-it-aca/axdd-components.git#1.0.5",
+      "axdd-components": "git+https://github.com/uw-it-aca/axdd-components.git#1.0.6",
       "axios": "^0.27.2",
-      "bootstrap": "^5.2.0",
-      "bootstrap-icons": "^1.9.1",
+      "bootstrap": "^5.2.3",
+      "bootstrap-icons": "^1.10.2",
       "dayjs": "^1.11.5",
       "jquery": "^3.6.0",
       "regenerator-runtime": "^0.13.9",
