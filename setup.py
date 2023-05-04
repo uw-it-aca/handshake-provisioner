@@ -24,7 +24,7 @@ setup(
         'Django~=3.2',
         'django-storages[google]>=1.10',
         'boto3',
-        'axdd-person-client~=1.1',
+        'axdd-person-client>=1.1.5,<1.2',
         'nameparser>=1.0.4,<2.0',
         'UW-Django-SAML2~=1.7',
     ],

@@ -115,7 +115,7 @@ class ImportFile(models.Model):
             logger.info('CSV skipped for file ID {}: No students'.format(
                 self.pk, ex))
         except Exception as ex:
-            logger.info('CSV failed for file ID {}: {}'.format(
+            logger.exception('CSV failed for file ID {}: {}'.format(
                 self.pk, ex))
 
         self.process_id = None
