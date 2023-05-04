@@ -26,7 +26,8 @@ class StudentDAOFunctionsTest(TestCase):
             include_student_sports=False,
             include_student_advisers=False,
             include_student_majors=True,
-            include_student_pending_majors=True)
+            include_student_pending_majors=True,
+            include_student_holds=False)
 
         mock_get_registered_students.return_value = []
         self.assertRaises(EmptyQueryException, get_students_for_handshake,
@@ -43,4 +44,5 @@ class StudentDAOFunctionsTest(TestCase):
             include_student_sports=False,
             include_student_advisers=False,
             include_student_majors=False,
-            include_student_pending_majors=False)
+            include_student_pending_majors=False,
+            include_student_holds=False)
