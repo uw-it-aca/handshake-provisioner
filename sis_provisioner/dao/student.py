@@ -62,6 +62,7 @@ def get_students_for_handshake(academic_term):
         'include_student_majors': True,
         'include_student_pending_majors': True,
         'include_student_holds': False,
+        'include_student_degrees': False,
     }
     client = HandshakePersonClient()
     students = client.get_registered_students(academic_term, **kwargs)
@@ -86,6 +87,7 @@ def get_active_students():
         'include_student_majors': False,
         'include_student_pending_majors': False,
         'include_student_holds': False,
+        'include_student_degrees': False,
     }
     client = HandshakePersonClient()
     return client.get_active_students(**kwargs)
