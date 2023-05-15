@@ -257,7 +257,9 @@ class HandshakeStudentsFile(ImportFile):
                 'TRUE',  # primary_education:currently_attending
                 get_education_level_name(person.student),
                 person.student.gender,
-                person.student.assigned_ethnic_group_desc,
+                person.student.hispanic_group_desc if (
+                    person.student.hispanic_group_desc is not None) else (
+                        person.student.ethnic_group_desc),
                 'TRUE' if is_athlete(person.student) else 'FALSE',
                 'TRUE' if is_veteran(person.student) else 'FALSE',
                 # 'work_study_eligible',  # Currently unavailble
