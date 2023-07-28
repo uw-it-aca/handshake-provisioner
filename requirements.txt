@@ -1,1 +1,2 @@
+git+https://github.com/uw-it-aca/axdd-person-client@task/code-types#egg=axdd-person-client
 -e .
