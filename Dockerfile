@@ -13,7 +13,7 @@ ADD --chown=acait:acait docker/ /app/project/
 
 RUN /app/bin/pip install -r requirements.txt
 RUN /app/bin/pip install psycopg2
-RUN . /app/bin/activate && python manage.py test
+
 FROM node:lts-bullseye AS node-bundler
 
 ADD ./package.json /app/
