@@ -21,7 +21,7 @@ setup(
     packages=['sis_provisioner'],
     include_package_data=True,
     install_requires = [
-        'Django~=3.2',
+        'Django~=4.2',
         'django-storages[google]>=1.10',
         'boto3',
         'axdd-person-client>=1.1.18,<1.2',
@@ -41,6 +41,5 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.8',
     ],
 )
