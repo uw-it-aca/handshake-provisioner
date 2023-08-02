@@ -4,7 +4,6 @@
     data-bs-toggle="modal"
     :data-bs-target="'#createFileModal'"
     class="btn text-nowrap btn-sm btn-outline-gray text-dark rounded-3 px-3 py-2"
-    @click="getFormData()"
   >
     <slot></slot>
   </a>
