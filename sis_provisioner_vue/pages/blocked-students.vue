@@ -34,11 +34,11 @@
 </template>
 
 <script>
-import dataMixin from "../mixins/data_mixin.js";
-import Layout from "../layout.vue";
-import TableLoading from "../components/table-loading.vue";
-import BlockedStudent from "../components/blocked-student.vue";
-import CreateBlockedStudent from "../components/create-blocked-student.vue";
+import dataMixin from "@/mixins/data_mixin.js";
+import Layout from "@/layout.vue";
+import TableLoading from "@/components/table-loading.vue";
+import BlockedStudent from "@/components/blocked-student.vue";
+import CreateBlockedStudent from "@/components/create-blocked-student.vue";
 
 export default {
   mixins: [dataMixin],

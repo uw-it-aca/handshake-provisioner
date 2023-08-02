@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import dataMixin from "../mixins/data_mixin.js";
+import dataMixin from "@/mixins/data_mixin.js";
 import { Modal } from "bootstrap";
 
 export default {

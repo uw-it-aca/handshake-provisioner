@@ -1,6 +1,6 @@
 import "regenerator-runtime/runtime";
 import axios from "axios";
-import { useTokenStore } from "../stores/token";
+import { useTokenStore } from "@/stores/token";
 
 const dataMixin = {
   methods: {
