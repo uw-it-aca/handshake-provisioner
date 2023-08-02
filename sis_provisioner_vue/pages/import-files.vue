@@ -34,11 +34,11 @@
 </template>
 
 <script>
-import dataMixin from "../mixins/data_mixin.js";
-import Layout from "../layout.vue";
-import TableLoading from "../components/table-loading.vue";
-import ImportFile from "../components/import-file.vue";
-import CreateFile from "../components/create-file.vue";
+import dataMixin from "@/mixins/data_mixin.js";
+import Layout from "@/layout.vue";
+import TableLoading from "@/components/table-loading.vue";
+import ImportFile from "@/components/import-file.vue";
+import CreateFile from "@/components/create-file.vue";
 
 export default {
   mixins: [dataMixin],

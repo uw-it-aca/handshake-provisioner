@@ -2,8 +2,8 @@ import { createWebHistory, createRouter } from "vue-router";
 import { trackRouter } from "vue-gtag-next";
 
 // page components
-import ImportFiles from "../pages/import-files.vue";
-import BlockedStudents from "../pages/blocked-students.vue";
+import ImportFiles from "@/pages/import-files.vue";
+import BlockedStudents from "@/pages/blocked-students.vue";
 
 const routes = [
   {

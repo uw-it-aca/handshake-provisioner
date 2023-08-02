@@ -1,7 +1,7 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import App from "./app.vue";
 import router from "./router";
-import store from "./store";
 
 // import axdd-components
 import AxddComponents from "axdd-components";
@@ -42,10 +42,13 @@ app.use(Vue3Mq, {
 });
 app.component("mq-responsive", MqResponsive);
 
+// pinia (vuex) state management
+const pinia = createPinia();
+app.use(pinia);
+
 // axdd-components
 app.use(AxddComponents);
 
 app.use(router);
-app.use(store);
 
 app.mount("#app");
