@@ -17,6 +17,7 @@ else:
     GS_LOCATION = os.path.join(os.getenv('STORAGE_DATA_ROOT', ''))
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
+    CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
 
 FILENAME_TEST_PREFIX = os.getenv('FILENAME_TEST_PREFIX', '')
 
