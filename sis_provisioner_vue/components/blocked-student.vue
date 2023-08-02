@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import dataMixin from "../mixins/data_mixin.js";
-import { formatDate } from "../helpers/utils";
+import dataMixin from "@/mixins/data_mixin.js";
+import { formatDate } from "@/helpers/utils";
 
 export default {
   mixins: [dataMixin],

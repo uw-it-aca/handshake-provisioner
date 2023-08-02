@@ -4,7 +4,6 @@
     data-bs-toggle="modal"
     :data-bs-target="'#createBlockedStudentModal'"
     class="btn text-nowrap btn-sm btn-outline-gray text-dark rounded-3 px-3 py-2"
-    @click="getFormData()"
   >
     <slot></slot>
   </a>
@@ -83,7 +82,7 @@
 </template>
 
 <script>
-import dataMixin from "../mixins/data_mixin.js";
+import dataMixin from "@/mixins/data_mixin.js";
 import { Modal } from "bootstrap";
 
 export default {

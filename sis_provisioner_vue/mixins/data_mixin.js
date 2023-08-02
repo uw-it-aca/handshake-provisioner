@@ -1,15 +1,17 @@
 import "regenerator-runtime/runtime";
 import axios from "axios";
+import { useTokenStore } from "@/stores/token";
 
 const dataMixin = {
   methods: {
     _getAxiosConfig: function () {
-      const csrfToken = this.$store.state.csrfToken;
+      const tokenStore = useTokenStore();
+
       const axiosConfig = {
         headers: {
           "Content-Type": "application/json;charset=UTF-8",
           "Access-Control-Allow-Origin": "*",
-          "X-CSRFToken": csrfToken,
+          "X-CSRFToken": tokenStore.csrfToken,
         },
       };
       return axiosConfig;
