@@ -75,6 +75,7 @@ class HandshakeUtilsTest(TestCase):
             college='H')
 
         student = self._build_student(majors=[major0])
+        print(get_majors(student))
         self.assertEqual(len(get_majors(student)), 0)
 
         student = self._build_student(majors=[major2])
@@ -143,15 +144,6 @@ class HandshakeUtilsTest(TestCase):
         major.college = 'S'
         self.assertEqual(get_college_for_major(major), 'S')
 
-    def test_get_college_code(self):
-        codes = ['A', 'B', 'C']
-        self.assertEqual(get_college_code(codes), 'C')
-        self.assertEqual(get_college_code([]), None)
-        self.assertEqual(get_college_code(['Z']), None)
-        self.assertEqual(get_college_code(['Z'] + codes), 'C')
-        self.assertEqual(get_college_code(['C', 'Z']), 'C')
-        self.assertEqual(get_college_code(['Y', 'J2']), 'J2')
-
     def test_get_major_names(self):
         major = self._build_major(major_abbr_code='BSE', college='F',
                                   major_full_name='Bachelor of Science')
@@ -202,7 +194,7 @@ class HandshakeUtilsTest(TestCase):
 
         self.assertEqual(get_primary_major_name([major, major2]),
                          'Bachelor of Science')
-        self.assertEqual(get_primary_major_name([]), None)
+        self.assertEqual(get_primary_major_name([]), '')
         self.assertEqual(get_primary_major_name([major]),
                          'Bachelor of Science')
         self.assertEqual(get_primary_major_name([major3]),
@@ -225,47 +217,44 @@ class HandshakeUtilsTest(TestCase):
         major3 = self._build_major(major_abbr_code='2', college='E',
                                    major_full_name='Business Administration')
 
-        self.assertFalse(is_excluded_college([major, major2]))
-        self.assertTrue(is_excluded_college([]))
-        self.assertFalse(is_excluded_college([major]))
-        self.assertFalse(is_excluded_college([major3]))
-        self.assertFalse(is_excluded_college([major, major3]))
-        self.assertFalse(is_excluded_college([major, major3, major2]))
-        major3.college = 'F'
-        self.assertFalse(is_excluded_college([major3, major2]))
+        self.assertFalse(is_excluded_college(major.college))
+        self.assertFalse(is_excluded_college(major2.college))
+        self.assertFalse(is_excluded_college(major3.college))
 
-    def test_get_college_name(self):
+    def test_get_college_names(self):
         major = self._build_major(major_abbr_code='BSE', college='C')
         major2 = self._build_major(major_abbr_code='2', college='S')
         major3 = self._build_major(major_abbr_code='3', college='C')
         major4 = self._build_major(major_abbr_code='CSE', college='C')
         major5 = self._build_major(major_abbr_code='BIOEN', college='O')
 
-        self.assertEqual(get_college_name([major]),
+        self.assertEqual(get_college_names([major]),
                          'College of Engineering')
-        self.assertEqual(get_college_name([major2]),
+        self.assertEqual(get_college_names([major2]),
                          'The Information School')
-        self.assertEqual(get_college_name([major3]),
+        self.assertEqual(get_college_names([major3]),
                          'College of Arts & Sciences')
-        self.assertEqual(get_college_name([major2, major]),
+        self.assertEqual(get_college_names([major2, major]),
+                         'The Information School;College of Engineering')
+        self.assertEqual(get_college_names([major, major3]),
+                         'College of Engineering;College of Arts & Sciences')
+        self.assertEqual(get_college_names([major2, major3]),
+                         'The Information School;College of Arts & Sciences')
+        self.assertEqual(get_college_names(
+            [major4, major2, major3]), (
+            'School of Computer Science & Engineering;'
+            'The Information School;College of Arts & Sciences'))
+        self.assertEqual(
+            get_college_names([major4, major2]),
+            'School of Computer Science & Engineering;The Information School')
+        self.assertEqual(get_college_names(
+            [major4, major2, major, major3]), (
+            'School of Computer Science & Engineering;The Information School;'
+            'College of Engineering;College of Arts & Sciences'))
+        self.assertEqual(get_college_names([major5]),
                          'College of Engineering')
-        self.assertEqual(get_college_name([major, major3]),
-                         'College of Engineering')
-        self.assertEqual(get_college_name([major2, major3]),
-                         'The Information School')
-        self.assertEqual(get_college_name([major2, major3]),
-                         'The Information School')
-        self.assertEqual(get_college_name([major4, major2, major3]),
-                         'School of Computer Science & Engineering')
-        self.assertEqual(get_college_name([major4, major2]),
-                         'School of Computer Science & Engineering')
-        self.assertEqual(get_college_name(
-            [major4, major2, major, major3]),
-            'School of Computer Science & Engineering')
-        self.assertEqual(get_college_name([major5]),
-                         'College of Engineering')
-        self.assertEqual(get_college_name([]), None)
-        self.assertEqual(get_college_name([], campus='1'), 'UW Bothell')
+        self.assertEqual(get_college_names([]), '')
+        self.assertEqual(get_college_names([], campus='1'), 'UW Bothell')
 
     def test_titleize(self):
         self.assertRaises(TypeError, titleize, None)

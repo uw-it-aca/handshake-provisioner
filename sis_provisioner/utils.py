@@ -79,24 +79,8 @@ def get_college_for_major(major):
         major.major_abbr_code, major.college)
 
 
-def get_college_code(codes: list):
-    excluded_college_codes = getattr(settings, 'EXCLUDE_COLLEGE_CODES', [])
-    codes = [code for code in codes if code not in excluded_college_codes]
-
-    if len(codes) == 0:
-        return None
-    if 'J2' in codes:
-        return 'J2'
-    if 'J' in codes:
-        return 'J'
-    return max(codes)
-
-
-def is_excluded_college(majors):
-    college_code = get_college_code(
-        [get_college_for_major(major) for major in majors]
-    )
-    return college_code is None
+def is_excluded_college(college_code):
+    return college_code in getattr(settings, 'EXCLUDE_COLLEGE_CODES', [])
 
 
 def get_requested_majors(student):
@@ -118,8 +102,7 @@ def is_pre_major(major):
 
 
 def is_excluded_major(major):
-    excluded_major_codes = getattr(settings, 'EXCLUDE_MAJOR_CODES', [])
-    return major.major_abbr_code in excluded_major_codes
+    return major.major_abbr_code in getattr(settings, 'EXCLUDE_MAJOR_CODES')
 
 
 def validate_majors(majors) -> list:
@@ -170,25 +153,35 @@ def get_majors(student):
 
 
 def get_major_names(majors):
-    if not is_excluded_college(majors):
-        return ';'.join([get_major_name(m) for m in majors])
+    major_names = []
+    for major in majors:
+        if not is_excluded_college(get_college_for_major(majors[0])):
+            major_names.append(get_major_name(major))
+    return ';'.join(major_names) if len(major_names) else ''
+
+
+def get_primary_major_name(majors):
+    if (len(majors) and
+            not is_excluded_college(get_college_for_major(majors[0]))):
+        return get_major_name(majors[0])
     return ''
 
 
-def get_primary_major_name(majors: list):
-    if len(majors) > 0 and not is_excluded_college(majors):
-        return get_major_name(majors[0])
-
-
-def get_college_name(majors, campus='0'):
+def get_college_names(majors, campus='0'):
+    college_names = []
     college_dict = getattr(settings, 'COLLEGES', {})
 
-    college_code = get_college_code(
-        [get_college_for_major(major) for major in majors]
-    )
-    if college_code is None and campus == '1':
-        college_code = 'V'
-    return college_dict.get(college_code)
+    for major in majors:
+        college_code = get_college_for_major(major)
+        if not is_excluded_college(college_code):
+            college_name = college_dict.get(college_code)
+            if college_name not in college_names:
+                college_names.append(college_name)
+
+    if not len(college_names) and campus == '1':
+        college_names.append(college_dict.get('V'))
+
+    return ';'.join(college_names) if len(college_names) else ''
 
 
 def format_name(first_name, surname):
