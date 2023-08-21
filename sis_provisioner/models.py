@@ -15,7 +15,7 @@ from sis_provisioner.dao.student import (
 from sis_provisioner.dao.term import AcademicTerm
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
-    is_veteran, get_college_name, get_class_desc, get_education_level_name,
+    is_veteran, get_college_names, get_class_desc, get_education_level_name,
     format_student_number, format_name)
 from datetime import datetime
 from logging import getLogger
@@ -249,7 +249,7 @@ class HandshakeStudentsFile(ImportFile):
                 first_name,
                 middle_name,
                 person.preferred_first_name,
-                get_college_name(majors, person.student.campus_code),
+                get_college_names(majors, person.student.campus_code),
                 '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
                 person.student.campus_desc,
                 get_major_names(majors),
