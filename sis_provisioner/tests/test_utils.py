@@ -27,10 +27,8 @@ class HandshakeUtilsTest(TestCase):
         if requested_majors:
             for i in range(3):
                 code = None
-                print(len(requested_majors), i)
                 if len(requested_majors) > i:
                     code = requested_majors[i].major_abbr_code
-                print(requested_majors, i)
                 setattr(student, f'requested_major{i+1}_code', code)
         if intended_majors:
             for i in range(3):
@@ -75,7 +73,6 @@ class HandshakeUtilsTest(TestCase):
             college='H')
 
         student = self._build_student(majors=[major0])
-        print(get_majors(student))
         self.assertEqual(len(get_majors(student)), 0)
 
         student = self._build_student(majors=[major2])
