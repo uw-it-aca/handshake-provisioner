@@ -58,7 +58,7 @@ HANDSHAKE_CSV_HEADER = [
     'first_name',
     'middle_name',
     'preferred_name',
-    'primary_education:college_name',
+    'primary_education:college_names',
     'email_address',
     'campus_name',
     'primary_education:major_names',
