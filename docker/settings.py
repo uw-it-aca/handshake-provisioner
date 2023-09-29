@@ -46,7 +46,7 @@ VETERAN_CODES = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '33', '40', 
 
 INCLUDE_CAMPUS_CODES = ['0', '1']
 EXCLUDE_COLLEGE_CODES = ['Z']
-EXCLUDE_MAJOR_CODES = ['GEMBA', 'N MATR']
+EXCLUDE_MAJOR_CODES = ['N MATR']
 PRE_MAJOR_CODES = ['EPRMJ', 'PSOCS', 'P SW', 'TPRMAJ']
 
 HANDSHAKE_CSV_HEADER = [
@@ -106,6 +106,7 @@ MAJOR_NAME_OVERRIDES = {
     'MSBA-00': 'Master of Science in Business Analytics',
     'ENTRE-10': 'Master of Science in Entrepreneurship',
     'EMBA-00': 'Master of Business Administration (Executive)',
+    'GEMBA-00': 'Master of Business Administration (Global Executive)',
     'MBA EX-00': 'Master of Business Administration (Evening)',
     'MBA-00': 'Master of Business Administration (Full-Time)',
     'MBA-20': 'Master of Business Administration (Hybrid)',
