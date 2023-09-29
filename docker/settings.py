@@ -106,6 +106,7 @@ MAJOR_NAME_OVERRIDES = {
     'MSBA-00': 'Master of Science in Business Analytics',
     'ENTRE-10': 'Master of Science in Entrepreneurship',
     'EMBA-00': 'Master of Business Administration (Executive)',
+    'GEMBA-00': 'Master of Business Administration (Global Executive)',
     'MBA EX-00': 'Master of Business Administration (Evening)',
     'MBA-00': 'Master of Business Administration (Full-Time)',
     'MBA-20': 'Master of Business Administration (Hybrid)',
