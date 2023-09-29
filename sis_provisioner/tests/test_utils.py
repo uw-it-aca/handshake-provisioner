@@ -44,8 +44,6 @@ class HandshakeUtilsTest(TestCase):
         return student
 
     def test_get_majors(self):
-        major0 = self._build_major(
-            major_abbr_code='GEMBA', major_full_name='Major 0', college='J')
         major1 = self._build_major(
             major_abbr_code='A', major_full_name='Major 1', college='A1')
         major2 = self._build_major(
@@ -72,19 +70,16 @@ class HandshakeUtilsTest(TestCase):
             major_abbr_code='EDUC I', major_full_name='Education Certificate',
             college='H')
 
-        student = self._build_student(majors=[major0])
-        self.assertEqual(len(get_majors(student)), 0)
-
         student = self._build_student(majors=[major2])
         self.assertEqual(len(get_majors(student)), 1)
 
-        student = self._build_student(majors=[major0, major2])
+        student = self._build_student(majors=[major8, major2])
         self.assertEqual(len(get_majors(student)), 1)
 
         student = self._build_student(majors=[major1, major2, major3])
         self.assertEqual(len(get_majors(student)), 3)
 
-        student = self._build_student(majors=[major0, major1, major2])
+        student = self._build_student(majors=[major8, major1, major2])
         self.assertEqual(len(get_majors(student)), 2)
 
         student = self._build_student(majors=[major1, major2, major4])
