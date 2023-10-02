@@ -195,13 +195,14 @@ class HandshakeStudentsFile(ImportFile):
         try:
             write_handshake(self.filename, self.content)
             self.imported_status = 200
+            self.imported_date = datetime.utcnow().replace(tzinfo=utc)
             logger.info('File ID {} imported'.format(self.pk))
         except Exception as ex:
             logger.critical(ex, exc_info=True)
             self.imported_status = 500
-
-        self.imported_date = datetime.utcnow().replace(tzinfo=utc)
-        self.save()
+            raise
+        finally:
+            self.save()
 
     def json_data(self):
         data = super().json_data()
