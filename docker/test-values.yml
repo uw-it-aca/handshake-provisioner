@@ -168,11 +168,11 @@ environmentVariablesSecrets:
     secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: storage-bucket-path
   awsAccessKeyID:
-    name: AWS_S3_ACCESS_KEY_ID
+    name: AWS_ACCESS_KEY_ID
     secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: access-key-id
   awsSecretAccessKey:
-    name: AWS_S3_SECRET_ACCESS_KEY
+    name: AWS_SECRET_ACCESS_KEY
     secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: secret-access-key
   personDBUser:
