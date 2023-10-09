@@ -122,8 +122,8 @@ COLLEGES = {
     'H': 'College of Education',
     'J': 'College of Engineering',
     'J2': 'School of Computer Science & Engineering',
-    'K': 'College of Ocean & Fishery Sciences',
-    'L': 'College of Forest Resources',
+    'K': 'College of the Environment',
+    'L': 'College of the Environment',
     'M': 'School of Public Health',
     'N': 'School of Nursing',
     'O': 'Interschool or Intercollege Programs',
@@ -169,8 +169,6 @@ TEMPLATES = [
         },
     }
 ]
-
-LOGGING['loggers']['']['level'] = 'DEBUG'
 
 if os.getenv("ENV") == "localdev":
     DEBUG = True
