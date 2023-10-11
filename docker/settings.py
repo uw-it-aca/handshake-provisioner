@@ -8,22 +8,33 @@ INSTALLED_APPS += [
 
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     MEDIA_ROOT = os.getenv('MEDIA_ROOT', '/app/data')
 else:
-    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    GS_PROJECT_ID = os.getenv('STORAGE_PROJECT_ID', '')
-    GS_BUCKET_NAME = os.getenv('STORAGE_BUCKET_NAME', '')
-    GS_LOCATION = os.path.join(os.getenv('STORAGE_DATA_ROOT', ''))
-    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        '/gcs/credentials.json')
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
+            'OPTIONS': {
+                'project_id': os.getenv('STORAGE_PROJECT_ID', ''),
+                'bucket_name': os.getenv('STORAGE_BUCKET_NAME', ''),
+                'location': os.path.join(os.getenv('STORAGE_DATA_ROOT', '')),
+                'credentials': service_account.Credentials.from_service_account_file(
+                    '/gcs/credentials.json'),
+            }
+        },
+        'handshake': {
+            'BACKEND': 'storages.backends.s3.S3Storage',
+            'OPTIONS': {
+                'region_name': os.getenv('AWS_S3_REGION_NAME', ''),
+                'bucket_name': os.getenv('AWS_STORAGE_BUCKET_NAME', ''),
+                'location': os.getenv('AWS_LOCATION', ''),
+                'access_key': os.getenv('AWS_ACCESS_KEY_ID', ''),
+                'secret_key': os.getenv('AWS_SECRET_ACCESS_KEY', ''),
+            }
+        }
+    }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
 
 FILENAME_TEST_PREFIX = os.getenv('FILENAME_TEST_PREFIX', '')
-
-AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', '')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
-AWS_LOCATION = os.getenv('AWS_LOCATION', '')
 
 AXDD_PERSON_CLIENT_ENV = os.getenv('AXDD_PERSON_CLIENT_ENV', 'localdev')
 UW_PERSON_DB_USERNAME = os.getenv('UW_PERSON_DB_USERNAME')
