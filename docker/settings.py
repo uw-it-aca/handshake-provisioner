@@ -30,7 +30,10 @@ else:
                 'access_key': os.getenv('AWS_ACCESS_KEY_ID', ''),
                 'secret_key': os.getenv('AWS_SECRET_ACCESS_KEY', ''),
             }
-        }
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
     }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
 
