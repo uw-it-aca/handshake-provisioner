@@ -2,13 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from storages.backends.s3boto3 import S3Boto3Storage
+from django.core.files.storage import storages
 
 
 def read_file(path):
-    storage = S3Boto3Storage()
+    storage = storages['handshake']
     if not storage.exists(path):
         raise ObjectDoesNotExist()
 
@@ -19,6 +18,6 @@ def read_file(path):
 
 
 def write_file(path, data):
-    storage = S3Boto3Storage()
+    storage = storages['handshake']
     with storage.open(path, mode='wb') as f:
         f.write(data)

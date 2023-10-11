@@ -22,8 +22,8 @@ setup(
     include_package_data=True,
     install_requires = [
         'Django~=4.2',
-        'django-storages[google]>=1.10',
-        'boto3',
+        'django-storages[google, s3]',
+        'urllib3<2', # pinned for boto3
         'axdd-person-client>=1.1.18,<1.2',
         'nameparser>=1.0.4,<2.0',
         'UW-Django-SAML2~=1.7',
