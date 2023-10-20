@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import NavMenu from "./components/nav-menu.vue";
-import NavMessage from "./components/nav-message.vue";
+import NavMenu from "@/components/nav-menu.vue";
+import NavMessage from "@/components/nav-message.vue";
 
 export default {
   components: {
