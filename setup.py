@@ -8,7 +8,7 @@ See the README on `GitHub
 <https://github.com/uw-it-aca/handshake-provisioner>`_.
 """
 
-version_path = 'sis_provisioner/VERSION'
+version_path = "sis_provisioner/VERSION"
 VERSION = open(os.path.join(os.path.dirname(__file__), version_path)).read()
 VERSION = VERSION.replace("\n", "")
 
@@ -16,30 +16,30 @@ VERSION = VERSION.replace("\n", "")
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='handshake-provisioner',
+    name="handshake-provisioner",
     version=VERSION,
-    packages=['sis_provisioner'],
+    packages=["sis_provisioner"],
     include_package_data=True,
-    install_requires = [
-        'Django~=4.2',
-        'django-storages[google, s3]',
-        'urllib3<2', # pinned for boto3
-        'axdd-person-client>=1.1.18,<1.2',
-        'nameparser>=1.0.4,<2.0',
-        'UW-Django-SAML2~=1.7',
+    install_requires=[
+        "Django~=4.2",
+        "django-storages[google, s3]",
+        "urllib3<2",  # pinned for boto3
+        "axdd-person-client>=1.1.18,<1.2",
+        "nameparser>=1.0.4,<2.0",
+        "UW-Django-SAML2~=1.7",
     ],
-    license='Apache License, Version 2.0',
-    description='UW application that supports Handshake',
+    license="Apache License, Version 2.0",
+    description="UW application that supports Handshake",
     long_description=README,
-    url='https://github.com/uw-it-aca/handshake-provisioner',
-    author = "UW-IT AXDD",
-    author_email = "aca-it@uw.edu",
+    url="https://github.com/uw-it-aca/handshake-provisioner",
+    author="UW-IT T&LS",
+    author_email="aca-it@uw.edu",
     classifiers=[
-        'Environment :: Web Environment',
-        'Framework :: Django',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Apache Software License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
+        "Environment :: Web Environment",
+        "Framework :: Django",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
     ],
 )
