@@ -291,7 +291,7 @@ class HandshakeLabelsFileManager(models.Manager):
         return import_file
 
 
-class HandshakeLabelsFile(models.Model):
+class HandshakeLabelsFile(ImportFile):
     '''
     A file containing enrolled student labels for a term, used for provisioning
     student labels to Handshake.
