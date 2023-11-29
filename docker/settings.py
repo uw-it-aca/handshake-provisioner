@@ -85,6 +85,17 @@ HANDSHAKE_CSV_HEADER = [
     'veteran',
 ]
 
+LABEL_CSV_HEADER = [
+    'identifier',
+    'identifiable_type',
+    'user_type',
+    'sp_pgm_descrip',
+    's1_visa_type',
+    'DRS',
+    'athlete',
+    'veteran',
+]
+
 MAJOR_COLLEGE_OVERRIDES = {
     'BIOEN': 'J', 'BSE': 'J', 'DATA': 'J', 'PHARBX': 'J', 'PREBSE': 'J',
     'TECH I': 'J',

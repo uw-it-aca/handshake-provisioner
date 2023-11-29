@@ -3,7 +3,8 @@
 
 
 from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models import HandshakeStudentsFile, ActiveStudentsFile
+from sis_provisioner.models import (
+    HandshakeStudentsFile, HandshakeLabelsFile, ActiveStudentsFile)
 
 
 class Command(BaseCommand):
@@ -11,4 +12,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         (HandshakeStudentsFile.objects.build_file() or
+            HandshakeLabelsFile.objects.build_file() or
             ActiveStudentsFile.objects.build_file())
