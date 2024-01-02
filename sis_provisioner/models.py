@@ -25,6 +25,9 @@ import os
 
 logger = getLogger(__name__)
 
+TRUE = 'True'
+FALSE = 'False'
+
 
 class TermManager(models.Manager):
     def current(self):
@@ -255,17 +258,94 @@ class HandshakeStudentsFile(ImportFile):
                 person.student.campus_desc,
                 get_major_names(majors),
                 get_primary_major_name(majors),
-                'TRUE',  # primary_education:currently_attending
+                TRUE,  # primary_education:currently_attending
                 get_education_level_name(person.student),
                 person.student.gender,
                 person.student.hispanic_group_desc if (
                     person.student.hispanic_group_desc is not None) else (
                         person.student.ethnic_group_desc),
-                'TRUE' if is_athlete(person.student) else 'FALSE',
-                'TRUE' if is_veteran(person.student) else 'FALSE',
+                TRUE if is_athlete(person.student) else FALSE,
+                TRUE if is_veteran(person.student) else FALSE,
                 # 'work_study_eligible',  # Currently unavailble
             ])
 
+        return s.getvalue()
+
+
+class HandshakeLabelsFileManager(models.Manager):
+    def build_file(self):
+        import_file = super().get_queryset().filter(
+            generated_date__isnull=True, process_id__isnull=True
+        ).order_by('created_date').first()
+
+        if import_file is None:
+            return
+
+        import_file.build()
+
+        # Automatically created files are automatically imported
+        if (import_file.generated_date is not None and
+                import_file.created_by == 'automatic'):
+            import_file.sisimport()
+
+        return import_file
+
+
+class HandshakeLabelsFile(ImportFile):
+    '''
+    A file containing enrolled student labels for a term, used for provisioning
+    student labels to Handshake.
+    '''
+    term = models.ForeignKey(Term, on_delete=models.CASCADE)
+    is_test_file = models.BooleanField(default=False)
+
+    objects = HandshakeLabelsFileManager()
+
+    def json_data(self):
+        data = super().json_data()
+        data['term'] = self.term.json_data()
+        data['is_test_file'] = self.is_test_file
+        # data['api_path'] = reverse('handshake-file', kwargs={
+        #         'file_id': self.pk}),
+        return data
+
+    def sisimport(self):
+        pass
+
+    def _create_path(self):
+        name = f'{self.term.name}-LABELS'
+        prefix = getattr(settings, 'FILENAME_TEST_PREFIX')
+
+        if self.is_test_file and prefix is not None and len(prefix):
+            name = f'{prefix}-{name}'
+
+        timezone = get_default_timezone()
+        return self.created_date.replace(tzinfo=utc).astimezone(
+            timezone).strftime(f'%Y/%m/{name}-%Y%m%d-%H%M%S.csv')
+
+    def _generate_csv(self):
+        s = io.StringIO()
+        csv.register_dialect('unix_newline', lineterminator='\n')
+        writer = csv.writer(s, dialect='unix_newline')
+
+        writer.writerow(settings.LABEL_CSV_HEADER)
+
+        blocked_students = BlockedHandshakeStudent.objects.all_usernames()
+
+        for person in get_students_for_handshake(self.term):
+            if person.uwnetid in blocked_students:
+                continue
+
+            writer.writerow([
+                '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
+                'User',
+                'Students',
+                person.student.special_program_desc,
+                person.student.visa_type,
+                TRUE if person.student.disability_ind else FALSE,
+                TRUE if is_athlete(person.student) else FALSE,
+                person.student.veteran_benefit_code,
+            ])
         return s.getvalue()
 
 
