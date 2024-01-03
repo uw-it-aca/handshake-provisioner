@@ -25,6 +25,7 @@ setup(
         "django-storages[google, s3]",
         "urllib3<2",  # pinned for boto3
         "uw-person-client~=1.2",
+        'uw-memcached-clients~=1.0',
         'UW-RestClients-Core~=1.4',
         'UW-RestClients-SWS~=2.4',
         "nameparser>=1.0.4,<2.0",
