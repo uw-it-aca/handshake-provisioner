@@ -42,7 +42,10 @@ database:
   secretName: handshake-test.axdd.s.uw.edu-sql-secrets
 
 memcached:
-  enabled: false
+  enabled: true
+  replicaCount: 1
+  updateStrategy:
+    type: RollingUpdate
 
 cronjob:
   enabled: true
