@@ -10,6 +10,7 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     MEDIA_ROOT = os.getenv('MEDIA_ROOT', '/app/data')
 else:
+    RESTCLIENTS_DAO_CACHE_CLASS = 'sis_provisioner.cache.RestClientsCache'
     STORAGES = {
         'default': {
             'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
