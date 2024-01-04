@@ -42,7 +42,10 @@ database:
   secretName: handshake-test.axdd.s.uw.edu-sql-secrets
 
 memcached:
-  enabled: false
+  enabled: true
+  replicaCount: 1
+  updateStrategy:
+    type: RollingUpdate
 
 cronjob:
   enabled: true
@@ -70,6 +73,9 @@ gcsCredentials:
 environmentVariables:
   - name: ENV
     value: test
+
+  - name: SWS_ENV
+    value: PROD
 
   - name: AUTH
     value: SAML
@@ -130,6 +136,8 @@ externalSecrets:
           property: person-db-user
         - name: person-db-pass
           property: person-db-pass
+        - name: sws-token
+          property: sws-token
     - name: handshake-test.axdd.s.uw.edu-gcs-credentials
       externalKey: handshake/shared/gcs-credentials
       data:
@@ -183,6 +191,10 @@ environmentVariablesSecrets:
     name: UW_PERSON_DB_PASSWORD
     secretName: handshake-test.axdd.s.uw.edu-shared-secrets
     secretKey: person-db-pass
+  swsToken:
+    name: RESTCLIENTS_SWS_OAUTH_BEARER
+    secretName: handshake-test.axdd.s.uw.edu-shared-secrets
+    secretKey: sws-token
   samlSPCert:
     name: SP_CERT
     secretName: handshake-test.axdd.s.uw.edu-ic-certs

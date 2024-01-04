@@ -2,111 +2,26 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.test import TestCase, override_settings
-from sis_provisioner.dao.term import AcademicTerm
-from datetime import datetime
+from django.test import TestCase
+from uw_sws.util import fdao_sws_override
+from sis_provisioner.dao.term import current_term, next_term
 
 
+@fdao_sws_override
 class AcademicTermTest(TestCase):
-    def test_name(self):
-        term = AcademicTerm(date=datetime(2020, 1, 10))
-        self.assertEqual(term.name, 'WIN2020')
-        self.assertEqual(term.next().name, 'SPR2020')
-        self.assertEqual(term.next().name, 'SUM2020')
-        self.assertEqual(term.next().name, 'AUT2020')
+    def test_current_term(self):
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
+            term = current_term()
+            self.assertEquals(term.year, 2013)
+            self.assertEquals(term.quarter, 'autumn')
 
-    def test_term_from_year_quarter(self):
-        term = AcademicTerm(year=2020, quarter=1)
-        self.assertEqual(term.year, 2020)
-        self.assertEqual(term.quarter, 1)
+    def test_next_term(self):
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-01-15 00:00:00'):
+            term = next_term()
+            self.assertEquals(term.year, 2013)
+            self.assertEquals(term.quarter, 'spring')
 
-    def test_term_from_current_datetime(self):
-        term = AcademicTerm()
-        self.assertEqual(term.year, datetime.now().year)
-        self.assertEqual(term.current(),
-                         AcademicTerm(date=datetime.now()).current())
-
-    def test_term_from_datetime(self):
-        term = AcademicTerm(date=datetime(2020, 1, 1))
-        self.assertEqual(term.year, 2020)
-        self.assertEqual(term.quarter, 4)
-
-        term.next()
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 1)
-
-        term.previous()
-        self.assertEqual(term.year, 2020)
-        self.assertEqual(term.quarter, 4)
-
-        term = AcademicTerm(date=datetime(2022, 4, 1))
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 2)
-
-        term.next()
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 3)
-
-        term.previous()
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 2)
-
-        term = AcademicTerm(date=datetime(2021, 6, 20))
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 2)
-
-        term.next()
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 3)
-
-        term.previous()
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 2)
-
-        term = AcademicTerm(date=datetime(2021, 6, 21))
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 3)
-
-        term.next()
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 4)
-
-        term.previous()
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 3)
-
-        term = AcademicTerm(date=datetime(2021, 10, 1))
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 4)
-
-        term.next()
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 1)
-
-        term.previous()
-        self.assertEqual(term.year, 2021)
-        self.assertEqual(term.quarter, 4)
-
-        term = AcademicTerm(date=datetime(2022, 3, 27))
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 1)
-
-        term.next()
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 2)
-
-        term.previous()
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 1)
-
-        term = AcademicTerm(date=datetime(2022, 3, 28))
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 2)
-
-        term.next()
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 3)
-
-        term.previous()
-        self.assertEqual(term.year, 2022)
-        self.assertEqual(term.quarter, 2)
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-1-1 00:00:00'):
+            term = next_term()
+            self.assertEquals(term.year, 2013)
+            self.assertEquals(term.quarter, 'winter')

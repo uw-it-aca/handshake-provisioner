@@ -12,7 +12,8 @@ from sis_provisioner.dao.file import read_file, write_file, delete_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
 from sis_provisioner.dao.student import (
     get_students_for_handshake, get_active_students)
-from sis_provisioner.dao.term import AcademicTerm
+from sis_provisioner.dao.term import (
+    current_term, next_term, get_term_by_year_and_quarter)
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_college_names, get_class_desc, get_education_level_name,
@@ -31,17 +32,19 @@ FALSE = 'False'
 
 class TermManager(models.Manager):
     def current(self):
-        academic_term = AcademicTerm()
+        academic_term = current_term()
+        quarter_int = academic_term.int_key() % 10
 
         term, _ = Term.objects.get_or_create(
-            year=academic_term.year, quarter=academic_term.quarter)
+            year=academic_term.year, quarter=quarter_int)
         return term
 
     def next(self):
-        academic_term = AcademicTerm().next()
+        academic_term = next_term()
+        quarter_int = academic_term.int_key() % 10
 
         term, _ = Term.objects.get_or_create(
-            year=academic_term.year, quarter=academic_term.quarter)
+            year=academic_term.year, quarter=quarter_int)
         return term
 
 
@@ -54,6 +57,9 @@ class Term(models.Model):
     QUARTER_CHOICES = (
         (WINTER, 'WIN'), (SPRING, 'SPR'), (SUMMER, 'SUM'), (AUTUMN, 'AUT')
     )
+
+    SWS_LABELS = {
+        WINTER: 'winter', SPRING: 'spring', SUMMER: 'summer', AUTUMN: 'autumn'}
 
     year = models.SmallIntegerField()
     quarter = models.SmallIntegerField(choices=QUARTER_CHOICES)
@@ -79,9 +85,13 @@ class Term(models.Model):
         }
 
     def next(self):
-        next_term = AcademicTerm(year=self.year, quarter=self.quarter).next()
+        sws_term = get_term_by_year_and_quarter(
+            self.year, self.SWS_LABELS.get(self.quarter))
+        nexterm = next_term(sws_term)
+
+        quarter_int = nexterm.int_key() % 10
         term, _ = Term.objects.get_or_create(
-            year=next_term.year, quarter=next_term.quarter)
+            year=nexterm.year, quarter=quarter_int)
         return term
 
 
