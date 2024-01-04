@@ -12,7 +12,8 @@ from sis_provisioner.dao.file import read_file, write_file, delete_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
 from sis_provisioner.dao.student import (
     get_students_for_handshake, get_active_students)
-from sis_provisioner.dao.term import current_term, next_term
+from sis_provisioner.dao.term import (
+    current_term, next_term, get_term_by_year_and_quarter)
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_college_names, get_class_desc, get_education_level_name,
@@ -57,6 +58,9 @@ class Term(models.Model):
         (WINTER, 'WIN'), (SPRING, 'SPR'), (SUMMER, 'SUM'), (AUTUMN, 'AUT')
     )
 
+    SWS_LABELS = {
+        WINTER: 'winter', SPRING: 'spring', SUMMER: 'summer', AUTUMN: 'autumn'}
+
     year = models.SmallIntegerField()
     quarter = models.SmallIntegerField(choices=QUARTER_CHOICES)
 
@@ -79,6 +83,16 @@ class Term(models.Model):
             'year': self.year,
             'quarter': dict(self.QUARTER_CHOICES).get(self.quarter),
         }
+
+    def next(self):
+        sws_term = get_term_by_year_and_quarter(
+            self.year, self.SWS_LABELS.get(self.quarter))
+        next_term = next_term(sws_term)
+
+        quarter_int = next_term.int_key() % 10
+        term, _ = Term.objects.get_or_create(
+            year=next_term.year, quarter=quarter_int)
+        return term
 
 
 class ImportFile(models.Model):
