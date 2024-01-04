@@ -87,11 +87,11 @@ class Term(models.Model):
     def next(self):
         sws_term = get_term_by_year_and_quarter(
             self.year, self.SWS_LABELS.get(self.quarter))
-        next_term = next_term(sws_term)
+        nexterm = next_term(sws_term)
 
-        quarter_int = next_term.int_key() % 10
+        quarter_int = nexterm.int_key() % 10
         term, _ = Term.objects.get_or_create(
-            year=next_term.year, quarter=quarter_int)
+            year=nexterm.year, quarter=quarter_int)
         return term
 
 
