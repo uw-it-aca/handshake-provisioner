@@ -30,6 +30,7 @@ setup(
         'UW-RestClients-SWS~=2.4',
         "nameparser>=1.0.4,<2.0",
         "UW-Django-SAML2~=1.7",
+        "lxml==4.9.4",
     ],
     license="Apache License, Version 2.0",
     description="UW application that supports Handshake",
