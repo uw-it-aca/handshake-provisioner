@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.utils.timezone import utc
 from sis_provisioner.views.api import APIView
 from sis_provisioner.models import BlockedHandshakeStudent
 from uw_saml.utils import get_user
-from datetime import datetime
+from datetime import datetime, timezone
 from logging import getLogger
 import json
 
@@ -28,7 +27,7 @@ class BlockedStudentListView(APIView):
         blocked_student, _ = BlockedHandshakeStudent.objects.get_or_create(
             username=username, defaults={
                 'added_by': get_user(request),
-                'added_date': datetime.utcnow().replace(tzinfo=utc),
+                'added_date': datetime.now(timezone.utc),
                 'reason': reason,
             })
         return self.json_response(blocked_student.json_data())
