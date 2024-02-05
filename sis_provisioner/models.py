@@ -6,7 +6,7 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
-from django.utils.timezone import utc, get_default_timezone
+from django.utils.timezone import get_default_timezone
 from sis_provisioner.exceptions import EmptyQueryException
 from sis_provisioner.dao.file import read_file, write_file, delete_file
 from sis_provisioner.dao.handshake import write_file as write_handshake
@@ -18,7 +18,7 @@ from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_college_names, get_class_desc, get_education_level_name,
     format_student_number, format_name)
-from datetime import datetime
+from datetime import datetime, timezone
 from logging import getLogger
 import csv
 import io
@@ -122,7 +122,7 @@ class ImportFile(models.Model):
         self.save()
         try:
             write_file(self.path, self._generate_csv())
-            self.generated_date = datetime.utcnow().replace(tzinfo=utc)
+            self.generated_date = datetime.now(timezone.utc)
             logger.info('CSV generated for file ID {}'.format(self.pk))
         except EmptyQueryException as ex:
             logger.info('CSV skipped for file ID {}: No students'.format(
@@ -136,7 +136,7 @@ class ImportFile(models.Model):
 
     def save(self, *args, **kwargs):
         if self.created_date is None:
-            self.created_date = datetime.utcnow().replace(tzinfo=utc)
+            self.created_date = datetime.now(timezone.utc)
         if self.path is None:
             self.path = self._create_path()
         super().save(*args, **kwargs)
@@ -208,7 +208,7 @@ class HandshakeStudentsFile(ImportFile):
         try:
             write_handshake(self.filename, self.content)
             self.imported_status = 200
-            self.imported_date = datetime.utcnow().replace(tzinfo=utc)
+            self.imported_date = datetime.now(timezone.utc)
             logger.info('File ID {} imported'.format(self.pk))
         except Exception as ex:
             logger.critical(ex, exc_info=True)
@@ -232,9 +232,9 @@ class HandshakeStudentsFile(ImportFile):
         if self.is_test_file and prefix is not None and len(prefix):
             name = '{}-{}'.format(prefix, name)
 
-        timezone = get_default_timezone()
-        return self.created_date.replace(tzinfo=utc).astimezone(
-            timezone).strftime('%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))
+        local_tz = get_default_timezone()
+        return self.created_date.replace(tzinfo=timezone.utc).astimezone(
+            local_tz).strftime('%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))
 
     def _generate_csv(self):
         s = io.StringIO()
@@ -329,9 +329,9 @@ class HandshakeLabelsFile(ImportFile):
         if self.is_test_file and prefix is not None and len(prefix):
             name = f'{prefix}-{name}'
 
-        timezone = get_default_timezone()
-        return self.created_date.replace(tzinfo=utc).astimezone(
-            timezone).strftime(f'%Y/%m/{name}-%Y%m%d-%H%M%S.csv')
+        local_tz = get_default_timezone()
+        return self.created_date.replace(tzinfo=timezone.utc).astimezone(
+            local_tz).strftime(f'%Y/%m/{name}-%Y%m%d-%H%M%S.csv')
 
     def _generate_csv(self):
         s = io.StringIO()
@@ -403,9 +403,9 @@ class ActiveStudentsFile(ImportFile):
     objects = ActiveStudentsFileManager()
 
     def _create_path(self):
-        timezone = get_default_timezone()
-        return self.created_date.replace(tzinfo=utc).astimezone(
-            timezone).strftime('%Y/%m/active-students-%Y%m%d-%H%M%S.csv')
+        local_tz = get_default_timezone()
+        return self.created_date.replace(tzinfo=timezone.utc).astimezone(
+            local_tz).strftime('%Y/%m/active-students-%Y%m%d-%H%M%S.csv')
 
     def _generate_csv(self):
         s = io.StringIO()

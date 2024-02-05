@@ -8,7 +8,7 @@ Provisions UW data to Handshake through a CSV file.
 
 ## System Requirements
 
-- Python (3+)
+- Python (3.8+)
 - Docker
 - Node
 
@@ -79,28 +79,13 @@ or from anywhere:
 
         $ docker exec -ti sis_provisioner_app bin/python manage.py test
 
-### Validation
-
-There is a script to validate and compare CSV files with the file produced by this app. The script is run by running the following:
-
-        $ python3 scripts/validate.py my_generated.csv [--example/-e example_file.csv --column/c column_name --remove-cols/-r column_names]
-
-By default, the script will compare the generated CSV file with a file in the `handshake-provisioner` directory called `example.csv`.
-You can change the file name by passing the file name as an argument to the script through `--example` or `-e`. You can also specify the column name to compare by by passing the column name as an argument to the script through `--column` or `-c`. By default, this is the 'username' column. You can specify the column names to remove from the comparison output by passing the column names as an argument to the script through `--remove-cols` or `-r` like
-
-        ... -r auth_identifier last_name ...
-
-## Deployment
-
-To be completed.
-
 ## Authors
 
-- [Academic Experience Design & Delivery](https://github.com/uw-it-aca)
+- [UW-IT, Teaching & Learning Systems](https://github.com/uw-it-aca)
 
 ## License
 
-Copyright 2022 UW Information Technology, University of Washington
+Copyright 2024 UW Information Technology, University of Washington
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
