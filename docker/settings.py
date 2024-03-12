@@ -156,7 +156,7 @@ COLLEGES = {
     'N': 'School of Nursing',
     'O': 'Interschool or Intercollege Programs',
     'P': 'School of Pharmacy',
-    'Q': 'Evans School of Public Affairs',
+    'Q': 'Evans School of Public Policy & Governance',
     'R': 'Interdisciplinary Graduate Programs',
     'S': 'The Information School',
     'T': 'School of Social Work',
