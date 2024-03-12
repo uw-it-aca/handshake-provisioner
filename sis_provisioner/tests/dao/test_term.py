@@ -12,16 +12,16 @@ class AcademicTermTest(TestCase):
     def test_current_term(self):
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
             term = current_term()
-            self.assertEquals(term.year, 2013)
-            self.assertEquals(term.quarter, 'autumn')
+            self.assertEqual(term.year, 2013)
+            self.assertEqual(term.quarter, 'autumn')
 
     def test_next_term(self):
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-01-15 00:00:00'):
             term = next_term()
-            self.assertEquals(term.year, 2013)
-            self.assertEquals(term.quarter, 'spring')
+            self.assertEqual(term.year, 2013)
+            self.assertEqual(term.quarter, 'spring')
 
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-1-1 00:00:00'):
             term = next_term()
-            self.assertEquals(term.year, 2013)
-            self.assertEquals(term.quarter, 'winter')
+            self.assertEqual(term.year, 2013)
+            self.assertEqual(term.quarter, 'winter')
