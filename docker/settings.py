@@ -101,11 +101,9 @@ LABEL_CSV_HEADER = [
 
 MAJOR_COLLEGE_OVERRIDES = {
     'BIOEN': 'J', 'BSE': 'J', 'DATA': 'J', 'PHARBX': 'J', 'PREBSE': 'J',
-    'TECH I': 'J',
     'C SCI': 'J2', 'CMP E': 'J2', 'CSE': 'J2', 'CSE E': 'J2', 'CSE M': 'J2',
-    'ATM S': 'D', 'ESS': 'D',
-    'NUTR S': 'M', 'NUTR': 'M',
-    'EEP': 'A',
+    'ATM S': 'D', 'ESS': 'D', 'NUTR S': 'M', 'NUTR': 'M', 'EEP': 'A',
+    'MUSEOLOGY': 'S', 'TECH I': 'J',
 }
 
 MAJOR_NAME_OVERRIDES = {
