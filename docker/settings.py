@@ -103,7 +103,7 @@ MAJOR_COLLEGE_OVERRIDES = {
     'BIOEN': 'J', 'BSE': 'J', 'DATA': 'J', 'PHARBX': 'J', 'PREBSE': 'J',
     'C SCI': 'J2', 'CMP E': 'J2', 'CSE': 'J2', 'CSE E': 'J2', 'CSE M': 'J2',
     'ATM S': 'D', 'ESS': 'D', 'NUTR S': 'M', 'NUTR': 'M', 'EEP': 'A',
-    'MUSEOLOGY': 'S', 'TECH I': 'J',
+    'MUSEOX': 'S', 'TECH I': 'J',
 }
 
 MAJOR_NAME_OVERRIDES = {
