@@ -249,6 +249,7 @@ class HandshakeStudentsFile(ImportFile):
             if person.uwnetid in blocked_students:
                 continue
 
+            person.student = person.student_set.get()
             majors = get_majors(person.student)
 
             first_name, middle_name, last_name = format_name(person.first_name,
@@ -345,6 +346,8 @@ class HandshakeLabelsFile(ImportFile):
         for person in get_students_for_handshake(self.term):
             if person.uwnetid in blocked_students:
                 continue
+
+            person.student = person.student_set.get()
 
             writer.writerow([
                 '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
