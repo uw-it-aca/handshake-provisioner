@@ -15,10 +15,10 @@ else:
 
     DATABASES['uw_person'] = {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.getenv('UW_PERSON_DB_HOSTNAME'),
+        'HOST': os.getenv('UW_PERSON_DB_HOST'),
         'PORT': os.getenv('UW_PERSON_DB_PORT', '5432'),
-        'NAME': os.getenv('UW_PERSON_DB_DATABASE')
-        'USER': os.getenv('UW_PERSON_DB_USERNAME'),
+        'NAME': os.getenv('UW_PERSON_DB_NAME'),
+        'USER': os.getenv('UW_PERSON_DB_USER'),
         'PASSWORD': os.getenv('UW_PERSON_DB_PASSWORD')
     }
 
