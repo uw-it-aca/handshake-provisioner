@@ -245,38 +245,37 @@ class HandshakeStudentsFile(ImportFile):
 
         blocked_students = BlockedHandshakeStudent.objects.all_usernames()
 
-        for person in get_students_for_handshake(self.term):
-            if person.uwnetid in blocked_students:
+        for student in get_students_for_handshake(self.term):
+            if student.person.uwnetid in blocked_students:
                 continue
 
-            person.student = person.student_set.get()
-            majors = get_majors(person.student)
+            majors = get_majors(student)
 
-            first_name, middle_name, last_name = format_name(person.first_name,
-                                                             person.surname)
+            first_name, middle_name, last_name = format_name(
+                student.person.first_name, student.person.surname)
 
             writer.writerow([
-                person.uwnetid,
-                person.uwnetid,
-                format_student_number(person.student.student_number),
-                get_class_desc(person.student, majors),
+                student.person.uwnetid,
+                student.person.uwnetid,
+                format_student_number(student.student_number),
+                get_class_desc(student, majors),
                 last_name,
                 first_name,
                 middle_name,
-                person.preferred_first_name,
-                get_college_names(majors, person.student.campus_code),
-                '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
-                person.student.campus_desc,
+                student.person.preferred_first_name,
+                get_college_names(majors, student.campus_code),
+                '{}@{}'.format(student.person.uwnetid, settings.EMAIL_DOMAIN),
+                student.campus_desc,
                 get_major_names(majors),
                 get_primary_major_name(majors),
                 TRUE,  # primary_education:currently_attending
-                get_education_level_name(person.student),
-                person.student.gender,
-                person.student.hispanic_group_desc if (
-                    person.student.hispanic_group_desc is not None) else (
-                        person.student.ethnic_group_desc),
-                TRUE if is_athlete(person.student) else FALSE,
-                TRUE if is_veteran(person.student) else FALSE,
+                get_education_level_name(student),
+                student.gender,
+                student.hispanic_group_desc if (
+                    student.hispanic_group_desc is not None) else (
+                        student.ethnic_group_desc),
+                TRUE if is_athlete(student) else FALSE,
+                TRUE if is_veteran(student) else FALSE,
                 # 'work_study_eligible',  # Currently unavailble
             ])
 
@@ -343,21 +342,19 @@ class HandshakeLabelsFile(ImportFile):
 
         blocked_students = BlockedHandshakeStudent.objects.all_usernames()
 
-        for person in get_students_for_handshake(self.term):
-            if person.uwnetid in blocked_students:
+        for student in get_students_for_handshake(self.term):
+            if student.person.uwnetid in blocked_students:
                 continue
 
-            person.student = person.student_set.get()
-
             writer.writerow([
-                '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
+                '{}@{}'.format(student.person.uwnetid, settings.EMAIL_DOMAIN),
                 'User',
                 'Students',
-                person.student.special_program_desc,
-                person.student.visa_type,
-                TRUE if person.student.disability_ind else FALSE,
-                TRUE if is_athlete(person.student) else FALSE,
-                person.student.veteran_benefit_code,
+                student.special_program_desc,
+                student.visa_type,
+                TRUE if student.disability_ind else FALSE,
+                TRUE if is_athlete(student) else FALSE,
+                student.veteran_benefit_code,
             ])
         return s.getvalue()
 

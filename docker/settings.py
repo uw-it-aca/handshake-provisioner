@@ -10,17 +10,13 @@ INSTALLED_APPS += [
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     MEDIA_ROOT = os.getenv('MEDIA_ROOT', '/app/data')
+    MIGRATION_MODULES = {
+        'uw_person_client': 'uw_person_client.test_migrations',
+    }
+    FIXTURE_DIRS = ['uw_person_client/fixtures']
+
 else:
     RESTCLIENTS_DAO_CACHE_CLASS = 'sis_provisioner.cache.RestClientsCache'
-
-    DATABASES['uw_person'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.getenv('UW_PERSON_DB_HOST'),
-        'PORT': os.getenv('UW_PERSON_DB_PORT', '5432'),
-        'NAME': os.getenv('UW_PERSON_DB_NAME'),
-        'USER': os.getenv('UW_PERSON_DB_USER'),
-        'PASSWORD': os.getenv('UW_PERSON_DB_PASSWORD')
-    }
 
     STORAGES = {
         'default': {
@@ -48,6 +44,18 @@ else:
         },
     }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
+
+# PDS config, default values are for localdev
+DATABASES['uw_person'] = {
+    'ENGINE': 'django.db.backends.postgresql',
+    'HOST': os.getenv('UW_PERSON_DB_HOST', 'postgres'),
+    'PORT': os.getenv('UW_PERSON_DB_PORT', '5432'),
+    'NAME': os.getenv('UW_PERSON_DB_NAME', 'postgres'),
+    'USER': os.getenv('UW_PERSON_DB_USER', 'postgres'),
+    'PASSWORD': os.getenv('UW_PERSON_DB_PASSWORD', 'postgres')
+}
+
+DATABASE_ROUTERS = ['sis_provisioner.routers.UWPersonRouter']
 
 FILENAME_TEST_PREFIX = os.getenv('FILENAME_TEST_PREFIX', '')
 RESTCLIENTS_SWS_OAUTH_BEARER = os.getenv('RESTCLIENTS_SWS_OAUTH_BEARER', '')
