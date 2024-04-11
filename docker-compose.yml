@@ -11,6 +11,8 @@ services:
       ENV: localdev
       AUTH: SAML_MOCK
       GOOGLE_ANALYTICS_KEY: ${GOOGLE_ANALYTICS_KEY}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
     volumes:
       - ./sis_provisioner:/app/sis_provisioner
       - statics-volume:/static
@@ -18,6 +20,8 @@ services:
       - "${RUNSERVER_PORT:-8000}:8000"
     stdin_open: true
     tty: true
+    depends_on:
+      - postgres
   node-bundler:
     build:
       context: .
@@ -36,6 +40,10 @@ services:
     command: npm run watch
     stdin_open: true
     tty: true
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: postgres
 volumes:
   statics-volume:
 

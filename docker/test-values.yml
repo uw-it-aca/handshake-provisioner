@@ -84,13 +84,10 @@ environmentVariables:
   - name: CLUSTER_CNAME
     value: handshake-test.axdd.s.uw.edu
 
-  - name: AXDD_PERSON_CLIENT_ENV
-    value: PROD
-
-  - name: UW_PERSON_DB_HOSTNAME
+  - name: UW_PERSON_DB_HOST
     value: 172.18.1.67
 
-  - name: UW_PERSON_DB_DATABASE
+  - name: UW_PERSON_DB_NAME
     value: uw-person-prod
 
   - name: AWS_S3_REGION_NAME
@@ -184,7 +181,7 @@ environmentVariablesSecrets:
     secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: secret-access-key
   personDBUser:
-    name: UW_PERSON_DB_USERNAME
+    name: UW_PERSON_DB_USER
     secretName: handshake-test.axdd.s.uw.edu-shared-secrets
     secretKey: person-db-user
   personDBPass:

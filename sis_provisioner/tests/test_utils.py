@@ -3,7 +3,7 @@
 
 
 from django.test import TestCase
-from uw_person_client.components import Major, Student
+from uw_person_client.models import Student, Major
 from sis_provisioner.utils import *
 
 
