@@ -4,32 +4,38 @@
 from django.conf import settings
 from uw_person_client.models import Person, Major, Q
 from sis_provisioner.exceptions import EmptyQueryException
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 
 def get_students_for_handshake(academic_term):
     next_academic_term = academic_term.next()
 
-    persons = Person.objects.using('uw_person').filter(
-            Q(
-                student__academic_term__year=academic_term.year &
-                student__academic_term__quarter=academic_term.quarter) |
-            Q(
-                student__academic_term__year=next_academic_term.year &
-                student__academic_term__quarter=next_academic_term.quarter),
-            student__campus_code__in(settings.INCLUDE_CAMPUS_CODES),
-            Q(
-                student__enroll_status_code=settings.ENROLLED_STATUS &
-                student__class_code__in(settings.ENROLLED_CLASS_CODES)) |
-            Q(
-                student__application_status_code=settings.APPLICANT_STATUS &
-                student__class_code__in(settings.APPLICANT_CLASS_CODES) &
-                student__application_type_code__in(list(
-                    settings.APPLICANT_TYPES.values())))
-        ).prefetch_related('student_set')
+    queryset = Person.objects.using('uw_person').filter(
+        Q(student__campus_code__in(settings.INCLUDE_CAMPUS_CODES)),
+        (
+            Q(student__academic_term__year=academic_term.year) &
+            Q(student__academic_term__quarter=academic_term.quarter)
+        ) | (
+            Q(student__academic_term__year=next_academic_term.year) &
+            Q(student__academic_term__quarter=next_academic_term.quarter)
+        ),
+        (
+            Q(student__enroll_status_code=settings.ENROLLED_STATUS) &
+            Q(student__class_code__in(settings.ENROLLED_CLASS_CODES))
+        ) | (
+            Q(student__application_status_code=settings.APPLICANT_STATUS) &
+            Q(student__class_code__in(settings.APPLICANT_CLASS_CODES)) &
+            Q(student__application_type_code__in(list(
+                settings.APPLICANT_TYPES.values())))
+        )).prefetch_related('student_set')
 
-    if not persons:
+    logger.info(f'SQL: {queryset.query}')
+
+    if not queryset:
         raise EmptyQueryException()
-    return persons
+    return queryset
 
 
 def get_active_students():
