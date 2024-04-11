@@ -10,21 +10,21 @@ def get_students_for_handshake(academic_term):
     next_academic_term = academic_term.next()
 
     persons = Person.objects.using('uw_person').filter(
-        Q(
-            student__academic_term__year=academic_term.year,
-            student__academic_term__quarter=academic_term.quarter) |
-        Q(
-            student__academic_term__year=next_academic_term.year,
-            student__academic_term__quarter=next_academic_term.quarter),
-        student__campus_code__in(settings.INCLUDE_CAMPUS_CODES),
-        Q(
-            student__enroll_status_code=settings.ENROLLED_STATUS,
-            student__class_code__in(settings.ENROLLED_CLASS_CODES)) |
-        Q(
-            student__application_status_code=settings.APPLICANT_STATUS,
-            student__class_code__in(settings.APPLICANT_CLASS_CODES),
-            student__application_type_code__in(list(
-                settings.APPLICANT_TYPES.values())))
+            Q(
+                student__academic_term__year=academic_term.year &
+                student__academic_term__quarter=academic_term.quarter) |
+            Q(
+                student__academic_term__year=next_academic_term.year &
+                student__academic_term__quarter=next_academic_term.quarter),
+            student__campus_code__in(settings.INCLUDE_CAMPUS_CODES),
+            Q(
+                student__enroll_status_code=settings.ENROLLED_STATUS &
+                student__class_code__in(settings.ENROLLED_CLASS_CODES)) |
+            Q(
+                student__application_status_code=settings.APPLICANT_STATUS &
+                student__class_code__in(settings.APPLICANT_CLASS_CODES) &
+                student__application_type_code__in(list(
+                    settings.APPLICANT_TYPES.values())))
         ).prefetch_related('student_set')
 
     if not persons:
