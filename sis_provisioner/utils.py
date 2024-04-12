@@ -67,7 +67,7 @@ def get_class_desc(student, majors):
 
 def get_education_level_name(student):
     if student.class_code in getattr(settings, 'CLASS_CODE_NAMES', {}):
-        return 'Masters' if student.class_code == '8' else 'Bachelors'
+        return 'Masters' if student.class_code == 8 else 'Bachelors'
 
 
 def format_student_number(number):
@@ -167,7 +167,7 @@ def get_primary_major_name(majors):
     return ''
 
 
-def get_college_names(majors, campus='0'):
+def get_college_names(majors, campus=0):
     college_names = []
     college_dict = getattr(settings, 'COLLEGES', {})
 
@@ -178,7 +178,7 @@ def get_college_names(majors, campus='0'):
             if college_name not in college_names:
                 college_names.append(college_name)
 
-    if not len(college_names) and campus == '1':
+    if not len(college_names) and campus == 1:
         college_names.append(college_dict.get('V'))
 
     return ';'.join(college_names) if len(college_names) else ''

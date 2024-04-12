@@ -19,7 +19,7 @@ class HandshakeUtilsTest(TestCase):
 
     def _build_student(self, majors=[], pending_majors=[], requested_majors=[],
                        intended_majors=[], class_code=None,
-                       enroll_status_code='12', application_status_code='16',
+                       enroll_status_code=12, application_status_code=16,
                        special_program_code=None, veteran_benefit_code=None):
         student = Student()
         student.majors = majors
@@ -123,10 +123,10 @@ class HandshakeUtilsTest(TestCase):
         self.assertTrue(is_athlete(student))
 
     def test_is_veteran(self):
-        student = self._build_student(veteran_benefit_code='1')
+        student = self._build_student(veteran_benefit_code=1)
         self.assertTrue(is_veteran(student))
 
-        student = self._build_student(veteran_benefit_code='0')
+        student = self._build_student(veteran_benefit_code=0)
         self.assertFalse(is_veteran(student))
 
     def test_get_college_for_major(self):
@@ -246,7 +246,7 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(get_college_names([major5]),
                          'College of Engineering')
         self.assertEqual(get_college_names([]), '')
-        self.assertEqual(get_college_names([], campus='1'), 'UW Bothell')
+        self.assertEqual(get_college_names([], campus=1), 'UW Bothell')
 
     def test_titleize(self):
         self.assertRaises(TypeError, titleize, None)
@@ -279,44 +279,41 @@ class HandshakeUtilsTest(TestCase):
         major2 = self._build_major(major_abbr_code='0-EMBA', college='E')
         major3 = self._build_major(major_abbr_code='0-EMBA', college='F')
 
-        student = self._build_student(class_code='1')
+        student = self._build_student(class_code=1)
         self.assertEqual(get_class_desc(student, [major1]), 'Freshman')
-        student = self._build_student(class_code='2')
+        student = self._build_student(class_code=2)
         self.assertEqual(get_class_desc(student, [major1]), 'Sophomore')
-        student = self._build_student(class_code='3')
+        student = self._build_student(class_code=3)
         self.assertEqual(get_class_desc(student, [major1]), 'Junior')
-        student = self._build_student(class_code='4')
+        student = self._build_student(class_code=4)
         self.assertEqual(get_class_desc(student, [major1]), 'Senior')
-        student = self._build_student(class_code='5')
+        student = self._build_student(class_code=5)
         self.assertEqual(get_class_desc(student, [major1]), 'Senior')
-        student = self._build_student(class_code='6')
+        student = self._build_student(class_code=6)
         self.assertEqual(get_class_desc(student, [major1]), None)
-        student = self._build_student(class_code='8')
+        student = self._build_student(class_code=8)
         self.assertEqual(get_class_desc(student, [major1]), 'Masters')
 
-        student = self._build_student(class_code='1')
+        student = self._build_student(class_code=1)
         self.assertEqual(get_class_desc(student, [major2]),
                          'Masters of Business Administration')
-        student = self._build_student(class_code='8')
+        student = self._build_student(class_code=8)
         self.assertEqual(get_class_desc(student, [major2, major3]),
                          'Masters of Business Administration')
-        student = self._build_student(class_code='8')
+        student = self._build_student(class_code=8)
         self.assertEqual(get_class_desc(student, [major1, major2]),
                          'Masters of Business Administration')
-
-        student = self._build_student(class_code='9')
-        self.assertEqual(get_class_desc(student, [major1, major2]), None)
-        student = self._build_student(class_code=1)
+        student = self._build_student(class_code=9)
         self.assertEqual(get_class_desc(student, [major1, major2]), None)
 
     def test_get_education_level_name(self):
-        student = self._build_student(class_code='9')
+        student = self._build_student(class_code=9)
         self.assertEqual(get_education_level_name(student), None)
 
-        student = self._build_student(class_code='2')
+        student = self._build_student(class_code=2)
         self.assertEqual(get_education_level_name(student), 'Bachelors')
 
-        student = self._build_student(class_code='8')
+        student = self._build_student(class_code=8)
         self.assertEqual(get_education_level_name(student), 'Masters')
 
     def test_format_student_number(self):
