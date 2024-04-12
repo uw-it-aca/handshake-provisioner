@@ -62,16 +62,16 @@ RESTCLIENTS_SWS_OAUTH_BEARER = os.getenv('RESTCLIENTS_SWS_OAUTH_BEARER', '')
 HANDSHAKE_IMPORT_ADMIN_GROUP = 'u_acadev_handshake_admins'
 
 # Settings that control student data provisioning
-ENROLLED_STATUS = '12'
-ENROLLED_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
+ENROLLED_STATUS = 12
+ENROLLED_CLASS_CODES = [1, 2, 3, 4, 5, 8]
 
-APPLICANT_STATUS = '16'
+APPLICANT_STATUS = 16
 APPLICANT_TYPES = {'FRESHMAN': '1', '2YR TRANSFER': '2', '4YR TRANSFER': '4'}
-APPLICANT_CLASS_CODES = ['1', '2', '3', '4', '5', '6', '8']
+APPLICANT_CLASS_CODES = [1, 2, 3, 4, 5, 6, 8]
 ATHLETE_CODES = {'25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'}
-VETERAN_CODES = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '33', '40', '41', '42', '43'}
+VETERAN_CODES = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 41, 42, 43}
 
-INCLUDE_CAMPUS_CODES = ['0', '1']
+INCLUDE_CAMPUS_CODES = [0, 1]
 EXCLUDE_COLLEGE_CODES = ['Z']
 EXCLUDE_MAJOR_CODES = ['N MATR']
 PRE_MAJOR_CODES = ['EPRMJ', 'PSOCS', 'P SW', 'TPRMAJ']
@@ -175,12 +175,12 @@ COLLEGES = {
 }
 
 CLASS_CODE_NAMES = {
-    '1': 'Freshman',
-    '2': 'Sophomore',
-    '3': 'Junior',
-    '4': 'Senior',
-    '5': 'Senior',
-    '8': 'Masters',
+    1: 'Freshman',
+    2: 'Sophomore',
+    3: 'Junior',
+    4: 'Senior',
+    5: 'Senior',
+    8: 'Masters',
 }
 
 EMAIL_DOMAIN = 'uw.edu'
