@@ -24,7 +24,7 @@ setup(
         "django~=4.2",
         "django-storages[google, s3]",
         "urllib3<2",  # pinned for boto3
-        "uw-person-client~=2.0",
+        "django-person-client~=1.0",
         "uw-memcached-clients~=1.0",
         "uw-restclients-core~=1.4",
         "uw-restclients-sws~=2.4",

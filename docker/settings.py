@@ -4,13 +4,20 @@ import os
 
 INSTALLED_APPS += [
     'sis_provisioner.apps.SISProvisionerConfig',
+    'uw_person_client',
 ]
 
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     MEDIA_ROOT = os.getenv('MEDIA_ROOT', '/app/data')
+    MIGRATION_MODULES = {
+        'uw_person_client': 'uw_person_client.test_migrations',
+    }
+    FIXTURE_DIRS = ['uw_person_client/fixtures']
+
 else:
     RESTCLIENTS_DAO_CACHE_CLASS = 'sis_provisioner.cache.RestClientsCache'
+
     STORAGES = {
         'default': {
             'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
@@ -38,30 +45,33 @@ else:
     }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
 
+# PDS config, default values are for localdev
+DATABASES['uw_person'] = {
+    'ENGINE': 'django.db.backends.postgresql',
+    'HOST': os.getenv('UW_PERSON_DB_HOST', 'postgres'),
+    'PORT': os.getenv('UW_PERSON_DB_PORT', '5432'),
+    'NAME': os.getenv('UW_PERSON_DB_NAME', 'postgres'),
+    'USER': os.getenv('UW_PERSON_DB_USER', 'postgres'),
+    'PASSWORD': os.getenv('UW_PERSON_DB_PASSWORD', 'postgres')
+}
+
+DATABASE_ROUTERS = ['sis_provisioner.routers.UWPersonRouter']
+
 FILENAME_TEST_PREFIX = os.getenv('FILENAME_TEST_PREFIX', '')
-
-AXDD_PERSON_CLIENT_ENV = os.getenv('AXDD_PERSON_CLIENT_ENV', 'localdev')
-UW_PERSON_DB_USERNAME = os.getenv('UW_PERSON_DB_USERNAME')
-UW_PERSON_DB_PASSWORD = os.getenv('UW_PERSON_DB_PASSWORD')
-UW_PERSON_DB_HOSTNAME = os.getenv('UW_PERSON_DB_HOSTNAME', 'localhost')
-UW_PERSON_DB_DATABASE = os.getenv('UW_PERSON_DB_DATABASE', 'uw-person')
-UW_PERSON_DB_PORT = os.getenv('UW_PERSON_DB_PORT', '5432')
-
 RESTCLIENTS_SWS_OAUTH_BEARER = os.getenv('RESTCLIENTS_SWS_OAUTH_BEARER', '')
-
 HANDSHAKE_IMPORT_ADMIN_GROUP = 'u_acadev_handshake_admins'
 
 # Settings that control student data provisioning
-ENROLLED_STATUS = '12'
-ENROLLED_CLASS_CODES = ['1', '2', '3', '4', '5', '8']
+ENROLLED_STATUS = 12
+ENROLLED_CLASS_CODES = [1, 2, 3, 4, 5, 8]
 
-APPLICANT_STATUS = '16'
-APPLICANT_TYPES = {'FRESHMAN': '1', '2YR TRANSFER': '2', '4YR TRANSFER': '4'}
-APPLICANT_CLASS_CODES = ['1', '2', '3', '4', '5', '6', '8']
+APPLICANT_STATUS = 16
+APPLICANT_TYPES = {'FRESHMAN': 1, '2YR TRANSFER': 2, '4YR TRANSFER': 4}
+APPLICANT_CLASS_CODES = [1, 2, 3, 4, 5, 6, 8]
 ATHLETE_CODES = {'25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'}
-VETERAN_CODES = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '33', '40', '41', '42', '43'}
+VETERAN_CODES = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 41, 42, 43}
 
-INCLUDE_CAMPUS_CODES = ['0', '1']
+INCLUDE_CAMPUS_CODES = [0, 1]
 EXCLUDE_COLLEGE_CODES = ['Z']
 EXCLUDE_MAJOR_CODES = ['N MATR']
 PRE_MAJOR_CODES = ['EPRMJ', 'PSOCS', 'P SW', 'TPRMAJ']
@@ -165,12 +175,12 @@ COLLEGES = {
 }
 
 CLASS_CODE_NAMES = {
-    '1': 'Freshman',
-    '2': 'Sophomore',
-    '3': 'Junior',
-    '4': 'Senior',
-    '5': 'Senior',
-    '8': 'Masters',
+    1: 'Freshman',
+    2: 'Sophomore',
+    3: 'Junior',
+    4: 'Senior',
+    5: 'Senior',
+    8: 'Masters',
 }
 
 EMAIL_DOMAIN = 'uw.edu'
