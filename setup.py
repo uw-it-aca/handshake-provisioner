@@ -31,6 +31,7 @@ setup(
         "nameparser>=1.0.4,<2.0",
         "uw-django-saml2~=1.8",
         "lxml<5",
+        "xmlsec==1.3.13"
     ],
     license="Apache License, Version 2.0",
     description="UW application that supports Handshake",
