@@ -50,12 +50,8 @@ memcached:
 cronjob:
   enabled: true
   jobs:
-    #- name: create-handshake-file
-    #  schedule: "1 9 * * 1,4"
-    #  command: ["/scripts/management_command.sh"]
-    #  args: ["create_handshake_file", "current", "--test"]
     - name: build-file
-      schedule: "*/10 0,1,15-23 * * 1-5"
+      schedule: "5 12 * * 1"
       command: ["/scripts/management_command.sh"]
       args: ["build_file"]
       resources:
