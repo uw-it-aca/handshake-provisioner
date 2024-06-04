@@ -11,7 +11,6 @@ logger = getLogger(__name__)
 
 def get_students_for_handshake(academic_term):
     next_academic_term = academic_term.next()
-    autumn_applicant_types = list(settings.APPLICANT_TYPES.values())
 
     queryset = Student.objects.filter(
             campus_code__in=settings.INCLUDE_CAMPUS_CODES
@@ -24,11 +23,9 @@ def get_students_for_handshake(academic_term):
             (Q(enroll_status_code=settings.ENROLLED_STATUS) &
                 Q(class_code__in=settings.ENROLLED_CLASS_CODES)) |
             (Q(application_status_code=settings.APPLICANT_STATUS) &
-                    Q(class_code__in=settings.APPLICANT_CLASS_CODES) &
-                (Q(admitted_for_yr_qtr_id__endswith=academic_term.AUTUMN) &
-                    Q(application_type_code__in=autumn_applicant_types)) |
-                (Q(admitted_for_yr_qtr_id__isnull=False) &
-                    ~Q(admitted_for_yr_qtr_id__endswith=academic_term.AUTUMN)))
+                Q(class_code__in=settings.APPLICANT_CLASS_CODES) &
+                Q(application_type_code__in=list(
+                    settings.APPLICANT_TYPES.values())))
         )
 
     if not queryset:
