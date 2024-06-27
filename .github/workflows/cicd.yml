@@ -40,9 +40,9 @@ env:
 # defined in the "deploy" job
 on:
   push:
-    branches: [main, qa, develop, feature/eval-me]
+    branches: [main, master, qa, develop, feature/eval-me]
   pull_request:
-    branches: [main, qa, develop, feature/eval-me]
+    branches: [main, master, qa, develop, feature/eval-me]
     types: [opened, reopened, synchronize]
 
 jobs:
@@ -66,12 +66,27 @@ jobs:
 
     needs: context
 
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -82,10 +97,10 @@ jobs:
           exclude_paths: 'migrations,test_migrations,static'
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Cache Docker layers
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-$(echo ${{ hashFiles('Dockerfile') }} | head -c 16)
@@ -93,7 +108,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build App Image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           target: app-container
@@ -104,7 +119,7 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Build Test Image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           target: app-test-container
           tags: app-test-container
@@ -115,7 +130,7 @@ jobs:
         id: tests
         shell: bash
         run: >-
-          docker run -u root -t
+          docker run -u root -t --network ${{ job.container.network }}
           -v ${PWD}:/coverage
           -e DJANGO_APP="$DJANGO_APP"
           -e "ENV=localdev" -e "AUTH=SAML_MOCK"
@@ -150,11 +165,11 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deployment Pipeline
         if: >-
-          contains(fromJSON('["main", "develop", "qa"]'),
+          contains(fromJSON('["main", "master", "develop", "qa"]'),
             needs.context.outputs.git_repo_branch)
         uses: uw-it-aca/actions/cicd-deploy@main
         with:
