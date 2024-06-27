@@ -11,22 +11,29 @@ logger = getLogger(__name__)
 
 def get_students_for_handshake(academic_term):
     next_academic_term = academic_term.next()
+    autumn_year_qtr_id = str(academic_term.year) + str(academic_term.AUTUMN)
 
-    queryset = Student.objects.filter(
-            campus_code__in=settings.INCLUDE_CAMPUS_CODES
+    enrolled_queryset = Student.objects.filter(
+            campus_code__in=settings.INCLUDE_CAMPUS_CODES,
+            enroll_status_code=settings.ENROLLED_STATUS,
+            class_code__in=settings.ENROLLED_CLASS_CODES
         ).filter(
             (Q(academic_term__year=academic_term.year) &
                 Q(academic_term__quarter=academic_term.quarter)) |
             (Q(academic_term__year=next_academic_term.year) &
                 Q(academic_term__quarter=next_academic_term.quarter))
-        ).filter(
-            (Q(enroll_status_code=settings.ENROLLED_STATUS) &
-                Q(class_code__in=settings.ENROLLED_CLASS_CODES)) |
-            (Q(application_status_code=settings.APPLICANT_STATUS) &
-                Q(class_code__in=settings.APPLICANT_CLASS_CODES) &
-                Q(application_type_code__in=list(
-                    settings.APPLICANT_TYPES.values())))
         )
+
+    applicant_queryset = Student.objects.filter(
+            campus_code__in=settings.INCLUDE_CAMPUS_CODES,
+            enroll_status_code__isnull=True,
+            application_status_code=settings.APPLICANT_STATUS,
+            application_type_code__in=list(settings.APPLICANT_TYPES.values()),
+            class_code__in=settings.APPLICANT_CLASS_CODES,
+            admitted_for_yr_qtr_id=autumn_year_qtr_id
+        )
+
+    queryset = enrolled_queryset | applicant_queryset
 
     if not queryset:
         raise EmptyQueryException()
