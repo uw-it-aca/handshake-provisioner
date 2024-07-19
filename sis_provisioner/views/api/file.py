@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.exceptions import ObjectDoesNotExist
 from sis_provisioner.views.api import APIView
 from sis_provisioner.models import HandshakeStudentsFile, Term
 from uw_saml.utils import get_user
@@ -47,8 +46,7 @@ class FileView(APIView):
                                       import_file.filename)
         except HandshakeStudentsFile.DoesNotExist:
             return self.error_response(404, 'Not Found')
-        except ObjectDoesNotExist as err:
-            logger.error(f'File not found: {err}', exc_info=1)
+        except FileNotFoundError as err:
             return self.error_response(404, 'Not Available')
 
     def put(self, request, *args, **kwargs):
@@ -60,7 +58,7 @@ class FileView(APIView):
             return self.json_response(content=import_file.json_data())
         except HandshakeStudentsFile.DoesNotExist:
             return self.error_response(404, 'Not Found')
-        except ObjectDoesNotExist:
+        except FileNotFoundError:
             return self.error_response(404, 'Not Available')
         except Exception as ex:
             return self.error_response(500, ex)
@@ -74,5 +72,5 @@ class FileView(APIView):
             return self.json_response(status=204)
         except HandshakeStudentsFile.DoesNotExist:
             return self.error_response(404, 'Not Found')
-        except ObjectDoesNotExist:
+        except FileNotFoundError:
             return self.error_response(404, 'Not Available')
