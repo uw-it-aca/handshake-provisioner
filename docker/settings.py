@@ -14,10 +14,12 @@ if os.getenv('ENV', 'localdev') == 'localdev':
         'uw_person_client': 'uw_person_client.test_migrations',
     }
     FIXTURE_DIRS = ['uw_person_client/fixtures']
+    VITE_MANIFEST_PATH = os.path.join(
+        BASE_DIR, "sis_provisioner", "static", "manifest.json"
+    )
 
 else:
     RESTCLIENTS_DAO_CACHE_CLASS = 'sis_provisioner.cache.RestClientsCache'
-
     STORAGES = {
         'default': {
             'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
@@ -44,6 +46,7 @@ else:
         },
     }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
+    VITE_MANIFEST_PATH = os.path.join(os.sep, "static", "manifest.json")
 
 # PDS config, default values are for localdev
 DATABASES['uw_person'] = {
@@ -205,13 +208,3 @@ TEMPLATES = [
         },
     }
 ]
-
-if os.getenv("ENV") == "localdev":
-    DEBUG = True
-
-if os.getenv("ENV") == "localdev":
-    VITE_MANIFEST_PATH = os.path.join(
-        BASE_DIR, "sis_provisioner", "static", "manifest.json"
-    )
-else:
-    VITE_MANIFEST_PATH = os.path.join(os.sep, "static", "manifest.json")
