@@ -26,7 +26,6 @@ def get_students_for_handshake(academic_term):
 
     applicant_queryset = Student.objects.filter(
             campus_code__in=settings.INCLUDE_CAMPUS_CODES,
-            enroll_status_code__isnull=True,
             application_status_code=settings.APPLICANT_STATUS,
             application_type_code__in=list(settings.APPLICANT_TYPES.values()),
             class_code__in=settings.APPLICANT_CLASS_CODES,
