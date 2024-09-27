@@ -17,7 +17,7 @@ from sis_provisioner.dao.term import (
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_college_names, get_class_desc, get_education_level_name,
-    format_student_number, format_name)
+    get_ethnicity, format_student_number, format_name)
 from datetime import datetime, timezone
 from logging import getLogger
 import csv
@@ -346,6 +346,8 @@ class HandshakeLabelsFile(ImportFile):
             if student.person.uwnetid in blocked_students:
                 continue
 
+            ethnic_group, ethnic_desc, ethnic_urm = get_ethnicity(student)
+
             writer.writerow([
                 '{}@{}'.format(student.person.uwnetid, settings.EMAIL_DOMAIN),
                 'User',
@@ -355,6 +357,9 @@ class HandshakeLabelsFile(ImportFile):
                 TRUE if student.disability_ind else FALSE,
                 TRUE if is_athlete(student) else FALSE,
                 student.veteran_benefit_code,
+                ethnic_group,
+                ethnic_desc,
+                TRUE if ethnic_urm else FALSE,
             ])
         return s.getvalue()
 

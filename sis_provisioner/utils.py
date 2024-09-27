@@ -184,6 +184,19 @@ def get_college_names(majors, campus=0):
     return ';'.join(college_names) if len(college_names) else ''
 
 
+def get_ethnicity(student):
+    if student.ethnic_under_rep:
+        return student.ethnic_group_desc, student.ethnic_long_desc, True
+    elif student.hispanic_under_rep:
+        return student.hispanic_group_desc, student.hispanic_long_desc, True
+    elif student.ethnic_code:
+        return student.ethnic_group_desc, student.ethnic_long_desc, False
+    elif student.hispanic_code:
+        return student.hispanic_group_desc, student.hispanic_long_desc, False
+    else:
+        return '', '', False
+
+
 def format_name(first_name, surname):
     try:
         full_name = ' '.join([first_name, surname])

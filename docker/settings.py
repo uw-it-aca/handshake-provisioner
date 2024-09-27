@@ -110,6 +110,9 @@ LABEL_CSV_HEADER = [
     'DRS',
     'athlete',
     'veteran',
+    'ethnicity_group',
+    'ethnicity_name',
+    'URM',
 ]
 
 MAJOR_COLLEGE_OVERRIDES = {
