@@ -360,7 +360,8 @@ class HandshakeLabelsFile(ImportFile):
         labels = []
         if student.disability_ind:
             labels.append('drs')
-        if student.special_program_code == '1':
+        if (student.special_program_code == '1' or
+                student.special_program_code == '2'):
             labels.append('eop 1')
         elif student.special_program_code == '13':
             labels.append('eop 3')
