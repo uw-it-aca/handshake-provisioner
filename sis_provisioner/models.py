@@ -365,11 +365,11 @@ class HandshakeLabelsFile(ImportFile):
             labels.append('eop 1')
         elif student.special_program_code == '13':
             labels.append('eop 3')
-        if student.s1_visa_type == 'F1':
+        if student.visa_type == 'F1':
             labels.append('f1 international student')
-        elif student.s1_visa_type == 'J1':
+        elif student.visa_type == 'J1':
             labels.append('j1 international student')
-        elif student.s1_visa_type is not None and len(student.s1_visa_type):
+        elif student.visa_type is not None and len(student.visa_type):
             labels.append('non-f1 or j1 international student')
         if is_athlete(student):
             labels.append('student athlete')
