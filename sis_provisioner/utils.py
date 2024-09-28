@@ -129,8 +129,7 @@ def get_majors(student):
                   validate_majors(student.pending_majors))
 
     if not len(raw_majors):
-        logger.debug('No majors found for student {}'.format(
-            student.student_number))
+        logger.debug(f'No majors found for student {student.student_number}')
         return []
 
     for major in raw_majors:
@@ -182,19 +181,6 @@ def get_college_names(majors, campus=0):
         college_names.append(college_dict.get('V'))
 
     return ';'.join(college_names) if len(college_names) else ''
-
-
-def get_ethnicity(student):
-    if student.hispanic_under_rep:
-        return student.hispanic_group_desc, student.hispanic_long_desc, True
-    elif student.ethnic_under_rep:
-        return student.ethnic_group_desc, student.ethnic_long_desc, True
-    elif student.hispanic_code:
-        return student.hispanic_group_desc, student.hispanic_long_desc, False
-    elif student.ethnic_code:
-        return student.ethnic_group_desc, student.ethnic_long_desc, False
-    else:
-        return '', '', False
 
 
 def format_name(first_name, surname):
