@@ -17,7 +17,7 @@ from sis_provisioner.dao.term import (
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, is_athlete,
     is_veteran, get_college_names, get_class_desc, get_education_level_name,
-    get_ethnicity, format_student_number, format_name, titleize)
+    format_student_number, format_name, titleize)
 from datetime import datetime, timezone
 from logging import getLogger
 import csv
@@ -123,13 +123,11 @@ class ImportFile(models.Model):
         try:
             write_file(self.path, self._generate_csv())
             self.generated_date = datetime.now(timezone.utc)
-            logger.info('CSV generated for file ID {}'.format(self.pk))
+            logger.info(f'CSV generated for file ID {self.pk}')
         except EmptyQueryException as ex:
-            logger.info('CSV skipped for file ID {}: No students'.format(
-                self.pk, ex))
+            logger.info(f'CSV skipped for file ID {self.pk}: No students')
         except Exception as ex:
-            logger.exception('CSV failed for file ID {}: {}'.format(
-                self.pk, ex))
+            logger.exception(f'CSV failed for file ID {self.pk}: {ex}')
 
         self.process_id = None
         self.save()
@@ -209,7 +207,7 @@ class HandshakeStudentsFile(ImportFile):
             write_handshake(self.filename, self.content)
             self.imported_status = 200
             self.imported_date = datetime.now(timezone.utc)
-            logger.info('File ID {} imported'.format(self.pk))
+            logger.info(f'File ID {self.pk} imported')
         except Exception as ex:
             logger.critical(ex, exc_info=True)
             self.imported_status = 500
@@ -230,11 +228,11 @@ class HandshakeStudentsFile(ImportFile):
         prefix = getattr(settings, 'FILENAME_TEST_PREFIX')
 
         if self.is_test_file and prefix is not None and len(prefix):
-            name = '{}-{}'.format(prefix, name)
+            name = f'{prefix}-{name}'
 
         local_tz = get_default_timezone()
         return self.created_date.replace(tzinfo=timezone.utc).astimezone(
-            local_tz).strftime('%Y/%m/{}-%Y%m%d-%H%M%S.csv'.format(name))
+            local_tz).strftime(f'%Y/%m/{name}-%Y%m%d-%H%M%S.csv')
 
     def _generate_csv(self):
         s = io.StringIO()
@@ -254,8 +252,6 @@ class HandshakeStudentsFile(ImportFile):
             first_name, middle_name, last_name = format_name(
                 student.person.first_name, student.person.surname)
 
-            ethnic_group, ethnic_desc, ethnic_urm = get_ethnicity(student)
-
             writer.writerow([
                 student.person.uwnetid,
                 student.person.uwnetid,
@@ -266,14 +262,16 @@ class HandshakeStudentsFile(ImportFile):
                 middle_name,
                 student.person.preferred_first_name,
                 get_college_names(majors, student.campus_code),
-                '{}@{}'.format(student.person.uwnetid, settings.EMAIL_DOMAIN),
+                f'{student.person.uwnetid}@{settings.EMAIL_DOMAIN}',
                 student.campus_desc,
                 get_major_names(majors),
                 get_primary_major_name(majors),
                 TRUE,  # primary_education:currently_attending
                 get_education_level_name(student),
                 student.gender,
-                ethnic_group,
+                student.hispanic_group_desc if (
+                    student.hispanic_group_desc is not None) else (
+                        student.ethnic_group_desc),
                 TRUE if is_athlete(student) else FALSE,
                 TRUE if is_veteran(student) else FALSE,
                 # 'work_study_eligible',  # Currently unavailble
@@ -342,26 +340,43 @@ class HandshakeLabelsFile(ImportFile):
 
         blocked_students = BlockedHandshakeStudent.objects.all_usernames()
 
+        students = {}
         for student in get_students_for_handshake(self.term):
-            if student.person.uwnetid in blocked_students:
-                continue
+            uwnetid = student.person.uwnetid
+            if uwnetid not in blocked_students:
+                students[uwnetid] = self._student_labels(student)
 
-            ethnic_group, ethnic_desc, ethnic_urm = get_ethnicity(student)
-
-            writer.writerow([
-                '{}@{}'.format(student.person.uwnetid, settings.EMAIL_DOMAIN),
-                'User',
-                'Students',
-                student.special_program_desc,
-                student.visa_type,
-                TRUE if student.disability_ind else FALSE,
-                TRUE if is_athlete(student) else FALSE,
-                student.veteran_benefit_code,
-                ethnic_group,
-                titleize(ethnic_desc),
-                TRUE if ethnic_urm else FALSE,
-            ])
+        for uwnetid in students:
+            for label in students[uwnetid]:
+                writer.writerow([
+                    f'{uwnetid}@{settings.EMAIL_DOMAIN}',
+                    'User',
+                    'Students',
+                    f'cic-{label}'
+                ])
         return s.getvalue()
+
+    def _student_labels(self, student):
+        labels = []
+        if student.disability_ind:
+            labels.append('drs')
+        if student.special_program_code == '1':
+            labels.append('eop 1')
+        elif student.special_program_code == '13':
+            labels.append('eop 3')
+        if student.s1_visa_type == 'F1':
+            labels.append('f1 international student')
+        elif student.s1_visa_type == 'J1':
+            labels.append('j1 international student')
+        elif student.s1_visa_type is not None and len(student.s1_visa_type):
+            labels.append('non-f1 or j1 international student')
+        if is_athlete(student):
+            labels.append('student athlete')
+        if is_veteran(student):
+            labels.append('veteran')
+        if student.hispanic_under_rep or student.ethnic_under_rep:
+            labels.append('urm')
+        return labels
 
 
 class BlockedHandshakeStudentManager(models.Manager):
@@ -422,7 +437,7 @@ class ActiveStudentsFile(ImportFile):
 
         for person in get_active_students():
             writer.writerow([
-                '{}@{}'.format(person.uwnetid, settings.EMAIL_DOMAIN),
+                f'{person.uwnetid}@{settings.EMAIL_DOMAIN}',
                 person.uwregid,
                 ';'.join(person.prior_uwnetids),
                 ';'.join(person.prior_uwregids),
