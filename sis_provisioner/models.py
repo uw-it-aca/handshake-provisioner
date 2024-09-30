@@ -350,9 +350,10 @@ class HandshakeLabelsFile(ImportFile):
             for label in students[uwnetid]:
                 writer.writerow([
                     f'{uwnetid}@{settings.EMAIL_DOMAIN}',
-                    'User',
-                    'Students',
-                    f'cic-{label}'
+                    'User',         # User|Contact|Employer|Job
+                    'Students',     # Students|Career Services
+                    f'cic-{label}',
+                    'normal',       # normal|public
                 ])
         return s.getvalue()
 

@@ -105,7 +105,8 @@ LABEL_CSV_HEADER = [
     'identifier',
     'identifiable_type',
     'user_type',
-    'label',
+    'name',
+    'label_type',
 ]
 
 MAJOR_COLLEGE_OVERRIDES = {
