@@ -129,8 +129,7 @@ def get_majors(student):
                   validate_majors(student.pending_majors))
 
     if not len(raw_majors):
-        logger.debug('No majors found for student {}'.format(
-            student.student_number))
+        logger.debug(f'No majors found for student {student.student_number}')
         return []
 
     for major in raw_majors:

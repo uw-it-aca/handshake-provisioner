@@ -105,11 +105,8 @@ LABEL_CSV_HEADER = [
     'identifier',
     'identifiable_type',
     'user_type',
-    'sp_pgm_descrip',
-    's1_visa_type',
-    'DRS',
-    'athlete',
-    'veteran',
+    'name',
+    'label_type',
 ]
 
 MAJOR_COLLEGE_OVERRIDES = {
