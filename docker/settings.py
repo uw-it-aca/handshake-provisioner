@@ -17,7 +17,7 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     VITE_MANIFEST_PATH = os.path.join(
         BASE_DIR, "sis_provisioner", "static", "manifest.json"
     )
-
+    CURRENT_DATETIME_OVERRIDE = '2020-10-17 10:00:00'
 else:
     RESTCLIENTS_DAO_CACHE_CLASS = 'sis_provisioner.cache.RestClientsCache'
     STORAGES = {
