@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite";
 import Vue from "@vitejs/plugin-vue";
 
@@ -10,6 +11,11 @@ export default defineConfig({
       all: true,
       extension: [".vue"],
       reporter: ["text", "json", "html", "lcov"],
+    },
+  },
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./app_name_vue", import.meta.url)),
     },
   },
 });

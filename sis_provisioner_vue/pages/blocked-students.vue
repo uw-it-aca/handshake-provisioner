@@ -34,20 +34,23 @@
 </template>
 
 <script>
-import dataMixin from "@/mixins/data_mixin.js";
 import Layout from "@/layout.vue";
 import TableLoading from "@/components/table-loading.vue";
 import BlockedStudent from "@/components/blocked-student.vue";
 import CreateBlockedStudent from "@/components/create-blocked-student.vue";
+import { getBlockedStudents } from "@/utils/data";
 
 export default {
-  mixins: [dataMixin],
   components: {
-    // app components
     Layout,
     TableLoading,
     BlockedStudent,
     CreateBlockedStudent,
+  },
+  setup() {
+    return {
+      getBlockedStudents,
+    };
   },
   data() {
     return {
@@ -60,9 +63,9 @@ export default {
   methods: {
     loadBlockedStudentList: function () {
       this.getBlockedStudents().then(
-        (response) => {
-          if (response.data) {
-            this.studentData = response.data;
+        (data) => {
+          if (data) {
+            this.studentData = data;
             this.isLoading = false;
           }
         }
@@ -76,10 +79,6 @@ export default {
   },
   mounted() {
     this.loadBlockedStudentList();
-    /* this.timer = setInterval(this.loadBlockedStudentList, 60000); */
   },
-  beforeUnmount() {
-    /* clearInterval(this.timer); */
-  }
 };
 </script>

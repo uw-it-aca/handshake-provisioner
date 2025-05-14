@@ -30,14 +30,12 @@ setup(
         "uw-restclients-sws~=2.4",
         "nameparser>=1.0.4,<2.0",
         "uw-django-saml2~=1.8",
-        "lxml<5",
-        "xmlsec==1.3.13"
     ],
     license="Apache License, Version 2.0",
     description="UW application that supports Handshake",
     long_description=README,
     url="https://github.com/uw-it-aca/handshake-provisioner",
-    author="UW-IT T&LS",
+    author="UW-IT Student & Educational Technology Services",
     author_email="aca-it@uw.edu",
     classifiers=[
         "Environment :: Web Environment",

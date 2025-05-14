@@ -41,11 +41,10 @@
 </template>
 
 <script>
-import dataMixin from "@/mixins/data_mixin.js";
+import { deleteBlockedStudent } from "@/utils/data";
 import { formatDate } from "@/helpers/utils";
 
 export default {
-  mixins: [dataMixin],
   emits: ["studentUpdated"],
   props: {
     students: {
@@ -53,12 +52,17 @@ export default {
       required: true,
     },
   },
+  setup() {
+    return {
+      deleteBlockedStudent,
+      formatDate,
+    };
+  },
   data() {
     return {
     };
   },
   methods: {
-    formatDate,
     saveDelete(studentId) {
       if (confirm("Unblock this student?")) {
         this.deleteBlockedStudent(studentId)

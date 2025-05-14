@@ -34,20 +34,23 @@
 </template>
 
 <script>
-import dataMixin from "@/mixins/data_mixin.js";
 import Layout from "@/layout.vue";
 import TableLoading from "@/components/table-loading.vue";
 import ImportFile from "@/components/import-file.vue";
 import CreateFile from "@/components/create-file.vue";
+import { getFiles } from "@/utils/data";
 
 export default {
-  mixins: [dataMixin],
   components: {
-    // app components
     Layout,
     TableLoading,
     ImportFile,
     CreateFile,
+  },
+  setup() {
+    return {
+      getFiles,
+    };
   },
   data() {
     return {
@@ -60,9 +63,9 @@ export default {
   methods: {
     loadFileList: function () {
       this.getFiles().then(
-        (response) => {
-          if (response.data) {
-            this.fileData = response.data;
+        (data) => {
+          if (data) {
+            this.fileData = data;
             this.isLoading = false;
           }
         }

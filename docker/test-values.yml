@@ -28,6 +28,8 @@ securityPolicy:
 
 repo: handshake
 instance: test
+namespace:
+  enabled: true
 
 externalService:
   enabled: true
