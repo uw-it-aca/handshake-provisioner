@@ -52,7 +52,7 @@ async function deleteBlockedStudent(studentId) {
 }
 
 export {
-  getFiles.
+  getFiles,
   createFile,
   importFile,
   deleteFile,
