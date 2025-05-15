@@ -21,7 +21,7 @@ setup(
     packages=["sis_provisioner"],
     include_package_data=True,
     install_requires=[
-        "django~=4.2",
+        "django~=5.2",
         "django-storages[google, s3]",
         "urllib3<2",  # pinned for boto3
         "django-person-client~=1.0",
