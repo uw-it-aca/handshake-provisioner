@@ -3,6 +3,10 @@ import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
+// TODO: remove automatic bs-vue-next comp registering later
+import Components from "unplugin-vue-components/vite";
+import { BootstrapVueNextResolver } from "bootstrap-vue-next";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   // MARK: start vite build config
@@ -26,10 +30,23 @@ export default defineConfig({
   base: "/static/", // allows for proper css url path creation during the build process
 
   // MARK: standard vite/vue plugin and resolver config
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    Components({
+      resolvers: [BootstrapVueNextResolver()],
+    }),
+  ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./sis_provisioner_vue", import.meta.url)),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+        silenceDeprecations: ["global-builtin", "import"], // silence bootstrap5 related deprecations
+      },
     },
   },
 });

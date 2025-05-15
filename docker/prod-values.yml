@@ -33,6 +33,8 @@ securityPolicy:
 
 repo: handshake
 instance: prod
+namespace:
+  enabled: true
 
 externalService:
   enabled: true

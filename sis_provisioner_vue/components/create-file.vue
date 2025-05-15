@@ -90,13 +90,17 @@
 </template>
 
 <script>
-import dataMixin from "@/mixins/data_mixin.js";
+import { createFile } from "@/utils/data";
 import { Modal } from "bootstrap";
 
 export default {
-  mixins: [dataMixin],
   emits: ["fileUpdated"],
   props: {},
+  setup() {
+    return {
+      createFile,
+    };
+  },
   data() {
     return {
       term: {
@@ -124,7 +128,7 @@ export default {
           fileCreateModal.hide();
         })
         .catch((error) => {
-          this.formErrors = error.response.data;
+          this.formErrors = error;
         });
     },
   },
