@@ -57,32 +57,25 @@ export default {
       pageTitle: "Import Files",
       fileData: [],
       isLoading: true,
-      timer: '',
+      errorResponse: null,
     };
   },
   methods: {
     loadFileList: function () {
-      this.getFiles().then(
-        (data) => {
-          if (data) {
-            this.fileData = data;
-            this.isLoading = false;
-          }
-        }
-      ).catch(
-        (error) => {
-          this.requestError = error;
+      this.getFiles()
+        .then((data) => {
+          this.fileData = data;
+        })
+        .catch((error) => {
+          this.errorResponse = error;
+        })
+        .finally(() => {
           this.isLoading = false;
-        }
-      );
+        });
     },
   },
   mounted() {
     this.loadFileList();
-    this.timer = setInterval(this.loadFileList, 60000);
   },
-  beforeUnmount() {
-    clearInterval(this.timer);
-  }
 };
 </script>

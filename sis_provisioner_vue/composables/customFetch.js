@@ -22,7 +22,7 @@ export async function useCustomFetch(url, options = {}) {
     if (response.ok) {
       return response.text().then(text => {
         try {
-          const json = JSON.parse(text);
+          const json = text.length ? JSON.parse(text) : {};
           return json;
         } catch (error) {
           throw new Error(`Failed to parse response as JSON:, ${error}`);

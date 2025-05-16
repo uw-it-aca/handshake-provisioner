@@ -111,7 +111,7 @@ export default {
         document.getElementById("createBlockedStudentModal")
       );
       this.createBlockedStudent(this.student)
-        .then(() => {
+        .then((data) => {
           this.$emit("studentUpdated");
           studentCreateModal.hide();
         })

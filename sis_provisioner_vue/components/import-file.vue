@@ -78,7 +78,7 @@
 
 <script>
 import { importFile, deleteFile } from "@/utils/data";
-import { formatDate } from "@/helpers/utils";
+import { formatDate } from "@/utils/date";
 
 export default {
   emits: ["fileUpdated"],
@@ -102,19 +102,21 @@ export default {
   methods: {
     saveImport(fileId) {
       this.importFile(fileId)
-        .then(() => {
+        .then((data) => {
           this.$emit("fileUpdated");
         })
         .catch((error) => {
+          console.log(error);
         });
     },
     saveDelete(fileId) {
       if (confirm("Delete this file? This action is permanent.")) {
         this.deleteFile(fileId)
-          .then(() => {
+          .then((data) => {
             this.$emit("fileUpdated");
           })
           .catch((error) => {
+            console.log(error);
           });
       }
     },
