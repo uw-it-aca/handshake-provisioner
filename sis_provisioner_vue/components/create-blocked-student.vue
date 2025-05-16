@@ -82,13 +82,17 @@
 </template>
 
 <script>
-import dataMixin from "@/mixins/data_mixin.js";
+import { createBlockedStudent } from "@/utils/data";
 import { Modal } from "bootstrap";
 
 export default {
-  mixins: [dataMixin],
   emits: ["studentUpdated"],
   props: {},
+  setup() {
+    return {
+      createBlockedStudent,
+    };
+  },
   data() {
     return {
       student: this.getDefaultStudent(),
@@ -107,12 +111,12 @@ export default {
         document.getElementById("createBlockedStudentModal")
       );
       this.createBlockedStudent(this.student)
-        .then(() => {
+        .then((data) => {
           this.$emit("studentUpdated");
           studentCreateModal.hide();
         })
         .catch((error) => {
-          this.formErrors = error.response.data;
+          this.formErrors = error;
         });
     },
   },

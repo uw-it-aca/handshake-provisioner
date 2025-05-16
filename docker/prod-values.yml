@@ -31,8 +31,10 @@ readiness:
 securityPolicy:
   enabled: false
 
-repo: handshake
+repo: handshake-provisioner
 instance: prod
+namespace:
+  enabled: true
 
 externalService:
   enabled: true

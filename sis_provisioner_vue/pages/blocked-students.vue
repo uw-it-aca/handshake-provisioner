@@ -34,52 +34,48 @@
 </template>
 
 <script>
-import dataMixin from "@/mixins/data_mixin.js";
 import Layout from "@/layout.vue";
 import TableLoading from "@/components/table-loading.vue";
 import BlockedStudent from "@/components/blocked-student.vue";
 import CreateBlockedStudent from "@/components/create-blocked-student.vue";
+import { getBlockedStudents } from "@/utils/data";
 
 export default {
-  mixins: [dataMixin],
   components: {
-    // app components
     Layout,
     TableLoading,
     BlockedStudent,
     CreateBlockedStudent,
+  },
+  setup() {
+    return {
+      getBlockedStudents,
+    };
   },
   data() {
     return {
       pageTitle: "Blocked Students",
       studentData: [],
       isLoading: true,
-      timer: '',
+      errorResponse: null,
     };
   },
   methods: {
     loadBlockedStudentList: function () {
-      this.getBlockedStudents().then(
-        (response) => {
-          if (response.data) {
-            this.studentData = response.data;
-            this.isLoading = false;
-          }
-        }
-      ).catch(
-        (error) => {
-          this.requestError = error;
+      this.getBlockedStudents()
+        .then((data) => {
+          this.studentData = data;
+        })
+        .catch((error) => {
+          this.errorResponse = error;
+        })
+        .finally(() => {
           this.isLoading = false;
-        }
-      );
+        });
     },
   },
   mounted() {
     this.loadBlockedStudentList();
-    /* this.timer = setInterval(this.loadBlockedStudentList, 60000); */
   },
-  beforeUnmount() {
-    /* clearInterval(this.timer); */
-  }
 };
 </script>

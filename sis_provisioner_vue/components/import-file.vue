@@ -77,11 +77,10 @@
 </template>
 
 <script>
-import dataMixin from "@/mixins/data_mixin.js";
-import { formatDate } from "@/helpers/utils";
+import { importFile, deleteFile } from "@/utils/data";
+import { formatDate } from "@/utils/date";
 
 export default {
-  mixins: [dataMixin],
   emits: ["fileUpdated"],
   props: {
     files: {
@@ -89,27 +88,35 @@ export default {
       required: true,
     },
   },
+  setup() {
+    return {
+      importFile,
+      deleteFile,
+      formatDate,
+    };
+  },
   data() {
     return {
     };
   },
   methods: {
-    formatDate,
     saveImport(fileId) {
       this.importFile(fileId)
-        .then(() => {
+        .then((data) => {
           this.$emit("fileUpdated");
         })
         .catch((error) => {
+          console.log(error);
         });
     },
     saveDelete(fileId) {
       if (confirm("Delete this file? This action is permanent.")) {
         this.deleteFile(fileId)
-          .then(() => {
+          .then((data) => {
             this.$emit("fileUpdated");
           })
           .catch((error) => {
+            console.log(error);
           });
       }
     },

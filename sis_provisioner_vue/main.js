@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createBootstrap } from "bootstrap-vue-next";
 import { createPinia } from "pinia";
 
 // import solstice-vue
@@ -14,9 +15,14 @@ import { Vue3Mq, MqResponsive } from "vue3-mq";
 import "bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-// bootstrap and solstice-vue
-import "@/css/custom.scss";
+// solstice bootstrap theme
+import "solstice-theme/dist/solstice.scss";
+
+// solstice-vue comps
 import "solstice-vue/dist/style.css";
+
+// bootstrap-vue-next css
+import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 
 const app = createApp(App);
 
@@ -47,7 +53,8 @@ app.component("mq-responsive", MqResponsive);
 const pinia = createPinia();
 app.use(pinia);
 
-// solstice-vue
+// bootstrap-vue-next
+app.use(createBootstrap());
 app.use(SolsticeVue);
 
 app.use(router);

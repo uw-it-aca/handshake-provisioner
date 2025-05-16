@@ -3,9 +3,12 @@ from google.oauth2 import service_account
 import os
 
 INSTALLED_APPS += [
+    'sis_provisioner.apps.SISProvisionerFilesConfig',
     'sis_provisioner.apps.SISProvisionerConfig',
     'uw_person_client',
 ]
+
+INSTALLED_APPS.remove('django.contrib.staticfiles')
 
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
@@ -15,9 +18,9 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     }
     FIXTURE_DIRS = ['uw_person_client/fixtures']
     VITE_MANIFEST_PATH = os.path.join(
-        BASE_DIR, "sis_provisioner", "static", "manifest.json"
+        BASE_DIR, "sis_provisioner", "static", ".vite", "manifest.json"
     )
-
+    CURRENT_DATETIME_OVERRIDE = '2020-10-17 10:00:00'
 else:
     RESTCLIENTS_DAO_CACHE_CLASS = 'sis_provisioner.cache.RestClientsCache'
     STORAGES = {
@@ -46,7 +49,7 @@ else:
         },
     }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
-    VITE_MANIFEST_PATH = os.path.join(os.sep, "static", "manifest.json")
+    VITE_MANIFEST_PATH = os.path.join(os.sep, "static", ".vite", "manifest.json")
 
 # PDS config, default values are for localdev
 DATABASES['uw_person'] = {

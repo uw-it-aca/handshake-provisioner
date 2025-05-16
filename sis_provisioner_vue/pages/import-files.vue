@@ -34,52 +34,48 @@
 </template>
 
 <script>
-import dataMixin from "@/mixins/data_mixin.js";
 import Layout from "@/layout.vue";
 import TableLoading from "@/components/table-loading.vue";
 import ImportFile from "@/components/import-file.vue";
 import CreateFile from "@/components/create-file.vue";
+import { getFiles } from "@/utils/data";
 
 export default {
-  mixins: [dataMixin],
   components: {
-    // app components
     Layout,
     TableLoading,
     ImportFile,
     CreateFile,
+  },
+  setup() {
+    return {
+      getFiles,
+    };
   },
   data() {
     return {
       pageTitle: "Import Files",
       fileData: [],
       isLoading: true,
-      timer: '',
+      errorResponse: null,
     };
   },
   methods: {
     loadFileList: function () {
-      this.getFiles().then(
-        (response) => {
-          if (response.data) {
-            this.fileData = response.data;
-            this.isLoading = false;
-          }
-        }
-      ).catch(
-        (error) => {
-          this.requestError = error;
+      this.getFiles()
+        .then((data) => {
+          this.fileData = data;
+        })
+        .catch((error) => {
+          this.errorResponse = error;
+        })
+        .finally(() => {
           this.isLoading = false;
-        }
-      );
+        });
     },
   },
   mounted() {
     this.loadFileList();
-    this.timer = setInterval(this.loadFileList, 60000);
   },
-  beforeUnmount() {
-    clearInterval(this.timer);
-  }
 };
 </script>
