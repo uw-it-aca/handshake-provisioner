@@ -3,9 +3,12 @@ from google.oauth2 import service_account
 import os
 
 INSTALLED_APPS += [
+    'sis_provisioner.apps.SISProvisionerFilesConfig',
     'sis_provisioner.apps.SISProvisionerConfig',
     'uw_person_client',
 ]
+
+INSTALLED_APPS.remove('django.contrib.staticfiles')
 
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
