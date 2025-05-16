@@ -55,6 +55,7 @@ app.use(pinia);
 
 // bootstrap-vue-next
 app.use(createBootstrap());
+app.use(SolsticeVue);
 
 app.use(router);
 
