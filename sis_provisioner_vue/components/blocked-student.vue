@@ -42,7 +42,7 @@
 
 <script>
 import { deleteBlockedStudent } from "@/utils/data";
-import { formatDate } from "@/helpers/utils";
+import { formatDate } from "@/utils/date";
 
 export default {
   emits: ["studentUpdated"],
@@ -70,6 +70,7 @@ export default {
             this.$emit("studentUpdated");
           })
           .catch((error) => {
+            console.log(error);
           });
       }
     },

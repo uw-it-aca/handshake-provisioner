@@ -123,7 +123,7 @@ export default {
         document.getElementById("createFileModal")
       );
       this.createFile(this.file)
-        .then(() => {
+        .then((data) => {
           this.$emit("fileUpdated");
           fileCreateModal.hide();
         })

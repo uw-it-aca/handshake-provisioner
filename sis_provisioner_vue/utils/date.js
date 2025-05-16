@@ -5,10 +5,4 @@ function formatDate(dateString) {
   return date.format("MMM D, YYYY h:mm A");
 }
 
-function downloadFile(url) {
-  fetch(url).catch((error) => {
-    alert(error);
-  });
-}
-
-export { formatDate, downloadFile };
+export { formatDate };

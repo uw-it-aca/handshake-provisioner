@@ -57,24 +57,21 @@ export default {
       pageTitle: "Blocked Students",
       studentData: [],
       isLoading: true,
-      timer: '',
+      errorResponse: null,
     };
   },
   methods: {
     loadBlockedStudentList: function () {
-      this.getBlockedStudents().then(
-        (data) => {
-          if (data) {
-            this.studentData = data;
-            this.isLoading = false;
-          }
-        }
-      ).catch(
-        (error) => {
-          this.requestError = error;
+      this.getBlockedStudents()
+        .then((data) => {
+          this.studentData = data;
+        })
+        .catch((error) => {
+          this.errorResponse = error;
+        })
+        .finally(() => {
           this.isLoading = false;
-        }
-      );
+        });
     },
   },
   mounted() {
