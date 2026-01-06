@@ -50,7 +50,7 @@ memcached:
     type: RollingUpdate
 
 cronjob:
-  enabled: true
+  enabled: false
   jobs:
     - name: build-file
       schedule: "5 12 * * 1"
