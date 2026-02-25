@@ -1,4 +1,4 @@
-ARG DJANGO_CONTAINER_VERSION=2.0.13
+ARG DJANGO_CONTAINER_VERSION=3.0.2
 
 FROM us-docker.pkg.dev/uwit-mci-axdd/containers/django-container:${DJANGO_CONTAINER_VERSION} AS app-prebundler-container
 
@@ -19,7 +19,7 @@ RUN /app/bin/pip install psycopg2
 
 # latest node + ubuntu
 FROM node:20 AS node-base
-FROM ubuntu:22.04 AS node-bundler
+FROM ubuntu:24.04 AS node-bundler
 COPY --from=node-base / /
 
 ADD ./package.json /app/

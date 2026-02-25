@@ -1,6 +1,6 @@
 # handshake-provisioner
 
-[![Build Status](https://github.com/uw-it-aca/handshake-provisioner/workflows/Build%2C%20Test%20and%20Deploy/badge.svg?branch=main)](https://github.com/uw-it-aca/handshake-provisioner/actions)
+[![Build Status](https://github.com/uw-it-aca/handshake-provisioner/workflows/Build%2C%20Test%20and%20Deploy/badge.svg)](https://github.com/uw-it-aca/handshake-provisioner/actions)
 [![Coverage Status](https://coveralls.io/repos/github/uw-it-aca/handshake-provisioner/badge.svg?branch=main)](https://coveralls.io/github/uw-it-aca/handshake-provisioner?branch=main)
 
 Provisions UW data to Handshake through a CSV file.
@@ -8,13 +8,13 @@ Provisions UW data to Handshake through a CSV file.
 
 ## System Requirements
 
-- Python (3.8+)
+- Python (3.12)
 - Docker
 - Node
 
 ## Development Stack
 
-- [Django](https://www.djangoproject.com) (3.2)
+- [Django](https://www.djangoproject.com) (5.2)
 - Vue (3.2)
 - Vite (2.9)
 - Vitest (0.10.2)
