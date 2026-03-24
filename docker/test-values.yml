@@ -138,11 +138,6 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: handshake-test.axdd.s.uw.edu-ic-certs
-      externalKey: handshake/test/ic-certs
-      data:
-        - name: handshake-test.axdd.s.uw.edu-ic.cert
-          property: handshake-test.axdd.s.uw.edu-ic.cert
     - name: handshake-test.axdd.s.uw.edu-uw-idp-cert
       externalKey: idp-cert
       data:
@@ -190,10 +185,6 @@ environmentVariablesSecrets:
     name: RESTCLIENTS_SWS_OAUTH_BEARER
     secretName: handshake-test.axdd.s.uw.edu-shared-secrets
     secretKey: sws-token
-  samlSPCert:
-    name: SP_CERT
-    secretName: handshake-test.axdd.s.uw.edu-ic-certs
-    secretKey: handshake-test.axdd.s.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
     secretName: handshake-test.axdd.s.uw.edu-uw-idp-cert
