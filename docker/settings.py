@@ -150,6 +150,10 @@ MAJOR_NAME_OVERRIDES = {
     'MBA-00': 'Master of Business Administration (Full-Time)',
     'MBA-20': 'Master of Business Administration (Hybrid)',
     'TMMBA-00': 'Master of Business Administration (Technology Management)',
+    'ESRM-10': 'Environmental Science & Terrestrial Resource Management: Restoration Ecology & Environmental Horticulture',
+    'ESRM-20': 'Environmental Science & Terrestrial Resource Management: Natural Resource & Environmental Management',
+    'ESRM-30': 'Environmental Science & Terrestrial Resource Management: Sustainable Forest Management',
+    'ESRM-40': 'Environmental Science & Terrestrial Resource Management: Wildlife Conservation',
 }
 
 COLLEGES = {
