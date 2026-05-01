@@ -3,194 +3,211 @@ from google.oauth2 import service_account
 import os
 
 INSTALLED_APPS += [
-    'sis_provisioner.apps.SISProvisionerFilesConfig',
-    'sis_provisioner.apps.SISProvisionerConfig',
-    'uw_person_client',
+    "sis_provisioner.apps.SISProvisionerFilesConfig",
+    "sis_provisioner.apps.SISProvisionerConfig",
+    "uw_person_client",
+    "django.contrib.postgres",
 ]
 
-INSTALLED_APPS.remove('django.contrib.staticfiles')
+INSTALLED_APPS.remove("django.contrib.staticfiles")
 
-if os.getenv('ENV', 'localdev') == 'localdev':
+if os.getenv("ENV", "localdev") == "localdev":
     DEBUG = True
-    MEDIA_ROOT = os.getenv('MEDIA_ROOT', '/app/data')
+    MEDIA_ROOT = os.getenv("MEDIA_ROOT", "/app/data")
     MIGRATION_MODULES = {
-        'uw_person_client': 'uw_person_client.test_migrations',
+        "uw_person_client": "uw_person_client.test_migrations",
     }
-    FIXTURE_DIRS = ['uw_person_client/fixtures']
+    FIXTURE_DIRS = ["uw_person_client/fixtures"]
     VITE_MANIFEST_PATH = os.path.join(
         BASE_DIR, "sis_provisioner", "static", ".vite", "manifest.json"
     )
-    CURRENT_DATETIME_OVERRIDE = '2020-10-17 10:00:00'
+    CURRENT_DATETIME_OVERRIDE = "2020-10-17 10:00:00"
 else:
-    RESTCLIENTS_DAO_CACHE_CLASS = 'sis_provisioner.cache.RestClientsCache'
+    RESTCLIENTS_DAO_CACHE_CLASS = "sis_provisioner.cache.RestClientsCache"
     STORAGES = {
-        'default': {
-            'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
-            'OPTIONS': {
-                'project_id': os.getenv('STORAGE_PROJECT_ID', ''),
-                'bucket_name': os.getenv('STORAGE_BUCKET_NAME', ''),
-                'location': os.path.join(os.getenv('STORAGE_DATA_ROOT', '')),
-                'credentials': service_account.Credentials.from_service_account_file(
-                    '/gcs/credentials.json'),
+        "default": {
+            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+            "OPTIONS": {
+                "project_id": os.getenv("STORAGE_PROJECT_ID", ""),
+                "bucket_name": os.getenv("STORAGE_BUCKET_NAME", ""),
+                "location": os.path.join(os.getenv("STORAGE_DATA_ROOT", "")),
+                "credentials": service_account.Credentials.from_service_account_file(
+                    "/gcs/credentials.json"),
             }
         },
-        'handshake': {
-            'BACKEND': 'storages.backends.s3.S3Storage',
-            'OPTIONS': {
-                'region_name': os.getenv('AWS_S3_REGION_NAME', ''),
-                'bucket_name': os.getenv('AWS_STORAGE_BUCKET_NAME', ''),
-                'location': os.getenv('AWS_LOCATION', ''),
-                'access_key': os.getenv('AWS_ACCESS_KEY_ID', ''),
-                'secret_key': os.getenv('AWS_SECRET_ACCESS_KEY', ''),
+        "handshake": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "region_name": os.getenv("HANDSHAKE_AWS_S3_REGION_NAME", ""),
+                "bucket_name": os.getenv("HANDSHAKE_AWS_STORAGE_BUCKET_NAME", ""),
+                "location": os.getenv("HANDSHAKE_AWS_LOCATION", ""),
+                "access_key": os.getenv("HANDSHAKE_AWS_ACCESS_KEY_ID", ""),
+                "secret_key": os.getenv("HANDSHAKE_AWS_SECRET_ACCESS_KEY", ""),
             }
         },
-        'staticfiles': {
-            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        "uconnect": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "region_name": os.getenv("UCONNECT_AWS_S3_REGION_NAME", ""),
+                "bucket_name": os.getenv("UCONNECT_AWS_STORAGE_BUCKET_NAME", ""),
+                "location": os.getenv("UCONNECT_AWS_LOCATION", ""),
+                "access_key": os.getenv("UCONNECT_AWS_ACCESS_KEY_ID", ""),
+                "secret_key": os.getenv("UCONNECT_AWS_SECRET_ACCESS_KEY", ""),
+            }
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
-    CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
     VITE_MANIFEST_PATH = os.path.join(os.sep, "static", ".vite", "manifest.json")
 
 # PDS config, default values are for localdev
-DATABASES['uw_person'] = {
-    'ENGINE': 'django.db.backends.postgresql',
-    'HOST': os.getenv('UW_PERSON_DB_HOST', 'postgres'),
-    'PORT': os.getenv('UW_PERSON_DB_PORT', '5432'),
-    'NAME': os.getenv('UW_PERSON_DB_NAME', 'postgres'),
-    'USER': os.getenv('UW_PERSON_DB_USER', 'postgres'),
-    'PASSWORD': os.getenv('UW_PERSON_DB_PASSWORD', 'postgres')
+DATABASES["uw_person"] = {
+    "ENGINE": "django.db.backends.postgresql",
+    "HOST": os.getenv("UW_PERSON_DB_HOST", "postgres"),
+    "PORT": os.getenv("UW_PERSON_DB_PORT", "5432"),
+    "NAME": os.getenv("UW_PERSON_DB_NAME", "postgres"),
+    "USER": os.getenv("UW_PERSON_DB_USER", "postgres"),
+    "PASSWORD": os.getenv("UW_PERSON_DB_PASSWORD", "postgres"),
+    "OPTIONS": {
+        "pool": {
+            "min_size": int(os.getenv("UW_PERSON_DB_POOL_MIN", 1)),
+            "max_size": int(os.getenv("UW_PERSON_DB_POOL_MAX", 4)),
+        },
+    },
 }
+DATABASE_ROUTERS = ["uw_person_client.routers.UWPersonRouter"]
 
-DATABASE_ROUTERS = ['sis_provisioner.routers.UWPersonRouter']
-
-FILENAME_TEST_PREFIX = os.getenv('FILENAME_TEST_PREFIX', '')
-RESTCLIENTS_SWS_OAUTH_BEARER = os.getenv('RESTCLIENTS_SWS_OAUTH_BEARER', '')
-HANDSHAKE_IMPORT_ADMIN_GROUP = 'u_acadev_handshake_admins'
+FILENAME_TEST_PREFIX = os.getenv("FILENAME_TEST_PREFIX", "")
+RESTCLIENTS_SWS_OAUTH_BEARER = os.getenv("RESTCLIENTS_SWS_OAUTH_BEARER", "")
+HANDSHAKE_IMPORT_ADMIN_GROUP = "u_acadev_handshake_admins"
+UCONNECT_FILENAME = "student_feed.csv"
 
 # Settings that control student data provisioning
 ENROLLED_STATUS = 12
 ENROLLED_CLASS_CODES = [1, 2, 3, 4, 5, 8]
 
 APPLICANT_STATUS = 16
-APPLICANT_TYPES = {'FRESHMAN': 1, '2YR TRANSFER': 2, '4YR TRANSFER': 4}
+APPLICANT_TYPES = {"FRESHMAN": 1, "2YR TRANSFER": 2, "4YR TRANSFER": 4}
 APPLICANT_CLASS_CODES = [1, 2, 3, 4, 5, 6, 8]
-ATHLETE_CODES = {'25', '26', '27', '30', '31', '32', '33', '34', '40', '41', '42'}
+ATHLETE_CODES = {"25", "26", "27", "30", "31", "32", "33", "34", "40", "41", "42"}
 VETERAN_CODES = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 41, 42, 43}
 
 INCLUDE_CAMPUS_CODES = [0, 1]
-EXCLUDE_COLLEGE_CODES = ['Z']
-EXCLUDE_MAJOR_CODES = ['N MATR']
-PRE_MAJOR_CODES = ['EPRMJ', 'PSOCS', 'P SW', 'TPRMAJ']
+EXCLUDE_COLLEGE_CODES = ["Z"]
+EXCLUDE_MAJOR_CODES = ["N MATR"]
+PRE_MAJOR_CODES = ["EPRMJ", "PSOCS", "P SW", "TPRMAJ"]
 
 HANDSHAKE_CSV_HEADER = [
-    'username',
-    'auth_identifier',
-    'card_id',
-    'school_year_name',
-    'last_name',
-    'first_name',
-    'middle_name',
-    'preferred_name',
-    'primary_education:college_names',
-    'email_address',
-    'campus_name',
-    'primary_education:major_names',
-    'primary_education:primary_major_name',
-    'primary_education:currently_attending',
-    'primary_education:education_level_name',
-    'gender',
-    'ethnicity',
-    'athlete',
-    'veteran',
+    "username",
+    "auth_identifier",
+    "card_id",
+    "school_year_name",
+    "last_name",
+    "first_name",
+    "middle_name",
+    "preferred_name",
+    "primary_education:college_names",
+    "email_address",
+    "campus_name",
+    "primary_education:major_names",
+    "primary_education:primary_major_name",
+    "primary_education:currently_attending",
+    "primary_education:education_level_name",
+    "gender",
+    "ethnicity",
+    "athlete",
+    "veteran",
 ]
 
 LABEL_CSV_HEADER = [
-    'identifier',
-    'identifiable_type',
-    'user_type',
-    'name',
-    'label_type',
+    "identifier",
+    "identifiable_type",
+    "user_type",
+    "name",
+    "label_type",
 ]
 
 MAJOR_COLLEGE_OVERRIDES = {
-    'BIOEN': 'J', 'BSE': 'J', 'DATA': 'J', 'PHARBX': 'J', 'PREBSE': 'J',
-    'C SCI': 'J2', 'CMP E': 'J2', 'CSE': 'J2', 'CSE E': 'J2', 'CSE M': 'J2',
-    'ATM S': 'D', 'ESS': 'D', 'NUTR S': 'M', 'NUTR': 'M', 'EEP': 'A',
-    'MUSEOX': 'S', 'TECH I': 'J',
+    "ATM S": "D", "BIOEN": "J", "BSE": "J", "C SCI": "J2", "CESES": "J",
+    "CMB": "J", "CMP E": "J2", "CSE": "J2", "CSE E": "J2", "CSE M": "J2",
+    "DATA": "J", "EEP": "A", "ESS": "D", "HCID": "J", "MOLE": "J",
+    "MUSEOX": "S", "NCE": "J", "NUTR": "M", "NUTR S": "M", "PHARBX": "J",
+    "PREBSE": "J", "QISE": "J", "TECH I": "J",
 }
 
 MAJOR_NAME_OVERRIDES = {
-    'B A-00': 'Business Administration (General)',
-    'BA-00': 'Business Administration (General)',
-    'ACCTG-00': 'Business Administration (Accounting) - UW Seattle',
-    'ACCTG-01': 'Business Administration (Accounting) - UW Seattle',
-    'ACCTG-11': 'Business Administration (Accounting for Business Professionals)',
-    'FINANC-00': 'Business Administration (Finance)',
-    'FINANC-01': 'Business Administration (Finance)',
-    'MKTG-01': 'Business Administration (Marketing)',
-    'MKTG-10': 'Business Administration (Marketing)',
-    'ENTRE-00': 'Business Administration (Entrepreneurship)',
-    'ENTRE-01': 'Business Administration (Entrepreneurship)',
-    'HRMGT-01': 'Business Administration (Human Resources Management)',
-    'I S-00': 'Business Administration (Information Systems)',
-    'I S-01': 'Business Administration (Information Systems)',
-    'OSCM-00': 'Business Administration (Operations & Supply Chain Management)',
-    'OSCM-01': 'Business Administration (Operations & Supply Chain Management)',
-    'CISB-00': 'Business Administration (Certificate in International Business)',
-    'XBSAD-00': 'Business Administration (Exchange)',
-    'ACCTGX-01': 'Master of Professional Accounting',
-    'MST-00': 'Master of Science in Taxation',
-    'I S X-00': 'Master of Science in Information Systems',
-    'SCM-00': 'Master of Supply Chain Management',
-    'MSBA-00': 'Master of Science in Business Analytics',
-    'ENTRE-10': 'Master of Science in Entrepreneurship',
-    'EMBA-00': 'Master of Business Administration (Executive)',
-    'GEMBA-00': 'Master of Business Administration (Global Executive)',
-    'MBA EX-00': 'Master of Business Administration (Evening)',
-    'MBA-00': 'Master of Business Administration (Full-Time)',
-    'MBA-20': 'Master of Business Administration (Hybrid)',
-    'TMMBA-00': 'Master of Business Administration (Technology Management)',
-    'ESRM-10': 'Environmental Science & Terrestrial Resource Management: Restoration Ecology & Environmental Horticulture',
-    'ESRM-20': 'Environmental Science & Terrestrial Resource Management: Natural Resource & Environmental Management',
-    'ESRM-30': 'Environmental Science & Terrestrial Resource Management: Sustainable Forest Management',
-    'ESRM-40': 'Environmental Science & Terrestrial Resource Management: Wildlife Conservation',
+    "B A-00": "Business Administration (General)",
+    "BA-00": "Business Administration (General)",
+    "ACCTG-00": "Business Administration (Accounting) - UW Seattle",
+    "ACCTG-01": "Business Administration (Accounting) - UW Seattle",
+    "ACCTG-11": "Business Administration (Accounting for Business Professionals)",
+    "FINANC-00": "Business Administration (Finance)",
+    "FINANC-01": "Business Administration (Finance)",
+    "MKTG-01": "Business Administration (Marketing)",
+    "MKTG-10": "Business Administration (Marketing)",
+    "ENTRE-00": "Business Administration (Entrepreneurship)",
+    "ENTRE-01": "Business Administration (Entrepreneurship)",
+    "HRMGT-01": "Business Administration (Human Resources Management)",
+    "I S-00": "Business Administration (Information Systems)",
+    "I S-01": "Business Administration (Information Systems)",
+    "OSCM-00": "Business Administration (Operations & Supply Chain Management)",
+    "OSCM-01": "Business Administration (Operations & Supply Chain Management)",
+    "CISB-00": "Business Administration (Certificate in International Business)",
+    "XBSAD-00": "Business Administration (Exchange)",
+    "ACCTGX-01": "Master of Professional Accounting",
+    "MST-00": "Master of Science in Taxation",
+    "I S X-00": "Master of Science in Information Systems",
+    "SCM-00": "Master of Supply Chain Management",
+    "MSBA-00": "Master of Science in Business Analytics",
+    "ENTRE-10": "Master of Science in Entrepreneurship",
+    "EMBA-00": "Master of Business Administration (Executive)",
+    "GEMBA-00": "Master of Business Administration (Global Executive)",
+    "MBA EX-00": "Master of Business Administration (Evening)",
+    "MBA-00": "Master of Business Administration (Full-Time)",
+    "MBA-20": "Master of Business Administration (Hybrid)",
+    "TMMBA-00": "Master of Business Administration (Technology Management)",
+    "ESRM-10": "Environmental Science & Terrestrial Resource Management: Restoration Ecology & Environmental Horticulture",
+    "ESRM-20": "Environmental Science & Terrestrial Resource Management: Natural Resource & Environmental Management",
+    "ESRM-30": "Environmental Science & Terrestrial Resource Management: Sustainable Forest Management",
+    "ESRM-40": "Environmental Science & Terrestrial Resource Management: Wildlife Conservation",
 }
 
 COLLEGES = {
-    'A': 'Interdisciplinary Undergraduate Programs',
-    'B': 'College of Built Environments',
-    'C': 'College of Arts & Sciences',
-    'D': 'College of the Environment',
-    'E': 'Foster School of Business',
-    'H': 'College of Education',
-    'J': 'College of Engineering',
-    'J2': 'School of Computer Science & Engineering',
-    'K': 'College of the Environment',
-    'L': 'College of the Environment',
-    'M': 'School of Public Health',
-    'N': 'School of Nursing',
-    'O': 'Interschool or Intercollege Programs',
-    'P': 'School of Pharmacy',
-    'Q': 'Evans School of Public Policy & Governance',
-    'R': 'Interdisciplinary Graduate Programs',
-    'S': 'The Information School',
-    'T': 'School of Social Work',
-    'U': 'School of Dentistry',
-    'V': 'UW Bothell',
-    'X': 'School of Law',
-    'Y': 'School of Medicine',
+    "A": "Interdisciplinary Undergraduate Programs",
+    "B": "College of Built Environments",
+    "C": "College of Arts & Sciences",
+    "D": "College of the Environment",
+    "E": "Foster School of Business",
+    "H": "College of Education",
+    "J": "College of Engineering",
+    "J2": "School of Computer Science & Engineering",
+    "K": "College of the Environment",
+    "L": "College of the Environment",
+    "M": "School of Public Health",
+    "N": "School of Nursing",
+    "O": "Interschool or Intercollege Programs",
+    "P": "School of Pharmacy",
+    "Q": "Evans School of Public Policy & Governance",
+    "R": "Interdisciplinary Graduate Programs",
+    "S": "The Information School",
+    "T": "School of Social Work",
+    "U": "School of Dentistry",
+    "V": "UW Bothell",
+    "X": "School of Law",
+    "Y": "School of Medicine",
 }
 
 CLASS_CODE_NAMES = {
-    1: 'Freshman',
-    2: 'Sophomore',
-    3: 'Junior',
-    4: 'Senior',
-    5: 'Senior',
-    8: 'Masters',
+    1: "Freshman",
+    2: "Sophomore",
+    3: "Junior",
+    4: "Senior",
+    5: "Senior",
+    8: "Masters",
 }
 
-EMAIL_DOMAIN = 'uw.edu'
+EMAIL_DOMAIN = "uw.edu"
 
 GOOGLE_ANALYTICS_KEY = os.getenv("GOOGLE_ANALYTICS_KEY", default=" ")
 
