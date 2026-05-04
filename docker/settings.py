@@ -17,7 +17,7 @@ if os.getenv("ENV", "localdev") == "localdev":
     MIGRATION_MODULES = {
         "uw_person_client": "uw_person_client.test_migrations",
     }
-    FIXTURE_DIRS = ["uw_person_client/fixtures"]
+    FIXTURE_DIRS = (os.path.join(BASE_DIR, "uw_person_client", "fixtures"),)
     VITE_MANIFEST_PATH = os.path.join(
         BASE_DIR, "sis_provisioner", "static", ".vite", "manifest.json"
     )
