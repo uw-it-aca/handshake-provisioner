@@ -88,8 +88,11 @@ environmentVariables:
   - name: UW_PERSON_DB_NAME
     value: uw-person-prod
 
-  - name: AWS_S3_REGION_NAME
+  - name: HANDSHAKE_AWS_S3_REGION_NAME
     value: us-west-2
+
+  - name: UCONNECT_AWS_S3_REGION_NAME
+    value: us-east-1
 
   - name: FILENAME_TEST_PREFIX
     value: TEST
@@ -157,20 +160,20 @@ environmentVariablesSecrets:
     name: STORAGE_PROJECT_ID
     secretName: handshake-test.axdd.s.uw.edu-shared-secrets
     secretKey: storage-project-id
-  awsStorageBucketName:
-    name: AWS_STORAGE_BUCKET_NAME
+  handshakeAwsStorageBucketName:
+    name: HANDSHAKE_AWS_STORAGE_BUCKET_NAME
     secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: storage-bucket-name
-  awsStorageBucketPath:
-    name: AWS_LOCATION
+  handshakeAwsStorageBucketPath:
+    name: HANDSHAKE_AWS_LOCATION
     secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: storage-bucket-path
-  awsAccessKeyID:
-    name: AWS_ACCESS_KEY_ID
+  handshakeAwsAccessKeyID:
+    name: HANDSHAKE_AWS_ACCESS_KEY_ID
     secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: access-key-id
-  awsSecretAccessKey:
-    name: AWS_SECRET_ACCESS_KEY
+  handshakeAwsSecretAccessKey:
+    name: HANDSHAKE_AWS_SECRET_ACCESS_KEY
     secretName: handshake-test.axdd.s.uw.edu-aws-secrets
     secretKey: secret-access-key
   personDBUser:
