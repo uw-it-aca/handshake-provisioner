@@ -45,16 +45,16 @@ else:
                 "secret_key": os.getenv("HANDSHAKE_AWS_SECRET_ACCESS_KEY", ""),
             }
         },
-        "uconnect": {
-            "BACKEND": "storages.backends.s3.S3Storage",
-            "OPTIONS": {
-                "region_name": os.getenv("UCONNECT_AWS_S3_REGION_NAME", ""),
-                "bucket_name": os.getenv("UCONNECT_AWS_STORAGE_BUCKET_NAME", ""),
-                "location": os.getenv("UCONNECT_AWS_LOCATION", ""),
-                "access_key": os.getenv("UCONNECT_AWS_ACCESS_KEY_ID", ""),
-                "secret_key": os.getenv("UCONNECT_AWS_SECRET_ACCESS_KEY", ""),
-            }
-        },
+        #"uconnect": {
+        #    "BACKEND": "storages.backends.s3.S3Storage",
+        #    "OPTIONS": {
+        #        "region_name": os.getenv("UCONNECT_AWS_S3_REGION_NAME", ""),
+        #        "bucket_name": os.getenv("UCONNECT_AWS_STORAGE_BUCKET_NAME", ""),
+        #        "location": os.getenv("UCONNECT_AWS_LOCATION", ""),
+        #        "access_key": os.getenv("UCONNECT_AWS_ACCESS_KEY_ID", ""),
+        #        "secret_key": os.getenv("UCONNECT_AWS_SECRET_ACCESS_KEY", ""),
+        #    }
+        #},
         "staticfiles": {
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
