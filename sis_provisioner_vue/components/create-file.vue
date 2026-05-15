@@ -41,7 +41,7 @@
                 v-model="file.academic_term"
               />&nbsp;
               <label for="academic-term-current" class="form-label">
-                {{ term.current }}
+                {{ contextStore.context.currentTerm }}
               </label>&nbsp;&nbsp;
               <input
                 type="radio"
@@ -51,7 +51,7 @@
                 v-model="file.academic_term"
               />&nbsp;
               <label for="academic-term-next" class="form-label">
-                {{ term.next }}
+                {{ contextStore.context.nextTerm }}
               </label><br />
             </div>
           </div>
@@ -92,21 +92,21 @@
 <script>
 import { createFile } from "@/utils/data";
 import { Modal } from "bootstrap";
+import { useContextStore } from "@/stores/context";
 
 export default {
   emits: ["fileUpdated"],
   props: {},
   setup() {
+    const contextStore = useContextStore();
+
     return {
       createFile,
+      contextStore,
     };
   },
   data() {
     return {
-      term: {
-        current: window.handshake.current_term,
-        next: window.handshake.next_term
-      },
       file: this.getDefaultFile(),
       formErrors: {},
     };

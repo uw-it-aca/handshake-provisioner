@@ -4,13 +4,13 @@
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
-    :user-name="userName"
-    :sign-out-url="signOutUrl"
+    :user-name="contextStore.context.userName"
+    :sign-out-url="contextStore.context.signOutUrl"
   >
     <template #profile>
       <axdd-profile
-        :user-netid="userName"
-        :signout-url="signOutUrl"
+        :user-netid="contextStore.context.userName"
+        :signout-url="contextStore.context.signOutUrl"
       ></axdd-profile>
     </template>
     <template #navigation>
@@ -34,6 +34,7 @@
 <script>
 import NavMenu from "@/components/nav-menu.vue";
 import NavMessage from "@/components/nav-message.vue";
+import { useContextStore } from "@/stores/context";
 
 export default {
   components: {
@@ -46,17 +47,23 @@ export default {
       required: true,
     },
   },
+  setup() {
+    const contextStore = useContextStore();
+
+    return {
+      contextStore,
+    };
+  },
   data() {
     return {
-      // minimum application setup overrides
       appName: "Handshake Imports",
       appRootUrl: "/",
-      userName: document.body.getAttribute("data-user-name"),
-      signOutUrl: document.body.getAttribute("data-signout-url"),
-
-      // automatically set year
-      currentYear: new Date().getFullYear(),
     };
+  },
+  computed: {
+    currentYear() {
+      return new Date().getFullYear();
+    },
   },
   created: function () {
     // constructs page title in the following format "Page Title - AppName"

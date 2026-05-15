@@ -6,6 +6,8 @@ from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from sis_provisioner.models import Term
+from uw_saml.utils import get_user
+from django.urls import reverse
 
 
 @method_decorator(login_required, name='dispatch')
@@ -14,6 +16,8 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['current_term'] = Term.objects.current().name
-        context['next_term'] = Term.objects.next().name
+        context['currentTerm'] = Term.objects.current().name
+        context['nextTerm'] = Term.objects.next().name
+        context['userName'] = get_user(self.request)
+        context['signOutUrl'] = reverse('saml_logout')
         return context
