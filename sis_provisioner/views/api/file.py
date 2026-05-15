@@ -3,7 +3,7 @@
 
 
 from sis_provisioner.views.api import APIView
-from sis_provisioner.models import HandshakeStudentsFile, Term
+from sis_provisioner.models.handshake import HandshakeStudentsFile, Term
 from uw_saml.utils import get_user
 from logging import getLogger
 import json

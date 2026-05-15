@@ -3,7 +3,7 @@
 
 
 from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models import ActiveStudentsFile
+from sis_provisioner.models.active import ActiveStudentsFile
 
 
 class Command(BaseCommand):

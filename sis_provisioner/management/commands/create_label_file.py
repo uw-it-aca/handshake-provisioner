@@ -3,7 +3,7 @@
 
 
 from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models import HandshakeLabelsFile, Term
+from sis_provisioner.models.handshake import HandshakeLabelsFile, Term
 
 
 class Command(BaseCommand):

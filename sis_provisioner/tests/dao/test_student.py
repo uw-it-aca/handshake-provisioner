@@ -4,7 +4,7 @@
 
 from django.test import TestCase
 from sis_provisioner.dao.student import *
-from sis_provisioner.models import Term
+from sis_provisioner.models.term import Term
 
 
 class StudentTest(TestCase):

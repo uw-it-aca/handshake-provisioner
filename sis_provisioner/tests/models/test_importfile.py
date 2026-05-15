@@ -3,8 +3,9 @@
 
 
 from django.test import TestCase, override_settings
-from sis_provisioner.models import (
-    HandshakeStudentsFile, ActiveStudentsFile, Term)
+from sis_provisioner.models.handshake import HandshakeStudentsFile
+from sis_provisioner.models.active import ActiveStudentsFile
+from sis_provisioner.models.term import Term
 import datetime
 
 
