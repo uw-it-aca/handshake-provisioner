@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Condensed:wght@400;500;700&family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- django context -->
-    {{ context_data|json_script:'django-context-data' }}
+    {{ context_data|json_script:"django-context-data" }}
 
     <!-- vite css bundle -->
     {% vite_styles 'sis_provisioner_vue/main.js' %}

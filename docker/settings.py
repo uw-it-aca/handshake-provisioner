@@ -45,16 +45,16 @@ else:
                 "secret_key": os.getenv("HANDSHAKE_AWS_SECRET_ACCESS_KEY", ""),
             }
         },
-        #"uconnect": {
-        #    "BACKEND": "storages.backends.s3.S3Storage",
-        #    "OPTIONS": {
-        #        "region_name": os.getenv("UCONNECT_AWS_S3_REGION_NAME", ""),
-        #        "bucket_name": os.getenv("UCONNECT_AWS_STORAGE_BUCKET_NAME", ""),
-        #        "location": os.getenv("UCONNECT_AWS_LOCATION", ""),
-        #        "access_key": os.getenv("UCONNECT_AWS_ACCESS_KEY_ID", ""),
-        #        "secret_key": os.getenv("UCONNECT_AWS_SECRET_ACCESS_KEY", ""),
-        #    }
-        #},
+        "uconnect": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "region_name": os.getenv("UCONNECT_AWS_S3_REGION_NAME", ""),
+                "bucket_name": os.getenv("UCONNECT_AWS_STORAGE_BUCKET_NAME", ""),
+                "location": os.getenv("UCONNECT_AWS_LOCATION", ""),
+                "access_key": os.getenv("UCONNECT_AWS_ACCESS_KEY_ID", ""),
+                "secret_key": os.getenv("UCONNECT_AWS_SECRET_ACCESS_KEY", ""),
+            }
+        },
         "staticfiles": {
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
@@ -120,6 +120,16 @@ LABEL_CSV_HEADER = [
     "user_type",
     "name",
     "label_type",
+]
+
+UCONNECT_CSV_HEADER = [
+    "FIRST_NAME",
+    "LAST_NAME",
+    "EMAIL",
+    "SSO_ID",
+    "GRADUATION_YEAR",
+    "STAKEHOLDERS (USER TYPE)",
+    "COLLEGES",
 ]
 
 MAJOR_COLLEGE_OVERRIDES = {
@@ -203,23 +213,8 @@ CLASS_CODE_NAMES = {
 
 EMAIL_DOMAIN = "uw.edu"
 
-GOOGLE_ANALYTICS_KEY = os.getenv("GOOGLE_ANALYTICS_KEY", default=" ")
-
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "debug": True,
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "sis_provisioner.context_processors.auth_user",
-                "sis_provisioner.context_processors.google_analytics",
-                "sis_provisioner.context_processors.django_debug",
-            ],
-        },
-    }
-]
+LOGGING["loggers"]["urllib3"] = {
+    "handlers": ["stdout", "stderr"],
+    "level": "DEBUG",
+    "propagate": True,
+}
