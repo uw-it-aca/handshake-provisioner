@@ -20,7 +20,9 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="createFileModalLabel">Create a Handshake Import File</h5>
+          <h5 class="modal-title" id="createFileModalLabel">
+            Create a {{ importTargetLabel }} Import File
+          </h5>
           <button
             type="button"
             class="btn-close"
@@ -96,7 +98,12 @@ import { useContextStore } from "@/stores/context";
 
 export default {
   emits: ["fileUpdated"],
-  props: {},
+  props: {
+    fileType: {
+      type: String,
+      required: true,
+    },
+  },
   setup() {
     const contextStore = useContextStore();
 
@@ -111,6 +118,11 @@ export default {
       formErrors: {},
     };
   },
+  computed: {
+    importTargetLabel() {
+      return (this.fileType === "handshake") ? "Handshake" : "uConnect";
+    },
+  },
   methods: {
     getDefaultFile() {
       return {
@@ -122,7 +134,7 @@ export default {
       var fileCreateModal = Modal.getInstance(
         document.getElementById("createFileModal")
       );
-      this.createFile(this.file)
+      this.createFile(this.fileType, this.file)
         .then((data) => {
           this.$emit("fileUpdated");
           fileCreateModal.hide();

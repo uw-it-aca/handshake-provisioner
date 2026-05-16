@@ -6,10 +6,11 @@
           <axdd-card>
             <template #heading-action>
               <axdd-card-heading :level="2" class="my-2"
-                >Import Files</axdd-card-heading
+                >Handshake Import Files</axdd-card-heading
               >
               <axdd-card-action>
                 <CreateFile
+                  :fileType="fileType"
                   @fileUpdated="loadFileList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Create new
                   file</CreateFile
@@ -20,6 +21,7 @@
               <TableLoading v-if="isLoading"></TableLoading>
               <div v-if="fileData && fileData.length">
                 <ImportFile
+                  :fileType="fileType"
                   :files="fileData"
                   @fileUpdated="loadFileList()"
                 />
@@ -54,7 +56,8 @@ export default {
   },
   data() {
     return {
-      pageTitle: "Import Files",
+      pageTitle: "Handshake Import Files",
+      fileType: "handshake",
       fileData: [],
       isLoading: true,
       errorResponse: null,
@@ -62,7 +65,7 @@ export default {
   },
   methods: {
     loadFileList: function () {
-      this.getFiles()
+      this.getFiles(this.fileType)
         .then((data) => {
           this.fileData = data;
         })

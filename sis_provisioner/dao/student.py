@@ -39,6 +39,21 @@ def get_students_for_handshake(academic_term):
     return queryset
 
 
+def get_students_for_uconnect(academic_term):
+    next_academic_term = academic_term.next()
+
+    return Student.objects.filter(
+            campus_code=settings.SEATTLE_CAMPUS_CODE,
+            enroll_status_code=settings.ENROLLED_STATUS,
+            class_code__in=settings.ENROLLED_CLASS_CODES
+        ).filter(
+            (Q(academic_term__year=academic_term.year) &
+                Q(academic_term__quarter=academic_term.quarter)) |
+            (Q(academic_term__year=next_academic_term.year) &
+                Q(academic_term__quarter=next_academic_term.quarter))
+        )
+
+
 def get_active_students():
     return Person.objects.get_active_students()
 

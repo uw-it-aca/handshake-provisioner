@@ -88,12 +88,6 @@ environmentVariables:
   - name: UW_PERSON_DB_NAME
     value: uw-person-prod
 
-  - name: HANDSHAKE_AWS_S3_REGION_NAME
-    value: us-west-2
-
-  - name: UCONNECT_AWS_S3_REGION_NAME
-    value: us-east-1
-
   - name: FILENAME_TEST_PREFIX
     value: TEST
 
@@ -107,8 +101,8 @@ externalSecrets:
           property: django-secret
         - name: storage-bucket-name
           property: storage-bucket-name
-    - name: handshake-test.axdd.s.uw.edu-aws-secrets
-      externalKey: handshake/test/aws-secrets
+    - name: handshake-test.axdd.s.uw.edu-handshake-aws-secrets
+      externalKey: handshake/test/handshake-aws-secrets
       data:
         - name: access-key-id
           property: access-key-id
@@ -118,6 +112,21 @@ externalSecrets:
           property: storage-bucket-name
         - name: storage-bucket-path
           property: storage-bucket-path
+        - name: s3-region-name
+          property: s3-region-name
+    - name: handshake-test.axdd.s.uw.edu-uconnect-aws-secrets
+      externalKey: handshake/test/uconnect-aws-secrets
+      data:
+        - name: access-key-id
+          property: access-key-id
+        - name: secret-access-key
+          property: secret-access-key
+        - name: storage-bucket-name
+          property: storage-bucket-name
+        - name: storage-bucket-path
+          property: storage-bucket-path
+        - name: s3-region-name
+          property: s3-region-name
     - name: handshake-test.axdd.s.uw.edu-sql-secrets
       externalKey: handshake/shared/sql-secrets
       data:
@@ -162,20 +171,44 @@ environmentVariablesSecrets:
     secretKey: storage-project-id
   handshakeAwsStorageBucketName:
     name: HANDSHAKE_AWS_STORAGE_BUCKET_NAME
-    secretName: handshake-test.axdd.s.uw.edu-aws-secrets
+    secretName: handshake-test.axdd.s.uw.edu-handshake-aws-secrets
     secretKey: storage-bucket-name
   handshakeAwsStorageBucketPath:
     name: HANDSHAKE_AWS_LOCATION
-    secretName: handshake-test.axdd.s.uw.edu-aws-secrets
+    secretName: handshake-test.axdd.s.uw.edu-handshake-aws-secrets
     secretKey: storage-bucket-path
   handshakeAwsAccessKeyID:
     name: HANDSHAKE_AWS_ACCESS_KEY_ID
-    secretName: handshake-test.axdd.s.uw.edu-aws-secrets
+    secretName: handshake-test.axdd.s.uw.edu-handshake-aws-secrets
     secretKey: access-key-id
   handshakeAwsSecretAccessKey:
     name: HANDSHAKE_AWS_SECRET_ACCESS_KEY
-    secretName: handshake-test.axdd.s.uw.edu-aws-secrets
+    secretName: handshake-test.axdd.s.uw.edu-handshake-aws-secrets
     secretKey: secret-access-key
+  handshakeAwsS3RegionName:
+    name: HANDSHAKE_AWS_S3_REGION_NAME
+    secretName: handshake-test.axdd.s.uw.edu-handshake-aws-secrets
+    secretKey: s3-region-name
+  uconnectAwsStorageBucketName:
+    name: UCONNECT_AWS_STORAGE_BUCKET_NAME
+    secretName: handshake-test.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: storage-bucket-name
+  uconnectAwsStorageBucketPath:
+    name: UCONNECT_AWS_LOCATION
+    secretName: handshake-test.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: storage-bucket-path
+  uconnectAwsAccessKeyID:
+    name: UCONNECT_AWS_ACCESS_KEY_ID
+    secretName: handshake-test.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: access-key-id
+  uconnectAwsSecretAccessKey:
+    name: UCONNECT_AWS_SECRET_ACCESS_KEY
+    secretName: handshake-test.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: secret-access-key
+  uconnectAwsS3RegionName:
+    name: UCONNECT_AWS_S3_REGION_NAME
+    secretName: handshake-test.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: s3-region-name
   personDBUser:
     name: UW_PERSON_DB_USER
     secretName: handshake-test.axdd.s.uw.edu-shared-secrets

@@ -7,7 +7,7 @@
       Welcome to the Handshake Import tool! On this page, you can browse files
       that have been imported to Handshake.
       <br /><br />
-      To import a new file:
+      To import a new Handshake file:
       <br/><br/>
       <ol>
         <li>Click &quot;Create new file&quot;, and select the enrollment term.</li>
@@ -24,6 +24,23 @@
       class="text-light-gray bg-dark-purple rounded-3 p-3 small"
     >
       View and manage students who are currently blocked from Handshake.
+    </p>
+    <p
+      v-show="$route.path.includes('/uconnect-files')"
+      class="text-light-gray bg-dark-purple rounded-3 p-3 small"
+    >
+      On this page, you can browse files that have been imported to uConnect.
+      <br /><br />
+      To import a new uConnect file:
+      <br/><br/>
+      <ol>
+        <li>Click &quot;Create new file&quot;, and select the enrollment term.</li>
+        <br/>
+        <li>The &quot;CSV Generated&quot; column indicates the status of the
+        file-creation process.</li>
+        <br/>
+        <li>Once created, click &quot;Import to uConnect&quot; to import the file.</li>
+      </ol>
     </p>
   </div>
 </template>

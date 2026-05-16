@@ -6,22 +6,24 @@
           <axdd-card>
             <template #heading-action>
               <axdd-card-heading :level="2" class="my-2"
-                >Handshake Blocked Students</axdd-card-heading
+                >uConnect Import Files</axdd-card-heading
               >
               <axdd-card-action>
-                <CreateBlockedStudent
-                  @studentUpdated="loadBlockedStudentList()"
-                  ><i class="bi bi-plus-square text-dark me-2"></i>Add student
-                </CreateBlockedStudent
+                <CreateFile
+                  :fileType="fileType"
+                  @fileUpdated="loadFileList()"
+                  ><i class="bi bi-plus-square text-dark me-2"></i>Create new
+                  file</CreateFile
                 >
               </axdd-card-action>
             </template>
             <template #body>
               <TableLoading v-if="isLoading"></TableLoading>
-              <div v-if="studentData && studentData.length">
-                <BlockedStudent
-                  :students="studentData"
-                  @studentUpdated="loadBlockedStudentList()"
+              <div v-if="fileData && fileData.length">
+                <ImportFile
+                  :fileType="fileType"
+                  :files="fileData"
+                  @fileUpdated="loadFileList()"
                 />
               </div>
               <div v-else>No data</div>
@@ -36,35 +38,36 @@
 <script>
 import Layout from "@/layout.vue";
 import TableLoading from "@/components/table-loading.vue";
-import BlockedStudent from "@/components/blocked-student.vue";
-import CreateBlockedStudent from "@/components/create-blocked-student.vue";
-import { getBlockedStudents } from "@/utils/data";
+import ImportFile from "@/components/import-file.vue";
+import CreateFile from "@/components/create-file.vue";
+import { getFiles } from "@/utils/data";
 
 export default {
   components: {
     Layout,
     TableLoading,
-    BlockedStudent,
-    CreateBlockedStudent,
+    ImportFile,
+    CreateFile,
   },
   setup() {
     return {
-      getBlockedStudents,
+      getFiles,
     };
   },
   data() {
     return {
-      pageTitle: "Handshake Blocked Students",
-      studentData: [],
+      pageTitle: "uConnect Import Files",
+      fileType: "uconnect",
+      fileData: [],
       isLoading: true,
       errorResponse: null,
     };
   },
   methods: {
-    loadBlockedStudentList: function () {
-      this.getBlockedStudents()
+    loadFileList: function () {
+      this.getFiles(this.fileType)
         .then((data) => {
-          this.studentData = data;
+          this.fileData = data;
         })
         .catch((error) => {
           this.errorResponse = error;
@@ -75,7 +78,7 @@ export default {
     },
   },
   mounted() {
-    this.loadBlockedStudentList();
+    this.loadFileList();
   },
 };
 </script>

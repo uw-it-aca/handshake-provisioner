@@ -50,10 +50,10 @@
             <span v-if="file.imported_date == null" class="">
               <span v-if="file.generated_date != null" class="">
                 <a
-                  title="Import this file to Handshake"
+                  title="`Import this file to ${importTargetLabel}`"
                   class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
                   v-on:click="saveImport(file.id)"
-                >Import to Handshake</a>
+                >Import to {{ importTargetLabel }}</a>
               </span>
             </span>
             <span v-else>
@@ -83,6 +83,10 @@ import { formatDate } from "@/utils/date";
 export default {
   emits: ["fileUpdated"],
   props: {
+    fileType: {
+      type: String,
+      required: true,
+    },
     files: {
       type: Array,
       required: true,
@@ -95,13 +99,14 @@ export default {
       formatDate,
     };
   },
-  data() {
-    return {
-    };
+  computed: {
+    importTargetLabel() {
+      return (this.fileType === "handshake") ? "Handshake" : "uConnect";
+    },
   },
   methods: {
     saveImport(fileId) {
-      this.importFile(fileId)
+      this.importFile(this.fileType, fileId)
         .then((data) => {
           this.$emit("fileUpdated");
         })
@@ -111,7 +116,7 @@ export default {
     },
     saveDelete(fileId) {
       if (confirm("Delete this file? This action is permanent.")) {
-        this.deleteFile(fileId)
+        this.deleteFile(this.fileType, fileId)
           .then((data) => {
             this.$emit("fileUpdated");
           })

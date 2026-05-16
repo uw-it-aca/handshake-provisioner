@@ -1,12 +1,14 @@
 import "regenerator-runtime/runtime";
 import { useCustomFetch } from "@/composables/customFetch";
 
-async function getFiles() {
-  return useCustomFetch("/api/v1/file/");
+async function getFiles(fileType) {
+  const url = "/api/v1/file/" + fileType;
+  return useCustomFetch(url);
 }
 
-async function createFile(data) {
-  return useCustomFetch("/api/v1/file/", {
+async function createFile(fileType, data) {
+  const url = "/api/v1/" + fileType + "/file";
+  return useCustomFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
@@ -15,8 +17,9 @@ async function createFile(data) {
   });
 }
 
-async function importFile(fileId) {
-  return useCustomFetch("/api/v1/file/" + fileId, {
+async function importFile(fileType, fileId) {
+  const url = "/api/v1/" + fileType + "/file/" + fileId;
+  return useCustomFetch(url, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
@@ -25,8 +28,9 @@ async function importFile(fileId) {
   });
 }
 
-async function deleteFile(fileId) {
-  return useCustomFetch("/api/v1/file/" + fileId, {
+async function deleteFile(fileType, fileId) {
+  const url = "/api/v1/" + fileType + "/file/" + fileId;
+  return useCustomFetch(url, {
     method: "DELETE",
   });
 }

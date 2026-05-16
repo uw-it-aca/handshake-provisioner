@@ -2,13 +2,20 @@ import { createWebHistory, createRouter } from "vue-router";
 import { trackRouter } from "vue-gtag-next";
 
 // page components
-import ImportFiles from "@/pages/import-files.vue";
+import HandshakeFiles from "@/pages/handshake-files.vue";
+import UconnectFiles from "@/pages/uconnect-files.vue";
 import BlockedStudents from "@/pages/blocked-students.vue";
 
 const routes = [
   {
     path: "/",
-    component: ImportFiles,
+    component: HandshakeFiles,
+    pathToRegexpOptions: { strict: true },
+    props: true,
+  },
+  {
+    path: "/uconnect-files",
+    component: UconnectFiles,
     pathToRegexpOptions: { strict: true },
     props: true,
   },
