@@ -23,5 +23,8 @@ class HomeView(TemplateView):
         context['currentTerm'] = Term.objects.current().name
         context['nextTerm'] = Term.objects.next().name
         context['userName'] = get_user(self.request)
+        context['handshakeFilesUrl'] = reverse('handshake-file-list')
+        context['uconnectFilesUrl'] = reverse('uconnect-file-list')
+        context['blockedStudentsUrl'] = reverse('blocked-student-list')
         context['signOutUrl'] = reverse('saml_logout')
         return context

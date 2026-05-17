@@ -1,13 +1,11 @@
 import "regenerator-runtime/runtime";
 import { useCustomFetch } from "@/composables/customFetch";
 
-async function getFiles(fileType) {
-  const url = "/api/v1/file/" + fileType;
+async function getFiles(url) {
   return useCustomFetch(url);
 }
 
-async function createFile(fileType, data) {
-  const url = "/api/v1/" + fileType + "/file";
+async function createFile(url, data) {
   return useCustomFetch(url, {
     method: "POST",
     headers: {
@@ -17,8 +15,7 @@ async function createFile(fileType, data) {
   });
 }
 
-async function importFile(fileType, fileId) {
-  const url = "/api/v1/" + fileType + "/file/" + fileId;
+async function importFile(url) {
   return useCustomFetch(url, {
     method: "PUT",
     headers: {
@@ -28,19 +25,18 @@ async function importFile(fileType, fileId) {
   });
 }
 
-async function deleteFile(fileType, fileId) {
-  const url = "/api/v1/" + fileType + "/file/" + fileId;
+async function deleteFile(url) {
   return useCustomFetch(url, {
     method: "DELETE",
   });
 }
 
-async function getBlockedStudents() {
-  return useCustomFetch("/api/v1/blocked-student/");
+async function getBlockedStudents(url) {
+  return useCustomFetch(url);
 }
 
-async function createBlockedStudent(data) {
-  return useCustomFetch("/api/v1/blocked-student/", {
+async function createBlockedStudent(url, data) {
+  return useCustomFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
@@ -49,8 +45,8 @@ async function createBlockedStudent(data) {
   });
 }
 
-async function deleteBlockedStudent(studentId) {
-  return useCustomFetch("/api/v1/blocked-student/" + studentId, {
+async function deleteBlockedStudent(url) {
+  return useCustomFetch(url, {
     method: "DELETE",
   });
 }

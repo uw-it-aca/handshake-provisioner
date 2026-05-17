@@ -68,8 +68,9 @@ class UconnectStudentsFile(ImportFile):
         data = super().json_data()
         data['term'] = self.term.json_data()
         data['is_test_file'] = self.is_test_file
+        data['type'] = 'uConnect'
         data['api_path'] = reverse('uconnect-file', kwargs={
-            'file_id': self.pk}),
+            'file_id': self.pk})
         return data
 
     def _create_path(self):

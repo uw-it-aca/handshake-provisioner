@@ -38,6 +38,7 @@ import Layout from "@/layout.vue";
 import TableLoading from "@/components/table-loading.vue";
 import BlockedStudent from "@/components/blocked-student.vue";
 import CreateBlockedStudent from "@/components/create-blocked-student.vue";
+import { useContextStore } from "@/stores/context";
 import { getBlockedStudents } from "@/utils/data";
 
 export default {
@@ -48,8 +49,10 @@ export default {
     CreateBlockedStudent,
   },
   setup() {
+    const contextStore = useContextStore();
     return {
       getBlockedStudents,
+      contextStore,
     };
   },
   data() {
@@ -62,7 +65,7 @@ export default {
   },
   methods: {
     loadBlockedStudentList: function () {
-      this.getBlockedStudents()
+      this.getBlockedStudents(this.contextStore.context.blockedStudentsUrl)
         .then((data) => {
           this.studentData = data;
         })

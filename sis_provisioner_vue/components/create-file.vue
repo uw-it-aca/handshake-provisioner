@@ -99,14 +99,13 @@ import { useContextStore } from "@/stores/context";
 export default {
   emits: ["fileUpdated"],
   props: {
-    fileType: {
+    apiPath: {
       type: String,
       required: true,
     },
   },
   setup() {
     const contextStore = useContextStore();
-
     return {
       createFile,
       contextStore,
@@ -120,7 +119,7 @@ export default {
   },
   computed: {
     importTargetLabel() {
-      return (this.fileType === "handshake") ? "Handshake" : "uConnect";
+      return (this.apiPath.includes("handshake")) ? "Handshake" : "uConnect";
     },
   },
   methods: {
@@ -134,7 +133,7 @@ export default {
       var fileCreateModal = Modal.getInstance(
         document.getElementById("createFileModal")
       );
-      this.createFile(this.fileType, this.file)
+      this.createFile(this.apiPath, this.file)
         .then((data) => {
           this.$emit("fileUpdated");
           fileCreateModal.hide();

@@ -10,7 +10,8 @@
               >
               <axdd-card-action>
                 <CreateFile
-                  :fileType="fileType"
+                  v-if="!isLoading"
+                  :apiPath="contextStore.context.handshakeFilesUrl"
                   @fileUpdated="loadFileList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Create new
                   file</CreateFile
@@ -21,7 +22,6 @@
               <TableLoading v-if="isLoading"></TableLoading>
               <div v-if="fileData && fileData.length">
                 <ImportFile
-                  :fileType="fileType"
                   :files="fileData"
                   @fileUpdated="loadFileList()"
                 />
@@ -40,6 +40,7 @@ import Layout from "@/layout.vue";
 import TableLoading from "@/components/table-loading.vue";
 import ImportFile from "@/components/import-file.vue";
 import CreateFile from "@/components/create-file.vue";
+import { useContextStore } from "@/stores/context";
 import { getFiles } from "@/utils/data";
 
 export default {
@@ -50,14 +51,15 @@ export default {
     CreateFile,
   },
   setup() {
+    const contextStore = useContextStore();
     return {
       getFiles,
+      contextStore,
     };
   },
   data() {
     return {
       pageTitle: "Handshake Import Files",
-      fileType: "handshake",
       fileData: [],
       isLoading: true,
       errorResponse: null,
@@ -65,7 +67,7 @@ export default {
   },
   methods: {
     loadFileList: function () {
-      this.getFiles(this.fileType)
+      this.getFiles(this.contextStore.context.handshakeFilesUrl)
         .then((data) => {
           this.fileData = data;
         })

@@ -75,8 +75,9 @@ class HandshakeStudentsFile(ImportFile):
         data = super().json_data()
         data['term'] = self.term.json_data()
         data['is_test_file'] = self.is_test_file
+        data['type'] = 'Handshake'
         data['api_path'] = reverse('handshake-file', kwargs={
-                'file_id': self.pk}),
+            'file_id': self.pk})
         return data
 
     def _create_path(self):
@@ -259,4 +260,6 @@ class BlockedHandshakeStudent(models.Model):
             'added_by': self.added_by,
             'added_date': self.added_date.isoformat(),
             'reason': self.reason,
+            'api_path': reverse('blocked-student', kwargs={
+                'student_id': self.pk}),
         }
