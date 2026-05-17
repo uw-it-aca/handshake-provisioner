@@ -127,7 +127,6 @@ class UconnectStudentsFileTest(TestCase):
             'type': 'uConnect',
             'term': {'id': 1, 'quarter': 'AUT', 'year': 2019}
         })
-        print(impfile.json_data()['api_path'])
 
 
 class ActiveStudentsFileTest(TestCase):

@@ -11,6 +11,9 @@ from sis_provisioner.models.importfile import ImportFile
 from sis_provisioner.models.term import Term
 from sis_provisioner.dao.uconnect import write_file
 from sis_provisioner.dao.student import get_students_for_uconnect
+from sis_provisioner.utils import (
+    get_majors, get_college_names, get_first_last_name, get_graduation_year,
+    get_student_type)
 from datetime import datetime, timezone
 from logging import getLogger
 import csv
@@ -92,14 +95,18 @@ class UconnectStudentsFile(ImportFile):
         writer.writerow(settings.UCONNECT_CSV_HEADER)
 
         for student in get_students_for_uconnect(self.term):
+
+            majors = get_majors(student)
+            first_name, last_name = get_first_last_name(student.person)
+
             writer.writerow([
-                '',
-                '',
+                first_name,
+                last_name,
                 f'{student.person.uwnetid}@{settings.EMAIL_DOMAIN}',
                 student.person.uwnetid,
-                "",
-                "",
-                "",
+                get_graduation_year(student),
+                get_student_type(student),
+                get_college_names(majors, student.campus_code),
             ])
 
         return s.getvalue()

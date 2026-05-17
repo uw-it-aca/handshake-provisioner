@@ -65,6 +65,24 @@ def get_class_desc(student, majors):
     return getattr(settings, 'CLASS_CODE_NAMES', {}).get(class_code)
 
 
+def get_graduation_year(student):
+    try:
+        first_year_start = int(str(student.admitted_for_yr_qtr_id)[:4])
+        if not first_year_start:
+            return
+    except ValueError:
+        return
+
+    return first_year_start + 2 if (
+        student.class_code == 8) else first_year_start + 4
+
+
+def get_student_type(student):
+    if student.class_code in getattr(settings, 'CLASS_CODE_NAMES', {}):
+        return 'Graduate student' if (
+            student.class_code == 8) else 'Undergraduate student'
+
+
 def get_education_level_name(student):
     if student.class_code in getattr(settings, 'CLASS_CODE_NAMES', {}):
         return 'Masters' if student.class_code == 8 else 'Bachelors'
@@ -193,3 +211,13 @@ def format_name(first_name, surname):
     hname.capitalize(force=True)
     last = re.sub('^[a-z]', lambda x: x.group().upper(), hname.last)
     return hname.first, hname.middle, (last + ' ' + hname.suffix).strip()
+
+
+def get_first_last_name(person):
+    if (person.preferred_first_name is not None and
+            len(person.preferred_first_name) and
+            person.preferred_surname is not None and
+            len(person.preferred_surname)):
+        return person.preferred_first_name, person.preferred_surname
+
+    return person.first_name, person.surname
