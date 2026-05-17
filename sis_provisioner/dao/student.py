@@ -60,7 +60,11 @@ def get_active_students():
 
 def get_majors_by_code(codes: list):
     return Major.objects.filter(
-        major_abbr_code__in(codes), major_pathway=0).exclude(
-        major_full_name='').exclude(
-        major_full_name__isnull=True).exclude(
-        major_last_yr__isnull=True)
+            major_abbr_code__in=codes, major_pathway=0
+        ).exclude(
+            major_full_name=''
+        ).exclude(
+            major_full_name__isnull=True
+        ).exclude(
+            major_last_yr__isnull=True
+        )
