@@ -5,6 +5,7 @@
 from django.conf import settings
 from sis_provisioner.dao.student import get_majors_by_code
 from nameparser import HumanName
+from datetime import date
 from logging import getLogger
 import re
 
@@ -13,8 +14,13 @@ RE_UNTITLEIZE = re.compile(r'^(?:and|for|of|the|w)$', re.I)
 RE_TITLE_ABBR = re.compile(r'^(?:bs|ms)$', re.I)
 
 STUDENT_NUM_LEN = 7
+CLASS_CODE_GRAD_YEAR = {1: 4, 2: 3, 3: 2, 4: 1, 5: 1, 8: 2}
 
 logger = getLogger(__name__)
+
+
+def current_date():
+    return date.today()
 
 
 def titleize(string, andrepl='and'):
@@ -66,15 +72,16 @@ def get_class_desc(student, majors):
 
 
 def get_graduation_year(student):
-    try:
-        first_year_start = int(str(student.admitted_for_yr_qtr_id)[:4])
-        if not first_year_start:
-            return
-    except ValueError:
+    if not student.class_code:
         return
 
-    return first_year_start + 2 if (
-        student.class_code == 8) else first_year_start + 4
+    curr_date = current_date()
+    curr_year = curr_date.year
+    if curr_date.month < 6:
+        curr_year -= 1
+
+    remaining = CLASS_CODE_GRAD_YEAR.get(student.class_code)
+    return curr_year + remaining
 
 
 def get_student_type(student):
