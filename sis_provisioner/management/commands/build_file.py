@@ -4,8 +4,9 @@
 
 from django.core.management.base import BaseCommand, CommandError
 from sis_provisioner.models.handshake import (
-    HandshakeStudentsFile, HandshakeLabelsFile, ActiveStudentsFile)
+    HandshakeStudentsFile, HandshakeLabelsFile)
 from sis_provisioner.models.uconnect import UconnectStudentsFile
+from sis_provisioner.models.active import ActiveStudentsFile
 
 
 class Command(BaseCommand):
