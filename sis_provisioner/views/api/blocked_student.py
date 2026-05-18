@@ -3,7 +3,7 @@
 
 
 from sis_provisioner.views.api import APIView
-from sis_provisioner.models import BlockedHandshakeStudent
+from sis_provisioner.models.handshake import BlockedHandshakeStudent
 from uw_saml.utils import get_user
 from datetime import datetime, timezone
 from logging import getLogger

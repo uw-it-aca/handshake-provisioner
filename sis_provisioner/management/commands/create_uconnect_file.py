@@ -3,11 +3,11 @@
 
 
 from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models.handshake import HandshakeLabelsFile, Term
+from sis_provisioner.models.uconnect import UconnectStudentsFile, Term
 
 
 class Command(BaseCommand):
-    help = 'Creates a TEST Handshake label file for an academic term'
+    help = 'Creates a uConnect import file for an academic term'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -26,4 +26,4 @@ class Command(BaseCommand):
         else:
             term = Term.objects.current()
 
-        HandshakeLabelsFile(term=term, is_test_file=is_test_file).save()
+        UconnectStudentsFile(term=term, is_test_file=is_test_file).save()

@@ -50,10 +50,10 @@
             <span v-if="file.imported_date == null" class="">
               <span v-if="file.generated_date != null" class="">
                 <a
-                  title="Import this file to Handshake"
+                  :title="`Import this file to ${file.type}`"
                   class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
-                  v-on:click="saveImport(file.id)"
-                >Import to Handshake</a>
+                  v-on:click="saveImport(file.api_path)"
+                >Import to {{ file.type }}</a>
               </span>
             </span>
             <span v-else>
@@ -67,7 +67,7 @@
               role="button"
               title="Delete this file"
               class="btn btn-outline-dark-beige btn-sm rounded-circle"
-              v-on:click="saveDelete(file.id)"
+              v-on:click="saveDelete(file.api_path)"
             ><i class="bi bi-trash-fill"></i></a>
           </div>
         </td>
@@ -95,13 +95,9 @@ export default {
       formatDate,
     };
   },
-  data() {
-    return {
-    };
-  },
   methods: {
-    saveImport(fileId) {
-      this.importFile(fileId)
+    saveImport(url) {
+      this.importFile(url)
         .then((data) => {
           this.$emit("fileUpdated");
         })
@@ -109,9 +105,9 @@ export default {
           console.log(error);
         });
     },
-    saveDelete(fileId) {
+    saveDelete(url) {
       if (confirm("Delete this file? This action is permanent.")) {
-        this.deleteFile(fileId)
+        this.deleteFile(url)
           .then((data) => {
             this.$emit("fileUpdated");
           })

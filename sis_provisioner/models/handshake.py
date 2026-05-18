@@ -7,13 +7,10 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.timezone import get_default_timezone
-from sis_provisioner.exceptions import EmptyQueryException
-from sis_provisioner.dao.file import read_file, write_file, delete_file
-from sis_provisioner.dao.handshake import write_file as write_handshake
-from sis_provisioner.dao.student import (
-    get_students_for_handshake, get_active_students)
-from sis_provisioner.dao.term import (
-    current_term, next_term, get_term_by_year_and_quarter)
+from sis_provisioner.models.importfile import ImportFile
+from sis_provisioner.models.term import Term
+from sis_provisioner.dao.handshake import write_file
+from sis_provisioner.dao.student import get_students_for_handshake
 from sis_provisioner.utils import (
     get_majors, get_major_names, get_primary_major_name, get_college_names,
     is_athlete, is_veteran, get_class_desc, get_education_level_name,
@@ -22,152 +19,11 @@ from datetime import datetime, timezone
 from logging import getLogger
 import csv
 import io
-import os
 
 logger = getLogger(__name__)
 
 TRUE = 'True'
 FALSE = 'False'
-
-
-class TermManager(models.Manager):
-    def current(self):
-        academic_term = current_term()
-        quarter_int = academic_term.int_key() % 10
-
-        term, _ = Term.objects.get_or_create(
-            year=academic_term.year, quarter=quarter_int)
-        return term
-
-    def next(self):
-        academic_term = next_term()
-        quarter_int = academic_term.int_key() % 10
-
-        term, _ = Term.objects.get_or_create(
-            year=academic_term.year, quarter=quarter_int)
-        return term
-
-
-class Term(models.Model):
-    WINTER = 1
-    SPRING = 2
-    SUMMER = 3
-    AUTUMN = 4
-
-    QUARTER_CHOICES = (
-        (WINTER, 'WIN'), (SPRING, 'SPR'), (SUMMER, 'SUM'), (AUTUMN, 'AUT')
-    )
-
-    SWS_LABELS = {
-        WINTER: 'winter', SPRING: 'spring', SUMMER: 'summer', AUTUMN: 'autumn'}
-
-    year = models.SmallIntegerField()
-    quarter = models.SmallIntegerField(choices=QUARTER_CHOICES)
-
-    objects = TermManager()
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['year', 'quarter'],
-                                    name='unique_term')
-        ]
-
-    @property
-    def name(self):
-        return '{}{}'.format(
-            dict(self.QUARTER_CHOICES).get(self.quarter), self.year)
-
-    def json_data(self):
-        return {
-            'id': self.pk,
-            'year': self.year,
-            'quarter': dict(self.QUARTER_CHOICES).get(self.quarter),
-        }
-
-    def next(self):
-        sws_term = get_term_by_year_and_quarter(
-            self.year, self.SWS_LABELS.get(self.quarter))
-        nexterm = next_term(sws_term)
-
-        quarter_int = nexterm.int_key() % 10
-        term, _ = Term.objects.get_or_create(
-            year=nexterm.year, quarter=quarter_int)
-        return term
-
-
-class ImportFile(models.Model):
-    path = models.CharField(max_length=128, null=True)
-    created_by = models.CharField(max_length=32, default='automatic')
-    created_date = models.DateTimeField()
-    generated_date = models.DateTimeField(null=True)
-    import_progress = models.SmallIntegerField(default=0)
-    imported_date = models.DateTimeField(null=True)
-    imported_status = models.CharField(max_length=128, null=True)
-    process_id = models.CharField(max_length=64, null=True)
-
-    class Meta:
-        abstract = True
-
-    @property
-    def filename(self):
-        return os.path.basename(self.path or '')
-
-    @property
-    def content(self):
-        if self.generated_date is not None:
-            return read_file(self.path)
-
-    def build(self):
-        self.process_id = os.getpid()
-        self.save()
-        try:
-            write_file(self.path, self._generate_csv())
-            self.generated_date = datetime.now(timezone.utc)
-            logger.info(f'CSV generated for file ID {self.pk}')
-        except EmptyQueryException as ex:
-            logger.info(f'CSV skipped for file ID {self.pk}: No students')
-        except Exception as ex:
-            logger.exception(f'CSV failed for file ID {self.pk}: {ex}')
-
-        self.process_id = None
-        self.save()
-
-    def save(self, *args, **kwargs):
-        if self.created_date is None:
-            self.created_date = datetime.now(timezone.utc)
-        if self.path is None:
-            self.path = self._create_path()
-        super().save(*args, **kwargs)
-
-    def delete(self, **kwargs):
-        if self.generated_date is not None:
-            delete_file(self.path)
-        super().delete(**kwargs)
-
-    def json_data(self):
-        return {
-            'id': self.pk,
-            'name': self.filename,
-            'created_by': self.created_by,
-            'created_date': self.created_date.isoformat() if (
-                self.created_date is not None) else None,
-            'generated_date': self.generated_date.isoformat() if (
-                self.generated_date is not None) else None,
-            'import_progress': self.import_progress,
-            'imported_date': self.imported_date.isoformat() if (
-                self.imported_date is not None) else None,
-            'imported_status': self.imported_status,
-            'process_id': self.process_id,
-        }
-
-    def sisimport(self):
-        raise NotImplemented()
-
-    def _create_path(self):
-        raise NotImplemented()
-
-    def _generate_csv(self):
-        raise NotImplemented()
 
 
 class HandshakeStudentsFileManager(models.Manager):
@@ -204,7 +60,7 @@ class HandshakeStudentsFile(ImportFile):
             raise ObjectDoesNotExist
 
         try:
-            write_handshake(self.filename, self.content)
+            write_file(self.filename, self.content)
             self.imported_status = 200
             self.imported_date = datetime.now(timezone.utc)
             logger.info(f'File ID {self.pk} imported')
@@ -219,8 +75,9 @@ class HandshakeStudentsFile(ImportFile):
         data = super().json_data()
         data['term'] = self.term.json_data()
         data['is_test_file'] = self.is_test_file
+        data['type'] = 'Handshake'
         data['api_path'] = reverse('handshake-file', kwargs={
-                'file_id': self.pk}),
+            'file_id': self.pk})
         return data
 
     def _create_path(self):
@@ -403,46 +260,6 @@ class BlockedHandshakeStudent(models.Model):
             'added_by': self.added_by,
             'added_date': self.added_date.isoformat(),
             'reason': self.reason,
+            'api_path': reverse('blocked-student', kwargs={
+                'student_id': self.pk}),
         }
-
-
-class ActiveStudentsFileManager(models.Manager):
-    def build_file(self):
-        import_file = super().get_queryset().filter(
-            generated_date__isnull=True, process_id__isnull=True
-        ).order_by('created_date').first()
-
-        if import_file is not None:
-            import_file.build()
-            return import_file
-
-
-class ActiveStudentsFile(ImportFile):
-    '''
-    A file containing all active students, currently used for provisioning
-    uwnetid and uwregid to LinkedIn Learning.
-    '''
-    objects = ActiveStudentsFileManager()
-
-    def _create_path(self):
-        local_tz = get_default_timezone()
-        return self.created_date.replace(tzinfo=timezone.utc).astimezone(
-            local_tz).strftime('%Y/%m/active-students-%Y%m%d-%H%M%S.csv')
-
-    def _generate_csv(self):
-        s = io.StringIO()
-        csv.register_dialect('unix_newline', lineterminator='\n')
-        writer = csv.writer(s, dialect='unix_newline')
-
-        writer.writerow([
-            'email', 'uwregid', 'prior_uwnetids', 'prior_uwregids'])
-
-        for person in get_active_students():
-            writer.writerow([
-                f'{person.uwnetid}@{settings.EMAIL_DOMAIN}',
-                person.uwregid,
-                ';'.join(person.prior_uwnetids),
-                ';'.join(person.prior_uwregids),
-            ])
-
-        return s.getvalue()

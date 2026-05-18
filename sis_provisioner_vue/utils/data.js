@@ -1,12 +1,12 @@
 import "regenerator-runtime/runtime";
 import { useCustomFetch } from "@/composables/customFetch";
 
-async function getFiles() {
-  return useCustomFetch("/api/v1/file/");
+async function getFiles(url) {
+  return useCustomFetch(url);
 }
 
-async function createFile(data) {
-  return useCustomFetch("/api/v1/file/", {
+async function createFile(url, data) {
+  return useCustomFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
@@ -15,8 +15,8 @@ async function createFile(data) {
   });
 }
 
-async function importFile(fileId) {
-  return useCustomFetch("/api/v1/file/" + fileId, {
+async function importFile(url) {
+  return useCustomFetch(url, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
@@ -25,18 +25,18 @@ async function importFile(fileId) {
   });
 }
 
-async function deleteFile(fileId) {
-  return useCustomFetch("/api/v1/file/" + fileId, {
+async function deleteFile(url) {
+  return useCustomFetch(url, {
     method: "DELETE",
   });
 }
 
-async function getBlockedStudents() {
-  return useCustomFetch("/api/v1/blocked-student/");
+async function getBlockedStudents(url) {
+  return useCustomFetch(url);
 }
 
-async function createBlockedStudent(data) {
-  return useCustomFetch("/api/v1/blocked-student/", {
+async function createBlockedStudent(url, data) {
+  return useCustomFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
@@ -45,8 +45,8 @@ async function createBlockedStudent(data) {
   });
 }
 
-async function deleteBlockedStudent(studentId) {
-  return useCustomFetch("/api/v1/blocked-student/" + studentId, {
+async function deleteBlockedStudent(url) {
+  return useCustomFetch(url, {
     method: "DELETE",
   });
 }

@@ -83,14 +83,18 @@
 
 <script>
 import { createBlockedStudent } from "@/utils/data";
+import { useContextStore } from "@/stores/context";
 import { Modal } from "bootstrap";
+
 
 export default {
   emits: ["studentUpdated"],
   props: {},
   setup() {
+    const contextStore = useContextStore();
     return {
       createBlockedStudent,
+      contextStore,
     };
   },
   data() {
@@ -110,7 +114,8 @@ export default {
       var studentCreateModal = Modal.getInstance(
         document.getElementById("createBlockedStudentModal")
       );
-      this.createBlockedStudent(this.student)
+      const url = this.contextStore.context.blockedStudentsUrl;
+      this.createBlockedStudent(url, this.student)
         .then((data) => {
           this.$emit("studentUpdated");
           studentCreateModal.hide();

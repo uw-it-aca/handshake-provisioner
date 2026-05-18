@@ -20,7 +20,9 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="createFileModalLabel">Create a Handshake Import File</h5>
+          <h5 class="modal-title" id="createFileModalLabel">
+            Create a {{ importTargetLabel }} Import File
+          </h5>
           <button
             type="button"
             class="btn-close"
@@ -41,7 +43,7 @@
                 v-model="file.academic_term"
               />&nbsp;
               <label for="academic-term-current" class="form-label">
-                {{ term.current }}
+                {{ contextStore.context.currentTerm }}
               </label>&nbsp;&nbsp;
               <input
                 type="radio"
@@ -51,7 +53,7 @@
                 v-model="file.academic_term"
               />&nbsp;
               <label for="academic-term-next" class="form-label">
-                {{ term.next }}
+                {{ contextStore.context.nextTerm }}
               </label><br />
             </div>
           </div>
@@ -92,24 +94,33 @@
 <script>
 import { createFile } from "@/utils/data";
 import { Modal } from "bootstrap";
+import { useContextStore } from "@/stores/context";
 
 export default {
   emits: ["fileUpdated"],
-  props: {},
+  props: {
+    apiPath: {
+      type: String,
+      required: true,
+    },
+  },
   setup() {
+    const contextStore = useContextStore();
     return {
       createFile,
+      contextStore,
     };
   },
   data() {
     return {
-      term: {
-        current: window.handshake.current_term,
-        next: window.handshake.next_term
-      },
       file: this.getDefaultFile(),
       formErrors: {},
     };
+  },
+  computed: {
+    importTargetLabel() {
+      return (this.apiPath.includes("handshake")) ? "Handshake" : "uConnect";
+    },
   },
   methods: {
     getDefaultFile() {
@@ -122,7 +133,7 @@ export default {
       var fileCreateModal = Modal.getInstance(
         document.getElementById("createFileModal")
       );
-      this.createFile(this.file)
+      this.createFile(this.apiPath, this.file)
         .then((data) => {
           this.$emit("fileUpdated");
           fileCreateModal.hide();
