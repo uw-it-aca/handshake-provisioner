@@ -58,10 +58,10 @@ cronjob:
       args: ["build_file"]
       resources:
         limits:
-          cpu: 750m
-          memory: 2048Mi
-        requests:
           cpu: 500m
+          memory: 1024Mi
+        requests:
+          cpu: 250m
           memory: 768Mi
 
 gcsCredentials:
