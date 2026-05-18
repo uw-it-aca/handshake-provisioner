@@ -5,6 +5,8 @@
 from django.test import TestCase
 from uw_person_client.models import Person, Student, Major
 from sis_provisioner.utils import *
+from datetime import date
+from unittest import mock
 
 
 class HandshakeUtilsTest(TestCase):
@@ -315,34 +317,41 @@ class HandshakeUtilsTest(TestCase):
         student = self._build_student(class_code=9)
         self.assertEqual(get_class_desc(student, [major1, major2]), None)
 
-    def test_get_graduation_year(self):
+    @mock.patch('sis_provisioner.utils.current_date')
+    def test_get_graduation_year(self, mock_current_date):
+        mock_current_date.return_value = date(2020, 12, 31)
+
+        student = self._build_student(class_code="")
+        self.assertEqual(get_graduation_year(student), None)
+
         student = self._build_student(class_code=1)
-        student.admitted_for_yr_qtr_id = 20254
-        self.assertEqual(get_graduation_year(student), 2029)
+        self.assertEqual(get_graduation_year(student), 2024)
 
         student = self._build_student(class_code=2)
-        student.admitted_for_yr_qtr_id = 20242
-        self.assertEqual(get_graduation_year(student), 2028)
+        self.assertEqual(get_graduation_year(student), 2023)
 
         student = self._build_student(class_code=3)
-        student.admitted_for_yr_qtr_id = 20222
-        self.assertEqual(get_graduation_year(student), 2026)
+        self.assertEqual(get_graduation_year(student), 2022)
 
         student = self._build_student(class_code=4)
-        student.admitted_for_yr_qtr_id = 20242
-        self.assertEqual(get_graduation_year(student), 2028)
+        self.assertEqual(get_graduation_year(student), 2021)
+
+        student = self._build_student(class_code=5)
+        self.assertEqual(get_graduation_year(student), 2021)
 
         student = self._build_student(class_code=8)
-        student.admitted_for_yr_qtr_id = 20251
-        self.assertEqual(get_graduation_year(student), 2027)
+        self.assertEqual(get_graduation_year(student), 2022)
+
+        mock_current_date.return_value = date(2021, 3, 15)
 
         student = self._build_student(class_code=1)
-        student.admitted_for_yr_qtr_id = 0
-        self.assertEqual(get_graduation_year(student), None)
+        self.assertEqual(get_graduation_year(student), 2024)
 
-        student = self._build_student(class_code=1)
-        student.admitted_for_yr_qtr_id = None
-        self.assertEqual(get_graduation_year(student), None)
+        student = self._build_student(class_code=2)
+        self.assertEqual(get_graduation_year(student), 2023)
+
+        student = self._build_student(class_code=3)
+        self.assertEqual(get_graduation_year(student), 2022)
 
     def test_get_student_type(self):
         student = self._build_student(class_code=9)
