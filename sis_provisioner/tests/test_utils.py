@@ -3,8 +3,10 @@
 
 
 from django.test import TestCase
-from uw_person_client.models import Student, Major
+from uw_person_client.models import Person, Student, Major
 from sis_provisioner.utils import *
+from datetime import date
+from unittest import mock
 
 
 class HandshakeUtilsTest(TestCase):
@@ -42,6 +44,15 @@ class HandshakeUtilsTest(TestCase):
         student.special_program_code = special_program_code
         student.veteran_benefit_code = veteran_benefit_code
         return student
+
+    def _build_person(self, first_name='James', surname='Average',
+                      preferred_first_name='J', preferred_surname='Average'):
+        person = Person()
+        person.first_name = first_name
+        person.surname = surname
+        person.preferred_first_name = preferred_first_name
+        person.preferred_surname = preferred_surname
+        return person
 
     def test_get_majors(self):
         major1 = self._build_major(
@@ -280,7 +291,7 @@ class HandshakeUtilsTest(TestCase):
         major3 = self._build_major(major_abbr_code='0-EMBA', college='F')
 
         student = self._build_student(class_code=1)
-        self.assertEqual(get_class_desc(student, [major1]), 'Freshman')
+        self.assertEqual(get_class_desc(student, [major1]), 'First-year')
         student = self._build_student(class_code=2)
         self.assertEqual(get_class_desc(student, [major1]), 'Sophomore')
         student = self._build_student(class_code=3)
@@ -305,6 +316,16 @@ class HandshakeUtilsTest(TestCase):
                          'Masters of Business Administration')
         student = self._build_student(class_code=9)
         self.assertEqual(get_class_desc(student, [major1, major2]), None)
+
+    def test_get_student_type(self):
+        student = self._build_student(class_code=9)
+        self.assertEqual(get_student_type(student), None)
+
+        student = self._build_student(class_code=2)
+        self.assertEqual(get_student_type(student), 'Undergraduate student')
+
+        student = self._build_student(class_code=8)
+        self.assertEqual(get_student_type(student), 'Graduate student')
 
     def test_get_education_level_name(self):
         student = self._build_student(class_code=9)
@@ -344,3 +365,13 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(format_name('Leland M', 'McDonald'),
                          ('Leland', 'M', 'McDonald'))
         self.assertEqual(format_name('Joe', 'Le'), ('Joe', '', 'Le'))
+
+    def test_get_first_last_name(self):
+        person = self._build_person()
+        self.assertEqual(get_first_last_name(person), ('J', 'Average'))
+
+        person = self._build_person(preferred_first_name='')
+        self.assertEqual(get_first_last_name(person), ('James', 'Average'))
+
+        person = self._build_person(preferred_surname='')
+        self.assertEqual(get_first_last_name(person), ('James', 'Average'))

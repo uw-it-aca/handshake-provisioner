@@ -5,6 +5,7 @@
 from django.conf import settings
 from sis_provisioner.dao.student import get_majors_by_code
 from nameparser import HumanName
+from datetime import date
 from logging import getLogger
 import re
 
@@ -13,8 +14,13 @@ RE_UNTITLEIZE = re.compile(r'^(?:and|for|of|the|w)$', re.I)
 RE_TITLE_ABBR = re.compile(r'^(?:bs|ms)$', re.I)
 
 STUDENT_NUM_LEN = 7
+CLASS_CODE_GRAD_YEAR = {1: 4, 2: 3, 3: 2, 4: 1, 5: 1, 8: 2}
 
 logger = getLogger(__name__)
+
+
+def current_date():
+    return date.today()
 
 
 def titleize(string, andrepl='and'):
@@ -63,6 +69,12 @@ def get_class_desc(student, majors):
         return 'Masters of Business Administration'
 
     return getattr(settings, 'CLASS_CODE_NAMES', {}).get(class_code)
+
+
+def get_student_type(student):
+    if student.class_code in getattr(settings, 'CLASS_CODE_NAMES', {}):
+        return 'Graduate student' if (
+            student.class_code == 8) else 'Undergraduate student'
 
 
 def get_education_level_name(student):
@@ -193,3 +205,13 @@ def format_name(first_name, surname):
     hname.capitalize(force=True)
     last = re.sub('^[a-z]', lambda x: x.group().upper(), hname.last)
     return hname.first, hname.middle, (last + ' ' + hname.suffix).strip()
+
+
+def get_first_last_name(person):
+    if (person.preferred_first_name is not None and
+            len(person.preferred_first_name) and
+            person.preferred_surname is not None and
+            len(person.preferred_surname)):
+        return person.preferred_first_name, person.preferred_surname
+
+    return person.first_name, person.surname

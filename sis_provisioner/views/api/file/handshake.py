@@ -3,7 +3,8 @@
 
 
 from sis_provisioner.views.api import APIView
-from sis_provisioner.models import HandshakeStudentsFile, Term
+from sis_provisioner.models.handshake import HandshakeStudentsFile
+from sis_provisioner.models.term import Term
 from uw_saml.utils import get_user
 from logging import getLogger
 import json
@@ -11,7 +12,7 @@ import json
 logger = getLogger(__name__)
 
 
-class FileListView(APIView):
+class HandshakeFileListView(APIView):
     def get(self, request, *args, **kwargs):
         files = HandshakeStudentsFile.objects.all().order_by('-created_date')
         data = [f.json_data() for f in files]
@@ -36,7 +37,7 @@ class FileListView(APIView):
         return self.json_response(import_file.json_data())
 
 
-class FileView(APIView):
+class HandshakeFileView(APIView):
     def get(self, request, *args, **kwargs):
         file_id = kwargs.get('file_id')
 

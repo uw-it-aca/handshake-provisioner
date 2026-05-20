@@ -21,7 +21,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="createBlockedStudentModalLabel">
-            Add a blocked student
+            Add a blocked student for {{ blockTargetLabel }}
           </h5>
           <button
             type="button"
@@ -83,14 +83,22 @@
 
 <script>
 import { createBlockedStudent } from "@/utils/data";
+import { useContextStore } from "@/stores/context";
 import { Modal } from "bootstrap";
 
 export default {
   emits: ["studentUpdated"],
-  props: {},
+  props: {
+    apiPath: {
+      type: String,
+      required: true,
+    },
+  },
   setup() {
+    const contextStore = useContextStore();
     return {
       createBlockedStudent,
+      contextStore,
     };
   },
   data() {
@@ -98,6 +106,11 @@ export default {
       student: this.getDefaultStudent(),
       formErrors: {},
     };
+  },
+  computed: {
+    blockTargetLabel() {
+      return (this.apiPath.includes("handshake")) ? "Handshake" : "uConnect";
+    },
   },
   methods: {
     getDefaultStudent() {
@@ -110,7 +123,7 @@ export default {
       var studentCreateModal = Modal.getInstance(
         document.getElementById("createBlockedStudentModal")
       );
-      this.createBlockedStudent(this.student)
+      this.createBlockedStudent(this.apiPath, this.student)
         .then((data) => {
           this.$emit("studentUpdated");
           studentCreateModal.hide();

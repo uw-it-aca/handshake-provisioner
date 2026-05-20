@@ -30,6 +30,7 @@ setup(
         "uw-restclients-sws~=2.5",
         "nameparser>=1.0.4,<2.0",
         "uw-django-saml2~=1.8",
+        "psycopg[c]",
     ],
     license="Apache License, Version 2.0",
     description="UW application that supports Handshake",

@@ -31,7 +31,7 @@
               role="button"
               title="Unblock this student"
               class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
-              v-on:click="saveDelete(student.id)"
+              v-on:click="saveDelete(student.api_path)"
             >Unblock student</a>
           </div>
         </td>
@@ -63,9 +63,9 @@ export default {
     };
   },
   methods: {
-    saveDelete(studentId) {
+    saveDelete(url) {
       if (confirm("Unblock this student?")) {
-        this.deleteBlockedStudent(studentId)
+        this.deleteBlockedStudent(url)
           .then(() => {
             this.$emit("studentUpdated");
           })

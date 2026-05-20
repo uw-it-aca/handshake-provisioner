@@ -14,26 +14,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Condensed:wght@400;500;700&family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
+    <!-- django context -->
+    {{ context_data|json_script:"django-context-data" }}
 
     <!-- vite css bundle -->
     {% vite_styles 'sis_provisioner_vue/main.js' %}
 </head>
 
-<body data-django-debug="{{ django_debug|lower}}" data-user-name="{{ username }}" data-signout-url="{{ signout_url }}"{% if google_analytics %} data-google-analytics="{{ google_analytics }}"{% endif %} class="bg-light">
+<body class="bg-light">
     {% csrf_token %}
 
     <!-- vue app will be injected here -->
-    <div id="app"></div>
+    <div id="app" class="bg-body"></div>
 
     <!-- vite js bundle -->
     {% vite_scripts 'sis_provisioner_vue/main.js' %}
 
-    <script type="text/javascript">
-      window.handshake = {
-        current_term: "{{ current_term }}",
-        next_term: "{{ next_term }}"
-      };
-    </script>
 </body>
 
 </html>
