@@ -11,7 +11,8 @@ from sis_provisioner.views.api.file.handshake import (
 from sis_provisioner.views.api.file.uconnect import (
     UconnectFileListView, UconnectFileView)
 from sis_provisioner.views.api.blocked_student import (
-    BlockedStudentListView, BlockedStudentView)
+    HandshakeBlockedStudentListView, HandshakeBlockedStudentView,
+    UconnectBlockedStudentListView, UconnectBlockedStudentView)
 
 urlpatterns = []
 
@@ -36,16 +37,28 @@ urlpatterns += [
             HandshakeFileListView.as_view(), name="handshake-file-list"),
     re_path(r"^api/v1/handshake/file/(?P<file_id>[\d]+)$",
             HandshakeFileView.as_view(), name="handshake-file"),
+    re_path(r"^api/v1/handshake/blocked-student/?$",
+            HandshakeBlockedStudentListView.as_view(),
+            name="handshake-blocked-list"),
+    re_path(r"^api/v1/handshake/blocked-student/(?P<student_id>[\d]+)$",
+            HandshakeBlockedStudentView.as_view(),
+            name="handshake-blocked-student"),
     re_path(r"^api/v1/uconnect/file$",
             UconnectFileListView.as_view(), name="uconnect-file-list"),
     re_path(r"^api/v1/uconnect/file/(?P<file_id>[\d]+)$",
             UconnectFileView.as_view(), name="uconnect-file"),
-    re_path(r"^api/v1/blocked-student/?$",
-            BlockedStudentListView.as_view(), name="blocked-student-list"),
-    re_path(r"^api/v1/blocked-student/(?P<student_id>[\d]+)$",
-            BlockedStudentView.as_view(), name="blocked-student"),
+    re_path(r"^api/v1/uconnect/blocked-student/?$",
+            UconnectBlockedStudentListView.as_view(),
+            name="uconnect-blocked-list"),
+    re_path(r"^api/v1/uconnect/blocked-student/(?P<student_id>[\d]+)$",
+            UconnectBlockedStudentView.as_view(),
+            name="uconnect-blocked-student"),
+
     # vue-router paths
-    re_path(r"^(blocked-student|uconnect-files).*$", HomeView.as_view()),
+    re_path((r"^(handshake-blocked-students|uconnect-blocked-students|"
+             r"uconnect-files).*$"),
+            HomeView.as_view()),
+
     # default landing
     re_path(r"^$", HomeView.as_view(), name="index"),
 ]

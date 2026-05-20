@@ -71,19 +71,6 @@ def get_class_desc(student, majors):
     return getattr(settings, 'CLASS_CODE_NAMES', {}).get(class_code)
 
 
-def get_graduation_year(student):
-    if not student.class_code:
-        return
-
-    curr_date = current_date()
-    curr_year = curr_date.year
-    if curr_date.month < 6:
-        curr_year -= 1
-
-    remaining = CLASS_CODE_GRAD_YEAR.get(student.class_code)
-    return curr_year + remaining
-
-
 def get_student_type(student):
     if student.class_code in getattr(settings, 'CLASS_CODE_NAMES', {}):
         return 'Graduate student' if (

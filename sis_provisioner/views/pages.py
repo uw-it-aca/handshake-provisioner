@@ -25,6 +25,7 @@ class HomeView(TemplateView):
         context['userName'] = get_user(self.request)
         context['handshakeFilesUrl'] = reverse('handshake-file-list')
         context['uconnectFilesUrl'] = reverse('uconnect-file-list')
-        context['blockedStudentsUrl'] = reverse('blocked-student-list')
+        context['handshakeBlockedUrl'] = reverse('handshake-blocked-list')
+        context['uconnectBlockedUrl'] = reverse('uconnect-blocked-list')
         context['signOutUrl'] = reverse('saml_logout')
         return context

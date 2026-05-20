@@ -67,11 +67,11 @@ cronjob:
       args: ["build_file"]
       resources:
         limits:
-          cpu: 750m
-          memory: 2048Mi
-        requests:
           cpu: 500m
-          memory: 768Mi
+          memory: 1024Mi
+        requests:
+          cpu: 100m
+          memory: 512Mi
 
 gcsCredentials:
   mounted: true
@@ -97,9 +97,6 @@ environmentVariables:
   - name: UW_PERSON_DB_NAME
     value: uw-person-prod
 
-  - name: HANDSHAKE_AWS_S3_REGION_NAME
-    value: us-east-1
-
   - name: FILENAME_TEST_PREFIX
     value: TEST
 
@@ -113,8 +110,8 @@ externalSecrets:
           property: django-secret
         - name: storage-bucket-name
           property: storage-bucket-name
-    - name: handshake.axdd.s.uw.edu-aws-secrets
-      externalKey: handshake/prod/aws-secrets
+    - name: handshake.axdd.s.uw.edu-handshake-aws-secrets
+      externalKey: handshake/prod/handshake-aws-secrets
       data:
         - name: access-key-id
           property: access-key-id
@@ -124,6 +121,21 @@ externalSecrets:
           property: storage-bucket-name
         - name: storage-bucket-path
           property: storage-bucket-path
+        - name: s3-region-name
+          property: s3-region-name
+    - name: handshake.axdd.s.uw.edu-uconnect-aws-secrets
+      externalKey: handshake/prod/uconnect-aws-secrets
+      data:
+        - name: access-key-id
+          property: access-key-id
+        - name: secret-access-key
+          property: secret-access-key
+        - name: storage-bucket-name
+          property: storage-bucket-name
+        - name: storage-bucket-path
+          property: storage-bucket-path
+        - name: s3-region-name
+          property: s3-region-name
     - name: handshake.axdd.s.uw.edu-sql-secrets
       externalKey: handshake/shared/sql-secrets
       data:
@@ -168,20 +180,44 @@ environmentVariablesSecrets:
     secretKey: storage-project-id
   handshakeAwsStorageBucketName:
     name: HANDSHAKE_AWS_STORAGE_BUCKET_NAME
-    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretName: handshake.axdd.s.uw.edu-handshake-aws-secrets
     secretKey: storage-bucket-name
   handshakeAwsStorageBucketPath:
     name: HANDSHAKE_AWS_LOCATION
-    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretName: handshake.axdd.s.uw.edu-handshake-aws-secrets
     secretKey: storage-bucket-path
   handshakeAwsAccessKeyID:
     name: HANDSHAKE_AWS_ACCESS_KEY_ID
-    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretName: handshake.axdd.s.uw.edu-handshake-aws-secrets
     secretKey: access-key-id
   handshakeAwsSecretAccessKey:
     name: HANDSHAKE_AWS_SECRET_ACCESS_KEY
-    secretName: handshake.axdd.s.uw.edu-aws-secrets
+    secretName: handshake.axdd.s.uw.edu-handshake-aws-secrets
     secretKey: secret-access-key
+  handshakeAwsS3RegionName:
+    name: HANDSHAKE_AWS_S3_REGION_NAME
+    secretName: handshake.axdd.s.uw.edu-handshake-aws-secrets
+    secretKey: s3-region-name
+  uconnectAwsStorageBucketName:
+    name: UCONNECT_AWS_STORAGE_BUCKET_NAME
+    secretName: handshake.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: storage-bucket-name
+  uconnectAwsStorageBucketPath:
+    name: UCONNECT_AWS_LOCATION
+    secretName: handshake.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: storage-bucket-path
+  uconnectAwsAccessKeyID:
+    name: UCONNECT_AWS_ACCESS_KEY_ID
+    secretName: handshake.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: access-key-id
+  uconnectAwsSecretAccessKey:
+    name: UCONNECT_AWS_SECRET_ACCESS_KEY
+    secretName: handshake.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: secret-access-key
+  uconnectAwsS3RegionName:
+    name: UCONNECT_AWS_S3_REGION_NAME
+    secretName: handshake.axdd.s.uw.edu-uconnect-aws-secrets
+    secretKey: s3-region-name
   personDBUser:
     name: UW_PERSON_DB_USER
     secretName: handshake.axdd.s.uw.edu-shared-secrets

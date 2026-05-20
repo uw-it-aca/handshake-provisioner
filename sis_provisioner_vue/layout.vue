@@ -56,7 +56,7 @@ export default {
   },
   data() {
     return {
-      appName: "Handshake Imports",
+      appName: "Handshake & uConnect Imports",
       appRootUrl: "/",
     };
   },

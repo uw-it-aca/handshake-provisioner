@@ -93,8 +93,8 @@
 
 <script>
 import { createFile } from "@/utils/data";
-import { Modal } from "bootstrap";
 import { useContextStore } from "@/stores/context";
+import { Modal } from "bootstrap";
 
 export default {
   emits: ["fileUpdated"],

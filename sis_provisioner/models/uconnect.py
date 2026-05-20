@@ -12,7 +12,7 @@ from sis_provisioner.models.term import Term
 from sis_provisioner.dao.uconnect import write_file
 from sis_provisioner.dao.student import get_students_for_uconnect
 from sis_provisioner.utils import (
-    get_majors, get_college_names, get_first_last_name, get_graduation_year,
+    get_majors, get_college_names, get_first_last_name, get_class_desc,
     get_student_type)
 from datetime import datetime, timezone
 from logging import getLogger
@@ -104,9 +104,37 @@ class UconnectStudentsFile(ImportFile):
                 last_name,
                 f'{student.person.uwnetid}@{settings.EMAIL_DOMAIN}',
                 student.person.uwnetid,
-                get_graduation_year(student),
+                '',
                 get_student_type(student),
+                get_class_desc(student, majors),
                 get_college_names(majors, student.campus_code),
             ])
 
         return s.getvalue()
+
+
+class BlockedUconnectStudentManager(models.Manager):
+    def all_usernames(self):
+        usernames = super().get_queryset().all().values_list(
+            'username', flat=True)
+        return set(usernames)
+
+
+class BlockedUconnectStudent(models.Model):
+    username = models.CharField(max_length=20, null=False, unique=True)
+    added_by = models.CharField(max_length=20)
+    added_date = models.DateTimeField()
+    reason = models.CharField(max_length=250, null=True)
+
+    objects = BlockedUconnectStudentManager()
+
+    def json_data(self):
+        return {
+            'id': self.pk,
+            'username': self.username,
+            'added_by': self.added_by,
+            'added_date': self.added_date.isoformat(),
+            'reason': self.reason,
+            'api_path': reverse('uconnect-blocked-student', kwargs={
+                'student_id': self.pk}),
+        }

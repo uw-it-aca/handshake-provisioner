@@ -5,7 +5,8 @@
 from django.test import TestCase, override_settings
 from sis_provisioner.models.handshake import (
     HandshakeStudentsFile, BlockedHandshakeStudent)
-from sis_provisioner.models.uconnect import UconnectStudentsFile
+from sis_provisioner.models.uconnect import (
+    UconnectStudentsFile, BlockedUconnectStudent)
 from sis_provisioner.models.active import ActiveStudentsFile
 from sis_provisioner.models.term import Term
 import datetime
@@ -170,7 +171,30 @@ class BlockedHandshakeStudentTest(TestCase):
     def test_json_data(self):
         self.assertEqual(self.student.json_data(), {
             'id': 1,
-            'api_path': '/api/v1/blocked-student/1',
+            'api_path': '/api/v1/handshake/blocked-student/1',
+            'username': 'javerage',
+            'added_by': 'bill',
+            'added_date': '2019-06-15T02:45:00+00:00',
+            'reason': 'Request from student',
+        })
+
+
+class BlockedUconnectStudentTest(TestCase):
+    def setUp(self):
+        student = BlockedUconnectStudent(
+            username='javerage',
+            added_by='bill',
+            added_date=datetime.datetime(
+                2019, 6, 15, 2, 45, 0, tzinfo=datetime.timezone.utc),
+            reason='Request from student',
+        )
+        student.save()
+        self.student = student
+
+    def test_json_data(self):
+        self.assertEqual(self.student.json_data(), {
+            'id': 1,
+            'api_path': '/api/v1/uconnect/blocked-student/1',
             'username': 'javerage',
             'added_by': 'bill',
             'added_date': '2019-06-15T02:45:00+00:00',

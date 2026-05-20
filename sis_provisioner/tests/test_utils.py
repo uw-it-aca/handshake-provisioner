@@ -291,7 +291,7 @@ class HandshakeUtilsTest(TestCase):
         major3 = self._build_major(major_abbr_code='0-EMBA', college='F')
 
         student = self._build_student(class_code=1)
-        self.assertEqual(get_class_desc(student, [major1]), 'Freshman')
+        self.assertEqual(get_class_desc(student, [major1]), 'First-year')
         student = self._build_student(class_code=2)
         self.assertEqual(get_class_desc(student, [major1]), 'Sophomore')
         student = self._build_student(class_code=3)
@@ -316,42 +316,6 @@ class HandshakeUtilsTest(TestCase):
                          'Masters of Business Administration')
         student = self._build_student(class_code=9)
         self.assertEqual(get_class_desc(student, [major1, major2]), None)
-
-    @mock.patch('sis_provisioner.utils.current_date')
-    def test_get_graduation_year(self, mock_current_date):
-        mock_current_date.return_value = date(2020, 12, 31)
-
-        student = self._build_student(class_code="")
-        self.assertEqual(get_graduation_year(student), None)
-
-        student = self._build_student(class_code=1)
-        self.assertEqual(get_graduation_year(student), 2024)
-
-        student = self._build_student(class_code=2)
-        self.assertEqual(get_graduation_year(student), 2023)
-
-        student = self._build_student(class_code=3)
-        self.assertEqual(get_graduation_year(student), 2022)
-
-        student = self._build_student(class_code=4)
-        self.assertEqual(get_graduation_year(student), 2021)
-
-        student = self._build_student(class_code=5)
-        self.assertEqual(get_graduation_year(student), 2021)
-
-        student = self._build_student(class_code=8)
-        self.assertEqual(get_graduation_year(student), 2022)
-
-        mock_current_date.return_value = date(2021, 3, 15)
-
-        student = self._build_student(class_code=1)
-        self.assertEqual(get_graduation_year(student), 2024)
-
-        student = self._build_student(class_code=2)
-        self.assertEqual(get_graduation_year(student), 2023)
-
-        student = self._build_student(class_code=3)
-        self.assertEqual(get_graduation_year(student), 2022)
 
     def test_get_student_type(self):
         student = self._build_student(class_code=9)

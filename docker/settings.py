@@ -128,8 +128,9 @@ UCONNECT_CSV_HEADER = [
     "LAST_NAME",
     "EMAIL",
     "SSO_ID",
-    "GRADUATION_YEAR",
+    "GRADUATION YEAR",
     "STAKEHOLDERS (USER TYPE)",
+    "SCHOOL YEAR"
     "COLLEGES",
 ]
 
@@ -204,7 +205,7 @@ COLLEGES = {
 }
 
 CLASS_CODE_NAMES = {
-    1: "Freshman",
+    1: "First-year",
     2: "Sophomore",
     3: "Junior",
     4: "Senior",

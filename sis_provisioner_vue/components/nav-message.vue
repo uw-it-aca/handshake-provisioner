@@ -20,7 +20,7 @@
     </p>
 
     <p
-      v-show="$route.path.includes('/blocked-students')"
+      v-show="$route.path.includes('/handshake-blocked-students')"
       class="text-light-gray bg-dark-purple rounded-3 p-3 small"
     >
       View and manage students who are currently blocked from Handshake.
@@ -41,6 +41,12 @@
         <br/>
         <li>Once created, click &quot;Import to uConnect&quot; to import the file.</li>
       </ol>
+    </p>
+    <p
+      v-show="$route.path.includes('/uconnect-blocked-students')"
+      class="text-light-gray bg-dark-purple rounded-3 p-3 small"
+    >
+      View and manage students who are currently blocked from uConnect.
     </p>
   </div>
 </template>
