@@ -260,6 +260,6 @@ class BlockedHandshakeStudent(models.Model):
             'added_by': self.added_by,
             'added_date': self.added_date.isoformat(),
             'reason': self.reason,
-            'api_path': reverse('blocked-student', kwargs={
+            'api_path': reverse('handshake-blocked-student', kwargs={
                 'student_id': self.pk}),
         }

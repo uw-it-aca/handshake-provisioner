@@ -6,16 +6,18 @@
           <axdd-card>
             <template #heading-action>
               <axdd-card-heading :level="2" class="my-2"
-                >Handshake Blocked Students</axdd-card-heading
+                >uConnect Blocked Students</axdd-card-heading
               >
               <axdd-card-action>
                 <CreateBlockedStudent
+                  v-if="!isLoading"
+                  :apiPath="contextStore.context.uconnectBlockedUrl"
                   @studentUpdated="loadBlockedStudentList()"
                   ><i class="bi bi-plus-square text-dark me-2"></i>Add student
                 </CreateBlockedStudent
                 >
               </axdd-card-action>
-            </template>
+            </template>`
             <template #body>
               <TableLoading v-if="isLoading"></TableLoading>
               <div v-if="studentData && studentData.length">
@@ -57,7 +59,7 @@ export default {
   },
   data() {
     return {
-      pageTitle: "Handshake Blocked Students",
+      pageTitle: "uConnect Blocked Students",
       studentData: [],
       isLoading: true,
       errorResponse: null,
@@ -65,7 +67,7 @@ export default {
   },
   methods: {
     loadBlockedStudentList: function () {
-      this.getBlockedStudents(this.contextStore.context.blockedStudentsUrl)
+      this.getBlockedStudents(this.contextStore.context.uconnectBlockedUrl)
         .then((data) => {
           this.studentData = data;
         })
