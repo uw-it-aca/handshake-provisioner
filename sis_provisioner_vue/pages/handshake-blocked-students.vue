@@ -3,32 +3,25 @@
     <template #content>
       <div class="row my-4">
         <div class="col">
-          <axdd-card>
-            <template #heading-action>
-              <axdd-card-heading :level="2" class="my-2"
-                >Handshake Blocked Students</axdd-card-heading
-              >
-              <axdd-card-action>
-                <CreateBlockedStudent
-                  v-if="!isLoading"
-                  :apiPath="contextStore.context.handshakeBlockedUrl"
-                  @studentUpdated="loadBlockedStudentList()"
-                  ><i class="bi bi-plus-square text-dark me-2"></i>Add student
-                </CreateBlockedStudent
-                >
-              </axdd-card-action>
-            </template>`
-            <template #body>
-              <TableLoading v-if="isLoading"></TableLoading>
-              <div v-if="studentData && studentData.length">
-                <BlockedStudent
-                  :students="studentData"
-                  @studentUpdated="loadBlockedStudentList()"
-                />
-              </div>
-              <div v-else>No data</div>
+          <BCard class="shadow-sm rounded-3" header-bg-variant="transparent">
+            <template #header>
+              <h3>Handshake Blocked Students</h3>
+              <CreateBlockedStudent
+                v-if="!isLoading"
+                :apiPath="contextStore.context.handshakeBlockedUrl"
+                @studentUpdated="loadBlockedStudentList()"
+                ><i class="bi bi-plus-square text-dark me-2"></i>Add student
+              </CreateBlockedStudent>
             </template>
-          </axdd-card>
+            <TableLoading v-if="isLoading"></TableLoading>
+            <div v-if="studentData && studentData.length">
+              <BlockedStudent
+                :students="studentData"
+                @studentUpdated="loadBlockedStudentList()"
+              />
+            </div>
+            <div v-else>No data</div>
+          </BCard>
         </div>
       </div>
     </template>
@@ -36,7 +29,7 @@
 </template>
 
 <script>
-import Layout from "@/layout.vue";
+import Layout from "@/layouts/default.vue";
 import TableLoading from "@/components/table-loading.vue";
 import BlockedStudent from "@/components/blocked-student.vue";
 import CreateBlockedStudent from "@/components/create-blocked-student.vue";
