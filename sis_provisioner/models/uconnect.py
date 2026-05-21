@@ -94,7 +94,11 @@ class UconnectStudentsFile(ImportFile):
 
         writer.writerow(settings.UCONNECT_CSV_HEADER)
 
+        blocked_students = BlockedUconnectStudent.objects.all_usernames()
+
         for student in get_students_for_uconnect(self.term):
+            if student.person.uwnetid in blocked_students:
+                continue
 
             majors = get_majors(student)
             first_name, last_name = get_first_last_name(student.person)
@@ -104,7 +108,7 @@ class UconnectStudentsFile(ImportFile):
                 last_name,
                 f'{student.person.uwnetid}@{settings.EMAIL_DOMAIN}',
                 student.person.uwnetid,
-                '',
+                '',  # graduation year
                 get_student_type(student),
                 get_class_desc(student, majors),
                 get_college_names(majors, student.campus_code),
