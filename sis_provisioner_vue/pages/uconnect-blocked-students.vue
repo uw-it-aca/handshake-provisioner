@@ -6,6 +6,7 @@
           <BCard class="shadow-sm rounded-3" header-bg-variant="transparent">
             <template #header>
               <h3>uConnect Blocked Students</h3>
+              <HeaderMessage />
               <CreateBlockedStudent
                 v-if="!isLoading"
                 :apiPath="contextStore.context.uconnectBlockedUrl"
@@ -33,6 +34,7 @@ import Layout from "@/layouts/default.vue";
 import TableLoading from "@/components/table-loading.vue";
 import BlockedStudent from "@/components/blocked-student.vue";
 import CreateBlockedStudent from "@/components/create-blocked-student.vue";
+import HeaderMessage from "@/components/header-message.vue";
 import { BCard } from "bootstrap-vue-next";
 import { useContextStore } from "@/stores/context";
 import { getBlockedStudents } from "@/utils/data";
@@ -43,6 +45,7 @@ export default {
     TableLoading,
     BlockedStudent,
     CreateBlockedStudent,
+    HeaderMessage,
     BCard,
   },
   setup() {

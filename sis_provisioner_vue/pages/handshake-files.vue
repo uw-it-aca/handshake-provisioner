@@ -6,6 +6,7 @@
           <BCard class="shadow-sm rounded-3" header-bg-variant="transparent">
             <template #header>
               <h3>Handshake Import Files</h3>
+              <HeaderMessage />
               <CreateFile
                 v-if="!isLoading"
                 :apiPath="contextStore.context.handshakeFilesUrl"
@@ -34,6 +35,7 @@ import Layout from "@/layouts/default.vue";
 import TableLoading from "@/components/table-loading.vue";
 import ImportFile from "@/components/import-file.vue";
 import CreateFile from "@/components/create-file.vue";
+import HeaderMessage from "@/components/header-message.vue";
 import { BCard } from "bootstrap-vue-next";
 import { useContextStore } from "@/stores/context";
 import { getFiles } from "@/utils/data";
@@ -44,6 +46,7 @@ export default {
     TableLoading,
     ImportFile,
     CreateFile,
+    HeaderMessage,
     BCard,
   },
   setup() {

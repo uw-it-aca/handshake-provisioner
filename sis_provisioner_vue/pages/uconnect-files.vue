@@ -6,6 +6,7 @@
           <BCard class="shadow-sm rounded-3" header-bg-variant="transparent">
             <template #header>
               <h3>uConnect Import Files</h3>
+              <HeaderMessage />
               <CreateFile
                 :apiPath="contextStore.context.uconnectFilesUrl"
                 @fileUpdated="loadFileList()"
@@ -33,6 +34,7 @@ import Layout from "@/layouts/default.vue";
 import TableLoading from "@/components/table-loading.vue";
 import ImportFile from "@/components/import-file.vue";
 import CreateFile from "@/components/create-file.vue";
+import HeaderMessage from "@/components/header-message.vue";
 import { BCard } from "bootstrap-vue-next";
 import { useContextStore } from "@/stores/context";
 import { getFiles } from "@/utils/data";
@@ -43,6 +45,7 @@ export default {
     TableLoading,
     ImportFile,
     CreateFile,
+    HeaderMessage,
     BCard,
   },
   setup() {
