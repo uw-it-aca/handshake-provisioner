@@ -44,8 +44,8 @@
                 v-model="file.academic_term"
               />&nbsp;
               <label for="academic-term-current" class="form-label">
-                {{ contextStore.context.currentTerm }}
-              </label>&nbsp;&nbsp;
+                {{ contextStore.context.currentTerm }} </label
+              >&nbsp;&nbsp;
               <input
                 type="radio"
                 id="academic-term-next"
@@ -54,15 +54,15 @@
                 v-model="file.academic_term"
               />&nbsp;
               <label for="academic-term-next" class="form-label">
-                {{ contextStore.context.nextTerm }}
-              </label><br />
+                {{ contextStore.context.nextTerm }} </label
+              ><br />
             </div>
           </div>
           <div class="row">
             <div class="col">
               <label class="form-label">
-                Is this a <strong>TEST</strong> file?
-              </label>&nbsp;&nbsp;
+                Is this a <strong>TEST</strong> file? </label
+              >&nbsp;&nbsp;
               <input
                 type="checkbox"
                 id="is-test-file"
@@ -80,7 +80,8 @@
               type="button"
               class="btn btn-secondary me-2"
               data-bs-dismiss="modal"
-            >Close
+            >
+              Close
             </button>
             <button type="button" class="btn btn-primary" @click="saveFile()">
               Create file
@@ -93,62 +94,62 @@
 </template>
 
 <script>
-import { createFile } from "@/utils/data";
-import { useContextStore } from "@/stores/context";
-import { Modal } from "bootstrap";
+  import { createFile } from "@/utils/data";
+  import { useContextStore } from "@/stores/context";
+  import { Modal } from "bootstrap";
 
-export default {
-  emits: ["fileUpdated"],
-  props: {
-    apiPath: {
-      type: String,
-      required: true,
+  export default {
+    emits: ["fileUpdated"],
+    props: {
+      apiPath: {
+        type: String,
+        required: true,
+      },
     },
-  },
-  setup() {
-    const contextStore = useContextStore();
-    return {
-      createFile,
-      contextStore,
-    };
-  },
-  data() {
-    return {
-      file: this.getDefaultFile(),
-      formErrors: {},
-    };
-  },
-  computed: {
-    importTargetLabel() {
-      return (this.apiPath.includes("handshake")) ? "Handshake" : "uConnect";
-    },
-  },
-  methods: {
-    getDefaultFile() {
+    setup() {
+      const contextStore = useContextStore();
       return {
-        academic_term: "next",
-        is_test_file: true,
+        createFile,
+        contextStore,
       };
     },
-    saveFile() {
-      var fileCreateModal = Modal.getInstance(
-        document.getElementById("createFileModal")
-      );
-      this.createFile(this.apiPath, this.file)
-        .then((data) => {
-          this.$emit("fileUpdated");
-          fileCreateModal.hide();
-        })
-        .catch((error) => {
-          this.formErrors = error;
-        });
+    data() {
+      return {
+        file: this.getDefaultFile(),
+        formErrors: {},
+      };
     },
-  },
-  clearFormErrors() {
-    this.formErrors = {};
-  },
-  resetForm() {
-    this.clearFormErrors();
-  },
-};
+    computed: {
+      importTargetLabel() {
+        return this.apiPath.includes("handshake") ? "Handshake" : "uConnect";
+      },
+    },
+    methods: {
+      getDefaultFile() {
+        return {
+          academic_term: "next",
+          is_test_file: true,
+        };
+      },
+      saveFile() {
+        var fileCreateModal = Modal.getInstance(
+          document.getElementById("createFileModal"),
+        );
+        this.createFile(this.apiPath, this.file)
+          .then((data) => {
+            this.$emit("fileUpdated");
+            fileCreateModal.hide();
+          })
+          .catch((error) => {
+            this.formErrors = error;
+          });
+      },
+    },
+    clearFormErrors() {
+      this.formErrors = {};
+    },
+    resetForm() {
+      this.clearFormErrors();
+    },
+  };
 </script>

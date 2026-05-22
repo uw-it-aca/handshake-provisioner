@@ -1,5 +1,5 @@
 <template>
-  <table class="table mb-0">
+  <table class="mb-0 table">
     <thead class="small">
       <tr>
         <th scope="col">Name</th>
@@ -14,19 +14,21 @@
         <td>
           <div>
             <span>{{ file.name }}</span>
-            <span v-if="file.generated_date != null" class="">&nbsp;
+            <span v-if="file.generated_date != null" class=""
+              >&nbsp;
               <a
                 role="button"
                 :href="file.api_path"
                 title="Download this file"
                 class="btn btn-outline-dark-beige btn-sm rounded-circle"
-              ><i class="bi bi-download"></i></a>
+                ><i class="bi bi-download"></i
+              ></a>
             </span>
           </div>
         </td>
         <td>
           <div class="small text-muted">
-            {{ formatDate(file.created_date) }}<br/>
+            {{ formatDate(file.created_date) }}<br />
             {{ file.created_by }}
           </div>
         </td>
@@ -53,7 +55,8 @@
                   :title="`Import this file to ${file.type}`"
                   class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
                   v-on:click="saveImport(file.api_path)"
-                >Import to {{ file.type }}</a>
+                  >Import to {{ file.type }}</a
+                >
               </span>
             </span>
             <span v-else>
@@ -68,7 +71,8 @@
               title="Delete this file"
               class="btn btn-outline-dark-beige btn-sm rounded-circle"
               v-on:click="saveDelete(file.api_path)"
-            ><i class="bi bi-trash-fill"></i></a>
+              ><i class="bi bi-trash-fill"></i
+            ></a>
           </div>
         </td>
       </tr>
@@ -77,53 +81,53 @@
 </template>
 
 <script>
-import { importFile, deleteFile } from "@/utils/data";
-import { formatDate } from "@/utils/date";
+  import { importFile, deleteFile } from "@/utils/data";
+  import { formatDate } from "@/utils/date";
 
-export default {
-  emits: ["fileUpdated"],
-  props: {
-    files: {
-      type: Array,
-      required: true,
+  export default {
+    emits: ["fileUpdated"],
+    props: {
+      files: {
+        type: Array,
+        required: true,
+      },
     },
-  },
-  setup() {
-    return {
-      importFile,
-      deleteFile,
-      formatDate,
-    };
-  },
-  methods: {
-    saveImport(url) {
-      this.importFile(url)
-        .then((data) => {
-          this.$emit("fileUpdated");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    setup() {
+      return {
+        importFile,
+        deleteFile,
+        formatDate,
+      };
     },
-    saveDelete(url) {
-      if (confirm("Delete this file? This action is permanent.")) {
-        this.deleteFile(url)
+    methods: {
+      saveImport(url) {
+        this.importFile(url)
           .then((data) => {
             this.$emit("fileUpdated");
           })
           .catch((error) => {
             console.log(error);
           });
-      }
+      },
+      saveDelete(url) {
+        if (confirm("Delete this file? This action is permanent.")) {
+          this.deleteFile(url)
+            .then((data) => {
+              this.$emit("fileUpdated");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      },
     },
-  },
-};
+  };
 </script>
 
 <style lang="scss">
-.table tbody {
-  tr:last-of-type {
-    border-color: transparent !important;
+  .table tbody {
+    tr:last-of-type {
+      border-color: transparent !important;
+    }
   }
-}
 </style>

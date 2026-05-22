@@ -1,5 +1,5 @@
 <template>
-  <table class="table mb-0">
+  <table class="mb-0 table">
     <thead class="small">
       <tr>
         <th scope="col" class="w-30">Name</th>
@@ -11,7 +11,7 @@
     </thead>
     <tbody>
       <tr v-for="index in 4" :key="index">
-        <td class="ps-0 placeholder-glow">
+        <td class="placeholder-glow ps-0">
           <div><span class="placeholder bg-light-gray col-10"></span></div>
           <div><span class="placeholder bg-light-gray col-5"></span></div>
         </td>

@@ -20,7 +20,7 @@ export async function useCustomFetch(url, options = {}) {
     const response = await fetch(url, options);
 
     if (response.ok) {
-      return response.text().then(text => {
+      return response.text().then((text) => {
         try {
           const json = text.length ? JSON.parse(text) : {};
           return json;
@@ -31,11 +31,11 @@ export async function useCustomFetch(url, options = {}) {
     } else {
       if (response.status === 403) {
         alert(
-          "Your session has expired. Refresh the page to start a new session."
+          "Your session has expired. Refresh the page to start a new session.",
         );
         return;
       } else {
-        return response.text().then(text => {
+        return response.text().then((text) => {
           throw new Error(text);
         });
       }
