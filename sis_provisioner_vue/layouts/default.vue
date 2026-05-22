@@ -34,20 +34,18 @@
             ><i class="bi bi-people-fill me-2"></i>Handshake blocked students</router-link
           >
         </li>
-        <li class="nav-item mb-1">
+        <li class="list-inline-item">
           <router-link
             :to="'/uconnect-files'"
-            active-class="bg-dark-purple rounded-3"
             class="nav-link text-gray d-block px-3 py-2 bg-dark-purple-hover rounded-3"
             :class="
               $route.path.includes('/uconnect-files') ? 'bg-dark-purple rounded-3' : ''"
             ><i class="bi bi-file-text-fill me-2"></i>uConnect files</router-link
           >
         </li>
-        <li class="nav-item mb-1">
+        <li class="list-inline-item">
           <router-link
             :to="'/uconnect-blocked-students'"
-            active-class="bg-dark-purple rounded-3"
             class="nav-link text-gray d-block px-3 py-2 bg-dark-purple-hover rounded-3"
             :class="
               $route.path.includes('/uconnect-blocked-students') ? 'bg-dark-purple rounded-3' : ''"
