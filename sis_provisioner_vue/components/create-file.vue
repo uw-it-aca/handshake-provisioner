@@ -3,8 +3,9 @@
     role="button"
     data-bs-toggle="modal"
     :data-bs-target="'#createFileModal'"
-    class="btn text-nowrap btn-sm btn-outline-gray text-dark rounded-3 px-3 py-2"
+    class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
   >
+    <i class="bi bi-plus-square me-2"></i>Create new file
     <slot></slot>
   </a>
 

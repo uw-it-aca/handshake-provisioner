@@ -11,9 +11,7 @@
                 v-if="!isLoading"
                 :apiPath="contextStore.context.handshakeFilesUrl"
                 @fileUpdated="loadFileList()"
-                ><i class="bi bi-plus-square text-dark me-2"></i>Create new
-                file</CreateFile
-              >
+              />
             </template>
             <TableLoading v-if="isLoading"></TableLoading>
             <div v-if="fileData && fileData.length">

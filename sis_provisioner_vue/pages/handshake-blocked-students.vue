@@ -11,8 +11,7 @@
                 v-if="!isLoading"
                 :apiPath="contextStore.context.handshakeBlockedUrl"
                 @studentUpdated="loadBlockedStudentList()"
-                ><i class="bi bi-plus-square text-dark me-2"></i>Add student
-              </CreateBlockedStudent>
+              />
             </template>
             <TableLoading v-if="isLoading"></TableLoading>
             <div v-if="studentData && studentData.length">
