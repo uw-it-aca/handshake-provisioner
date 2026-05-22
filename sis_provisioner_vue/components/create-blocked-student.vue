@@ -47,7 +47,9 @@
           </div>
           <div class="row">
             <div class="col">
-              <label for="student-reason" class="form-label">Reason for block:</label>
+              <label for="student-reason" class="form-label"
+                >Reason for block:</label
+              >
               &nbsp;&nbsp;
               <input
                 type="text"
@@ -83,62 +85,62 @@
 </template>
 
 <script>
-import { createBlockedStudent } from "@/utils/data";
-import { useContextStore } from "@/stores/context";
-import { Modal } from "bootstrap";
+  import { createBlockedStudent } from "@/utils/data";
+  import { useContextStore } from "@/stores/context";
+  import { Modal } from "bootstrap";
 
-export default {
-  emits: ["studentUpdated"],
-  props: {
-    apiPath: {
-      type: String,
-      required: true,
+  export default {
+    emits: ["studentUpdated"],
+    props: {
+      apiPath: {
+        type: String,
+        required: true,
+      },
     },
-  },
-  setup() {
-    const contextStore = useContextStore();
-    return {
-      createBlockedStudent,
-      contextStore,
-    };
-  },
-  data() {
-    return {
-      student: this.getDefaultStudent(),
-      formErrors: {},
-    };
-  },
-  computed: {
-    blockTargetLabel() {
-      return (this.apiPath.includes("handshake")) ? "Handshake" : "uConnect";
-    },
-  },
-  methods: {
-    getDefaultStudent() {
+    setup() {
+      const contextStore = useContextStore();
       return {
-        username: "",
-        reason: "",
+        createBlockedStudent,
+        contextStore,
       };
     },
-    saveStudent() {
-      var studentCreateModal = Modal.getInstance(
-        document.getElementById("createBlockedStudentModal")
-      );
-      this.createBlockedStudent(this.apiPath, this.student)
-        .then((data) => {
-          this.$emit("studentUpdated");
-          studentCreateModal.hide();
-        })
-        .catch((error) => {
-          this.formErrors = error;
-        });
+    data() {
+      return {
+        student: this.getDefaultStudent(),
+        formErrors: {},
+      };
     },
-  },
-  clearFormErrors() {
-    this.formErrors = {};
-  },
-  resetForm() {
-    this.clearFormErrors();
-  },
-};
+    computed: {
+      blockTargetLabel() {
+        return this.apiPath.includes("handshake") ? "Handshake" : "uConnect";
+      },
+    },
+    methods: {
+      getDefaultStudent() {
+        return {
+          username: "",
+          reason: "",
+        };
+      },
+      saveStudent() {
+        var studentCreateModal = Modal.getInstance(
+          document.getElementById("createBlockedStudentModal"),
+        );
+        this.createBlockedStudent(this.apiPath, this.student)
+          .then((data) => {
+            this.$emit("studentUpdated");
+            studentCreateModal.hide();
+          })
+          .catch((error) => {
+            this.formErrors = error;
+          });
+      },
+    },
+    clearFormErrors() {
+      this.formErrors = {};
+    },
+    resetForm() {
+      this.clearFormErrors();
+    },
+  };
 </script>

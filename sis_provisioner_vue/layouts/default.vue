@@ -16,40 +16,41 @@
       <SColorMode color-class="text-white" class="ms-2" />
     </template>
     <template #navigation>
-      <ul class="navbar-nav mb-md-0 me-auto mb-2">
-        <li class="list-inline-item">
+      <ul class="navbar-nav my-xl-0 my-2 me-auto text-white">
+        <li class="nav-item me-5">
           <router-link
             :to="'/'"
-            active-class="bg-dark-purple rounded-3"
-            class="nav-link text-gray d-block px-3 py-2 bg-dark-purple-hover rounded-3"
-            ><i class="bi bi-file-text-fill me-2"></i>Handshake files</router-link
+            active-class="active"
+            class="nav-link px-0 text-white"
+            ><i class="bi bi-file-text-fill me-2"></i>Handshake
+            files</router-link
           >
         </li>
-        <li class="list-inline-item">
+        <li class="nav-item me-5">
           <router-link
             :to="'/handshake-blocked-students'"
-            class="nav-link text-gray d-block px-3 py-2 bg-dark-purple-hover rounded-3"
-            :class="
-              $route.path.includes('/handshake-blocked-students') ? 'bg-dark-purple rounded-3' : ''"
-            ><i class="bi bi-people-fill me-2"></i>Handshake blocked students</router-link
+            active-class="active"
+            class="nav-link px-0 text-white"
+            ><i class="bi bi-people-fill me-2"></i>Handshake blocked
+            students</router-link
           >
         </li>
-        <li class="list-inline-item">
+        <li class="nav-item me-5">
           <router-link
             :to="'/uconnect-files'"
-            class="nav-link text-gray d-block px-3 py-2 bg-dark-purple-hover rounded-3"
-            :class="
-              $route.path.includes('/uconnect-files') ? 'bg-dark-purple rounded-3' : ''"
-            ><i class="bi bi-file-text-fill me-2"></i>uConnect files</router-link
+            active-class="active"
+            class="nav-link px-0 text-white"
+            ><i class="bi bi-file-text-fill me-2"></i>uConnect
+            files</router-link
           >
         </li>
-        <li class="list-inline-item">
+        <li class="nav-item me-5">
           <router-link
             :to="'/uconnect-blocked-students'"
-            class="nav-link text-gray d-block px-3 py-2 bg-dark-purple-hover rounded-3"
-            :class="
-              $route.path.includes('/uconnect-blocked-students') ? 'bg-dark-purple rounded-3' : ''"
-            ><i class="bi bi-people-fill me-2"></i>uConnect blocked students</router-link
+            active-class="active"
+            class="nav-link px-0 text-white"
+            ><i class="bi bi-people-fill me-2"></i>uConnect blocked
+            students</router-link
           >
         </li>
       </ul>
@@ -108,8 +109,7 @@
       // constructs page title in the following format "Page Title - AppName"
       document.title = this.pageTitle + " - " + this.appName;
     },
-    methods: {
-    },
+    methods: {},
   };
 </script>
 
