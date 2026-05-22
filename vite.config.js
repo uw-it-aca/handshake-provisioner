@@ -1,7 +1,6 @@
-import { fileURLToPath, URL } from "url";
-
-import { defineConfig } from "vite";
+import { fileURLToPath, URL } from "node:url";
 import vue from "@vitejs/plugin-vue";
+import { defineConfig } from "vite";
 
 // TODO: remove automatic bs-vue-next comp registering later
 import Components from "unplugin-vue-components/vite";
@@ -17,7 +16,7 @@ export default defineConfig({
   // vite manifest prefaces all files with the path 'app_name/assets/xxxx'
   build: {
     manifest: true,
-    rollupOptions: {
+    rolldownOptions: {
       input: [
         // list all entry points
         "./sis_provisioner_vue/main.js",
@@ -25,8 +24,9 @@ export default defineConfig({
     },
     outDir: "./sis_provisioner/static/", // relative path to django's static directory
     assetsDir: "sis_provisioner/assets", // default ('assets')... this is the namespaced subdirectory of outDir that vite uses
-    emptyOutDir: false, // set to false to ensure favicon is not overwritten
+    emptyOutDir: true,
   },
+  publicDir: "sis_provisioner_vue/public", // Vite will copy contents to outDir
   base: "/static/", // allows for proper css url path creation during the build process
 
   // MARK: standard vite/vue plugin and resolver config
