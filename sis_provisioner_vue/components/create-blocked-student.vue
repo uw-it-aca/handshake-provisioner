@@ -3,8 +3,9 @@
     role="button"
     data-bs-toggle="modal"
     :data-bs-target="'#createBlockedStudentModal'"
-    class="btn text-nowrap btn-sm btn-outline-gray text-dark rounded-3 px-3 py-2"
+    class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
   >
+    <i class="bi bi-plus-square me-2"></i>Add blocked student
     <slot></slot>
   </a>
 
@@ -46,7 +47,9 @@
           </div>
           <div class="row">
             <div class="col">
-              <label for="student-reason" class="form-label">Reason for block:</label>
+              <label for="student-reason" class="form-label"
+                >Reason for block:</label
+              >
               &nbsp;&nbsp;
               <input
                 type="text"
@@ -82,62 +85,62 @@
 </template>
 
 <script>
-import { createBlockedStudent } from "@/utils/data";
-import { useContextStore } from "@/stores/context";
-import { Modal } from "bootstrap";
+  import { createBlockedStudent } from "@/utils/data";
+  import { useContextStore } from "@/stores/context";
+  import { Modal } from "bootstrap";
 
-export default {
-  emits: ["studentUpdated"],
-  props: {
-    apiPath: {
-      type: String,
-      required: true,
+  export default {
+    emits: ["studentUpdated"],
+    props: {
+      apiPath: {
+        type: String,
+        required: true,
+      },
     },
-  },
-  setup() {
-    const contextStore = useContextStore();
-    return {
-      createBlockedStudent,
-      contextStore,
-    };
-  },
-  data() {
-    return {
-      student: this.getDefaultStudent(),
-      formErrors: {},
-    };
-  },
-  computed: {
-    blockTargetLabel() {
-      return (this.apiPath.includes("handshake")) ? "Handshake" : "uConnect";
-    },
-  },
-  methods: {
-    getDefaultStudent() {
+    setup() {
+      const contextStore = useContextStore();
       return {
-        username: "",
-        reason: "",
+        createBlockedStudent,
+        contextStore,
       };
     },
-    saveStudent() {
-      var studentCreateModal = Modal.getInstance(
-        document.getElementById("createBlockedStudentModal")
-      );
-      this.createBlockedStudent(this.apiPath, this.student)
-        .then((data) => {
-          this.$emit("studentUpdated");
-          studentCreateModal.hide();
-        })
-        .catch((error) => {
-          this.formErrors = error;
-        });
+    data() {
+      return {
+        student: this.getDefaultStudent(),
+        formErrors: {},
+      };
     },
-  },
-  clearFormErrors() {
-    this.formErrors = {};
-  },
-  resetForm() {
-    this.clearFormErrors();
-  },
-};
+    computed: {
+      blockTargetLabel() {
+        return this.apiPath.includes("handshake") ? "Handshake" : "uConnect";
+      },
+    },
+    methods: {
+      getDefaultStudent() {
+        return {
+          username: "",
+          reason: "",
+        };
+      },
+      saveStudent() {
+        var studentCreateModal = Modal.getInstance(
+          document.getElementById("createBlockedStudentModal"),
+        );
+        this.createBlockedStudent(this.apiPath, this.student)
+          .then((data) => {
+            this.$emit("studentUpdated");
+            studentCreateModal.hide();
+          })
+          .catch((error) => {
+            this.formErrors = error;
+          });
+      },
+    },
+    clearFormErrors() {
+      this.formErrors = {};
+    },
+    resetForm() {
+      this.clearFormErrors();
+    },
+  };
 </script>

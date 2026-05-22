@@ -1,5 +1,5 @@
 <template>
-  <table class="table mb-0">
+  <table class="mb-0 table">
     <thead class="small">
       <tr>
         <th scope="col">UWNetID</th>
@@ -17,7 +17,7 @@
         </td>
         <td>
           <div class="small text-muted">
-            {{ formatDate(student.added_date) }}<br/>{{ student.added_by }}
+            {{ formatDate(student.added_date) }}<br />{{ student.added_by }}
           </div>
         </td>
         <td>
@@ -32,7 +32,8 @@
               title="Unblock this student"
               class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
               v-on:click="saveDelete(student.api_path)"
-            >Unblock student</a>
+              >Unblock student</a
+            >
           </div>
         </td>
       </tr>
@@ -41,47 +42,46 @@
 </template>
 
 <script>
-import { deleteBlockedStudent } from "@/utils/data";
-import { formatDate } from "@/utils/date";
+  import { deleteBlockedStudent } from "@/utils/data";
+  import { formatDate } from "@/utils/date";
 
-export default {
-  emits: ["studentUpdated"],
-  props: {
-    students: {
-      type: Array,
-      required: true,
+  export default {
+    emits: ["studentUpdated"],
+    props: {
+      students: {
+        type: Array,
+        required: true,
+      },
     },
-  },
-  setup() {
-    return {
-      deleteBlockedStudent,
-      formatDate,
-    };
-  },
-  data() {
-    return {
-    };
-  },
-  methods: {
-    saveDelete(url) {
-      if (confirm("Unblock this student?")) {
-        this.deleteBlockedStudent(url)
-          .then(() => {
-            this.$emit("studentUpdated");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
+    setup() {
+      return {
+        deleteBlockedStudent,
+        formatDate,
+      };
     },
-  },
-};
+    data() {
+      return {};
+    },
+    methods: {
+      saveDelete(url) {
+        if (confirm("Unblock this student?")) {
+          this.deleteBlockedStudent(url)
+            .then(() => {
+              this.$emit("studentUpdated");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      },
+    },
+  };
 </script>
 
 <style lang="scss">
-.table tbody {
-  tr:last-of-type {
-    border-color: transparent !important;
+  .table tbody {
+    tr:last-of-type {
+      border-color: transparent !important;
+    }
   }
-}
 </style>

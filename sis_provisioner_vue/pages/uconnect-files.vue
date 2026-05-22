@@ -3,31 +3,22 @@
     <template #content>
       <div class="row my-4">
         <div class="col">
-          <axdd-card>
-            <template #heading-action>
-              <axdd-card-heading :level="2" class="my-2"
-                >uConnect Import Files</axdd-card-heading
-              >
-              <axdd-card-action>
-                <CreateFile
-                  :apiPath="contextStore.context.uconnectFilesUrl"
-                  @fileUpdated="loadFileList()"
-                  ><i class="bi bi-plus-square text-dark me-2"></i>Create new
-                  file</CreateFile
-                >
-              </axdd-card-action>
+          <BCard class="rounded-3 shadow-sm" header-bg-variant="transparent">
+            <template #header>
+              <h3>uConnect Import Files</h3>
+              <HeaderMessage />
+              <CreateFile
+                v-if="!isLoading"
+                :apiPath="contextStore.context.uconnectFilesUrl"
+                @fileUpdated="loadFileList()"
+              />
             </template>
-            <template #body>
-              <TableLoading v-if="isLoading"></TableLoading>
-              <div v-if="fileData && fileData.length">
-                <ImportFile
-                  :files="fileData"
-                  @fileUpdated="loadFileList()"
-                />
-              </div>
-              <div v-else>No data</div>
-            </template>
-          </axdd-card>
+            <TableLoading v-if="isLoading"></TableLoading>
+            <div v-if="fileData && fileData.length">
+              <ImportFile :files="fileData" @fileUpdated="loadFileList()" />
+            </div>
+            <div v-else>No data</div>
+          </BCard>
         </div>
       </div>
     </template>
@@ -35,51 +26,55 @@
 </template>
 
 <script>
-import Layout from "@/layout.vue";
-import TableLoading from "@/components/table-loading.vue";
-import ImportFile from "@/components/import-file.vue";
-import CreateFile from "@/components/create-file.vue";
-import { useContextStore } from "@/stores/context";
-import { getFiles } from "@/utils/data";
+  import Layout from "@/layouts/default.vue";
+  import TableLoading from "@/components/table-loading.vue";
+  import ImportFile from "@/components/import-file.vue";
+  import CreateFile from "@/components/create-file.vue";
+  import HeaderMessage from "@/components/header-message.vue";
+  import { BCard } from "bootstrap-vue-next";
+  import { useContextStore } from "@/stores/context";
+  import { getFiles } from "@/utils/data";
 
-export default {
-  components: {
-    Layout,
-    TableLoading,
-    ImportFile,
-    CreateFile,
-  },
-  setup() {
-    const contextStore = useContextStore();
-    return {
-      getFiles,
-      contextStore,
-    };
-  },
-  data() {
-    return {
-      pageTitle: "uConnect Import Files",
-      fileData: [],
-      isLoading: true,
-      errorResponse: null,
-    };
-  },
-  methods: {
-    loadFileList: function () {
-      this.getFiles(this.contextStore.context.uconnectFilesUrl)
-        .then((data) => {
-          this.fileData = data;
-        })
-        .catch((error) => {
-          this.errorResponse = error;
-        })
-        .finally(() => {
-          this.isLoading = false;
-        });
+  export default {
+    components: {
+      Layout,
+      TableLoading,
+      ImportFile,
+      CreateFile,
+      HeaderMessage,
+      BCard,
     },
-  },
-  mounted() {
-    this.loadFileList();
-  },
-};
+    setup() {
+      const contextStore = useContextStore();
+      return {
+        getFiles,
+        contextStore,
+      };
+    },
+    data() {
+      return {
+        pageTitle: "uConnect Import Files",
+        fileData: [],
+        isLoading: true,
+        errorResponse: null,
+      };
+    },
+    methods: {
+      loadFileList: function () {
+        this.getFiles(this.contextStore.context.uconnectFilesUrl)
+          .then((data) => {
+            this.fileData = data;
+          })
+          .catch((error) => {
+            this.errorResponse = error;
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
+      },
+    },
+    mounted() {
+      this.loadFileList();
+    },
+  };
 </script>
