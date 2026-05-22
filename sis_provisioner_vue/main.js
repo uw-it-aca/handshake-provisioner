@@ -1,15 +1,11 @@
 import { createApp } from "vue";
 import { createBootstrap } from "bootstrap-vue-next";
 import { createPinia } from "pinia";
-
-// import solstice-vue
-import SolsticeVue from "solstice-vue";
+import VueGtag from "vue-gtag-next";
+import { Vue3Mq, MqResponsive } from "vue3-mq";
 
 import App from "@/app.vue";
 import router from "@/router";
-
-import VueGtag from "vue-gtag-next";
-import { Vue3Mq, MqResponsive } from "vue3-mq";
 
 // bootstrap js + bootstrap-icons
 import "bootstrap";
@@ -55,7 +51,6 @@ app.use(pinia);
 
 // bootstrap-vue-next
 app.use(createBootstrap());
-app.use(SolsticeVue);
 
 app.use(router);
 
