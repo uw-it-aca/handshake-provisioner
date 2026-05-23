@@ -5,13 +5,17 @@
         <div class="col">
           <BCard class="shadow-sm rounded-3" header-bg-variant="transparent">
             <template #header>
-              <h3>Handshake Import Files</h3>
-              <HeaderMessage />
-              <CreateFile
-                v-if="!isLoading"
-                :apiPath="contextStore.context.handshakeFilesUrl"
-                @fileUpdated="loadFileList()"
-              />
+              <div class="d-flex justify-content-between align-items-end">
+                <h3>Handshake Import Files</h3>
+                <CreateFile
+                  v-if="!isLoading"
+                  :apiPath="contextStore.context.handshakeFilesUrl"
+                  @fileUpdated="loadFileList()"
+                />
+              </div>
+              <p>
+                View and manage data files that have been imported to Handshake.
+              </p>
             </template>
             <TableLoading v-if="isLoading"></TableLoading>
             <div v-if="fileData && fileData.length">
@@ -20,7 +24,7 @@
                 @fileUpdated="loadFileList()"
               />
             </div>
-            <div v-else>No data</div>
+            <div v-else class="fw-bold">No Import Files found</div>
           </BCard>
         </div>
       </div>
@@ -33,7 +37,6 @@ import Layout from "@/layouts/default.vue";
 import TableLoading from "@/components/table-loading.vue";
 import ImportFile from "@/components/import-file.vue";
 import CreateFile from "@/components/create-file.vue";
-import HeaderMessage from "@/components/header-message.vue";
 import { BCard } from "bootstrap-vue-next";
 import { useContextStore } from "@/stores/context";
 import { getFiles } from "@/utils/data";
@@ -44,7 +47,6 @@ export default {
     TableLoading,
     ImportFile,
     CreateFile,
-    HeaderMessage,
     BCard,
   },
   setup() {

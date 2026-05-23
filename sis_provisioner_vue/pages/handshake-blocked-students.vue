@@ -5,13 +5,17 @@
         <div class="col">
           <BCard class="shadow-sm rounded-3" header-bg-variant="transparent">
             <template #header>
-              <h3>Handshake Blocked Students</h3>
-              <HeaderMessage />
-              <CreateBlockedStudent
-                v-if="!isLoading"
-                :apiPath="contextStore.context.handshakeBlockedUrl"
-                @studentUpdated="loadBlockedStudentList()"
-              />
+              <div class="d-flex justify-content-between align-items-end">
+                <h3>Handshake Blocked Students</h3>
+                <CreateBlockedStudent
+                  v-if="!isLoading"
+                  :apiPath="contextStore.context.handshakeBlockedUrl"
+                  @studentUpdated="loadBlockedStudentList()"
+                />
+              </div>
+              <p>
+                View and manage students who are currently blocked from Handshake.
+              </p>
             </template>
             <TableLoading v-if="isLoading"></TableLoading>
             <div v-if="studentData && studentData.length">
@@ -20,7 +24,7 @@
                 @studentUpdated="loadBlockedStudentList()"
               />
             </div>
-            <div v-else>No data</div>
+            <div v-else class="fw-bold">No Blocked Students found</div>
           </BCard>
         </div>
       </div>
@@ -33,7 +37,6 @@ import Layout from "@/layouts/default.vue";
 import TableLoading from "@/components/table-loading.vue";
 import BlockedStudent from "@/components/blocked-student.vue";
 import CreateBlockedStudent from "@/components/create-blocked-student.vue";
-import HeaderMessage from "@/components/header-message.vue";
 import { BCard } from "bootstrap-vue-next";
 import { useContextStore } from "@/stores/context";
 import { getBlockedStudents } from "@/utils/data";
@@ -44,7 +47,6 @@ export default {
     TableLoading,
     BlockedStudent,
     CreateBlockedStudent,
-    HeaderMessage,
     BCard,
   },
   setup() {
