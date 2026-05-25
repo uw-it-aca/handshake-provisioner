@@ -3,21 +3,28 @@
     <template #content>
       <div class="row my-4">
         <div class="col">
-          <BCard class="rounded-3 shadow-sm" header-bg-variant="transparent">
+          <BCard class="shadow-sm rounded-3" header-bg-variant="transparent">
             <template #header>
-              <h3>Handshake Import Files</h3>
-              <HeaderMessage />
-              <CreateFile
-                v-if="!isLoading"
-                :apiPath="contextStore.context.handshakeFilesUrl"
-                @fileUpdated="loadFileList()"
-              />
+              <div class="d-flex justify-content-between align-items-end">
+                <h3>Handshake Import Files</h3>
+                <CreateFile
+                  v-if="!isLoading"
+                  :apiPath="contextStore.context.handshakeFilesUrl"
+                  @fileUpdated="loadFileList()"
+                />
+              </div>
+              <p>
+                View and manage data files that have been imported to Handshake.
+              </p>
             </template>
             <TableLoading v-if="isLoading"></TableLoading>
             <div v-if="fileData && fileData.length">
-              <ImportFile :files="fileData" @fileUpdated="loadFileList()" />
+              <ImportFile
+                :files="fileData"
+                @fileUpdated="loadFileList()"
+              />
             </div>
-            <div v-else>No data</div>
+            <div v-else class="fw-bold">No Import Files found</div>
           </BCard>
         </div>
       </div>
@@ -26,55 +33,53 @@
 </template>
 
 <script>
-  import Layout from "@/layouts/default.vue";
-  import TableLoading from "@/components/table-loading.vue";
-  import ImportFile from "@/components/import-file.vue";
-  import CreateFile from "@/components/create-file.vue";
-  import HeaderMessage from "@/components/header-message.vue";
-  import { BCard } from "bootstrap-vue-next";
-  import { useContextStore } from "@/stores/context";
-  import { getFiles } from "@/utils/data";
+import Layout from "@/layouts/default.vue";
+import TableLoading from "@/components/table-loading.vue";
+import ImportFile from "@/components/import-file.vue";
+import CreateFile from "@/components/create-file.vue";
+import { BCard } from "bootstrap-vue-next";
+import { useContextStore } from "@/stores/context";
+import { getFiles } from "@/utils/data";
 
-  export default {
-    components: {
-      Layout,
-      TableLoading,
-      ImportFile,
-      CreateFile,
-      HeaderMessage,
-      BCard,
+export default {
+  components: {
+    Layout,
+    TableLoading,
+    ImportFile,
+    CreateFile,
+    BCard,
+  },
+  setup() {
+    const contextStore = useContextStore();
+    return {
+      getFiles,
+      contextStore,
+    };
+  },
+  data() {
+    return {
+      pageTitle: "Handshake Import Files",
+      fileData: [],
+      isLoading: true,
+      errorResponse: null,
+    };
+  },
+  methods: {
+    loadFileList: function () {
+      this.getFiles(this.contextStore.context.handshakeFilesUrl)
+        .then((data) => {
+          this.fileData = data;
+        })
+        .catch((error) => {
+          this.errorResponse = error;
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
     },
-    setup() {
-      const contextStore = useContextStore();
-      return {
-        getFiles,
-        contextStore,
-      };
-    },
-    data() {
-      return {
-        pageTitle: "Handshake Import Files",
-        fileData: [],
-        isLoading: true,
-        errorResponse: null,
-      };
-    },
-    methods: {
-      loadFileList: function () {
-        this.getFiles(this.contextStore.context.handshakeFilesUrl)
-          .then((data) => {
-            this.fileData = data;
-          })
-          .catch((error) => {
-            this.errorResponse = error;
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
-      },
-    },
-    mounted() {
-      this.loadFileList();
-    },
-  };
+  },
+  mounted() {
+    this.loadFileList();
+  },
+};
 </script>
