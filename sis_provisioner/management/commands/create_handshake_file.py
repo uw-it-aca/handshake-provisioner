@@ -7,7 +7,7 @@ from sis_provisioner.models.handshake import HandshakeStudentsFile, Term
 
 
 class Command(BaseCommand):
-    help = 'Creates a TEST Handshake import file for an academic term'
+    help = 'Creates a Handshake import file for an academic term'
 
     def add_arguments(self, parser):
         parser.add_argument(
