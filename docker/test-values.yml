@@ -55,7 +55,7 @@ cronjob:
   enabled: true
   jobs:
     - name: build-file
-      schedule: "5 12 * * 1"
+      schedule: "1 9 6 6 *"
       command: ["/scripts/management_command.sh"]
       args: ["build_file"]
       resources:
@@ -63,8 +63,8 @@ cronjob:
           cpu: 500m
           memory: 1024Mi
         requests:
-          cpu: 100m
-          memory: 512Mi
+          cpu: 250m
+          memory: 768Mi
 
 gcsCredentials:
   mounted: true
