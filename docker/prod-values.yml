@@ -15,6 +15,13 @@ ingress:
     nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
     nginx.ingress.kubernetes.io/proxy-body-size: "20M"
 
+gateway:
+  enabled: true
+  hostnames:
+    - handshake.dnatls.uw.edu
+    - handshake.axdd.s.uw.edu
+  redirectToFirstHostname: true
+
 autoscaling:
   enabled: true
   minReplicas: 2
