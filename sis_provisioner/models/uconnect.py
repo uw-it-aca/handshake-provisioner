@@ -2,22 +2,28 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.db import models
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.urls import reverse
-from django.utils.timezone import get_default_timezone
-from sis_provisioner.models.importfile import ImportFile
-from sis_provisioner.models.term import Term
-from sis_provisioner.dao.uconnect import write_file
-from sis_provisioner.dao.student import get_students_for_uconnect
-from sis_provisioner.utils import (
-    get_majors, get_college_names, get_first_last_name, get_class_desc,
-    get_student_type)
-from datetime import datetime, timezone
-from logging import getLogger
 import csv
 import io
+from datetime import datetime, timezone
+from logging import getLogger
+
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+from django.urls import reverse
+from django.utils.timezone import get_default_timezone
+
+from sis_provisioner.dao.student import get_students_for_uconnect
+from sis_provisioner.dao.uconnect import write_file
+from sis_provisioner.models.importfile import ImportFile
+from sis_provisioner.models.term import Term
+from sis_provisioner.utils import (
+    get_class_desc,
+    get_college_names,
+    get_first_last_name,
+    get_majors,
+    get_student_type,
+)
 
 logger = getLogger(__name__)
 
@@ -78,7 +84,7 @@ class UconnectStudentsFile(ImportFile):
 
     def _create_path(self):
         name = self.term.name
-        prefix = getattr(settings, 'FILENAME_TEST_PREFIX')
+        prefix = settings.FILENAME_TEST_PREFIX
 
         if self.is_test_file and prefix is not None and len(prefix):
             name = f'{prefix}-{name}'

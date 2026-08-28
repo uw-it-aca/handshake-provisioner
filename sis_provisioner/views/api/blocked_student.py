@@ -2,13 +2,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from sis_provisioner.views.api import APIView
-from sis_provisioner.models.handshake import BlockedHandshakeStudent
-from sis_provisioner.models.uconnect import BlockedUconnectStudent
-from uw_saml.utils import get_user
+import json
 from datetime import datetime, timezone
 from logging import getLogger
-import json
+
+from uw_saml.utils import get_user
+
+from sis_provisioner.models.handshake import BlockedHandshakeStudent
+from sis_provisioner.models.uconnect import BlockedUconnectStudent
+from sis_provisioner.views.api import APIView
 
 logger = getLogger(__name__)
 

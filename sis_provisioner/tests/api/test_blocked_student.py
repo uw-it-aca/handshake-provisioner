@@ -1,16 +1,21 @@
 # Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from django.test import TestCase, RequestFactory
-from django.contrib.auth.models import User
-from unittest.mock import patch, MagicMock
-from sis_provisioner.views.api.blocked_student import (
-    HandshakeBlockedStudentListView, HandshakeBlockedStudentView,
-    UconnectBlockedStudentListView, UconnectBlockedStudentView)
-from sis_provisioner.models.handshake import BlockedHandshakeStudent
-from sis_provisioner.models.uconnect import BlockedUconnectStudent
 import datetime
 import json
+from unittest.mock import MagicMock, patch
+
+from django.contrib.auth.models import User
+from django.test import RequestFactory, TestCase
+
+from sis_provisioner.models.handshake import BlockedHandshakeStudent
+from sis_provisioner.models.uconnect import BlockedUconnectStudent
+from sis_provisioner.views.api.blocked_student import (
+    HandshakeBlockedStudentListView,
+    HandshakeBlockedStudentView,
+    UconnectBlockedStudentListView,
+    UconnectBlockedStudentView,
+)
 
 
 class HandshakeBlockedStudentListViewTest(TestCase):

@@ -2,12 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from sis_provisioner.views.api import APIView
-from sis_provisioner.models.uconnect import UconnectStudentsFile
-from sis_provisioner.models.term import Term
-from uw_saml.utils import get_user
-from logging import getLogger
 import json
+from logging import getLogger
+
+from uw_saml.utils import get_user
+
+from sis_provisioner.models.term import Term
+from sis_provisioner.models.uconnect import UconnectStudentsFile
+from sis_provisioner.views.api import APIView
 
 logger = getLogger(__name__)
 
@@ -47,7 +49,7 @@ class UconnectFileView(APIView):
                                       import_file.filename)
         except UconnectStudentsFile.DoesNotExist:
             return self.error_response(404, 'Not Found')
-        except FileNotFoundError as err:
+        except FileNotFoundError:
             return self.error_response(404, 'Not Available')
 
     def put(self, request, *args, **kwargs):

@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.test import TestCase, override_settings
 from django.core.files.storage import default_storage
+from django.test import TestCase, override_settings
+
 from sis_provisioner.dao.file import read_file, write_file
 
 

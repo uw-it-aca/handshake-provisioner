@@ -2,23 +2,33 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.db import models
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.urls import reverse
-from django.utils.timezone import get_default_timezone
-from sis_provisioner.models.importfile import ImportFile
-from sis_provisioner.models.term import Term
-from sis_provisioner.dao.handshake import write_file
-from sis_provisioner.dao.student import get_students_for_handshake
-from sis_provisioner.utils import (
-    get_majors, get_major_names, get_primary_major_name, get_college_names,
-    is_athlete, is_veteran, get_class_desc, get_education_level_name,
-    format_student_number, format_name)
-from datetime import datetime, timezone
-from logging import getLogger
 import csv
 import io
+from datetime import datetime, timezone
+from logging import getLogger
+
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+from django.urls import reverse
+from django.utils.timezone import get_default_timezone
+
+from sis_provisioner.dao.handshake import write_file
+from sis_provisioner.dao.student import get_students_for_handshake
+from sis_provisioner.models.importfile import ImportFile
+from sis_provisioner.models.term import Term
+from sis_provisioner.utils import (
+    format_name,
+    format_student_number,
+    get_class_desc,
+    get_college_names,
+    get_education_level_name,
+    get_major_names,
+    get_majors,
+    get_primary_major_name,
+    is_athlete,
+    is_veteran,
+)
 
 logger = getLogger(__name__)
 
@@ -82,7 +92,7 @@ class HandshakeStudentsFile(ImportFile):
 
     def _create_path(self):
         name = self.term.name
-        prefix = getattr(settings, 'FILENAME_TEST_PREFIX')
+        prefix = settings.FILENAME_TEST_PREFIX
 
         if self.is_test_file and prefix is not None and len(prefix):
             name = f'{prefix}-{name}'
@@ -179,7 +189,7 @@ class HandshakeLabelsFile(ImportFile):
 
     def _create_path(self):
         name = f'{self.term.name}-LABELS'
-        prefix = getattr(settings, 'FILENAME_TEST_PREFIX')
+        prefix = settings.FILENAME_TEST_PREFIX
 
         if self.is_test_file and prefix is not None and len(prefix):
             name = f'{prefix}-{name}'
@@ -203,8 +213,8 @@ class HandshakeLabelsFile(ImportFile):
             if uwnetid not in blocked_students:
                 students[uwnetid] = self._student_labels(student)
 
-        for uwnetid in students:
-            for label in students[uwnetid]:
+        for uwnetid, labels in students.items():
+            for label in labels:
                 writer.writerow([
                     f'{uwnetid}@{settings.EMAIL_DOMAIN}',
                     'User',         # User|Contact|Employer|Job

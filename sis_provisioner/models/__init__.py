@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from .active import ActiveStudentsFile
-from .handshake import (
-    HandshakeStudentsFile, HandshakeLabelsFile, BlockedHandshakeStudent)
-from .uconnect import UconnectStudentsFile
-from .term import Term
+from .active import ActiveStudentsFile as ActiveStudentsFile
+from .handshake import BlockedHandshakeStudent as BlockedHandshakeStudent
+from .handshake import HandshakeLabelsFile as HandshakeLabelsFile
+from .handshake import HandshakeStudentsFile as HandshakeStudentsFile
+from .term import Term as Term
+from .uconnect import UconnectStudentsFile as UconnectStudentsFile

@@ -1,10 +1,12 @@
 # Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from django.conf import settings
-from uw_person_client.models import Person, Student, Major, Q
-from sis_provisioner.exceptions import EmptyQueryException
 from logging import getLogger
+
+from django.conf import settings
+from uw_person_client.models import Major, Person, Q, Student
+
+from sis_provisioner.exceptions import EmptyQueryException
 
 logger = getLogger(__name__)
 
