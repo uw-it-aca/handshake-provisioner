@@ -2,15 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.db import models
-from django.conf import settings
-from django.utils.timezone import get_default_timezone
-from sis_provisioner.models.importfile import ImportFile
-from sis_provisioner.dao.student import get_active_students
-from datetime import timezone
-from logging import getLogger
 import csv
 import io
+from datetime import timezone
+from logging import getLogger
+
+from django.conf import settings
+from django.db import models
+from django.utils.timezone import get_default_timezone
+
+from sis_provisioner.dao.student import get_active_students
+from sis_provisioner.models.importfile import ImportFile
 
 logger = getLogger(__name__)
 

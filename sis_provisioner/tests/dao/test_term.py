@@ -4,6 +4,7 @@
 
 from django.test import TestCase
 from uw_sws.util import fdao_sws_override
+
 from sis_provisioner.dao.term import current_term, next_term
 
 

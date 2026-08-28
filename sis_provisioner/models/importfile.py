@@ -2,12 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.db import models
-from sis_provisioner.exceptions import EmptyQueryException
-from sis_provisioner.dao.file import read_file, write_file, delete_file
+import os
 from datetime import datetime, timezone
 from logging import getLogger
-import os
+
+from django.db import models
+
+from sis_provisioner.dao.file import delete_file, read_file, write_file
+from sis_provisioner.exceptions import EmptyQueryException
 
 logger = getLogger(__name__)
 
@@ -41,10 +43,10 @@ class ImportFile(models.Model):
             write_file(self.path, self._generate_csv())
             self.generated_date = datetime.now(timezone.utc)
             logger.info(f'CSV generated for file ID {self.pk}')
-        except EmptyQueryException as ex:
+        except EmptyQueryException:
             logger.info(f'CSV skipped for file ID {self.pk}: No students')
-        except Exception as ex:
-            logger.exception(f'CSV failed for file ID {self.pk}: {ex}')
+        except Exception:
+            logger.exception(f'CSV failed for file ID {self.pk}')
 
         self.process_id = None
         self.save()
@@ -78,10 +80,10 @@ class ImportFile(models.Model):
         }
 
     def sisimport(self):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _create_path(self):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _generate_csv(self):
-        raise NotImplemented()
+        raise NotImplementedError()
