@@ -18,9 +18,7 @@ ingress:
 gateway:
   enabled: true
   hostnames:
-    - handshake.dnatls.uw.edu
     - handshake.axdd.s.uw.edu
-  redirectToFirstHostname: true
 
 autoscaling:
   enabled: true
