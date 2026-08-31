@@ -5,14 +5,22 @@
 from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
-from sis_provisioner.views.pages import HomeView
-from sis_provisioner.views.api.file.handshake import (
-    HandshakeFileListView, HandshakeFileView)
-from sis_provisioner.views.api.file.uconnect import (
-    UconnectFileListView, UconnectFileView)
+
 from sis_provisioner.views.api.blocked_student import (
-    HandshakeBlockedStudentListView, HandshakeBlockedStudentView,
-    UconnectBlockedStudentListView, UconnectBlockedStudentView)
+    HandshakeBlockedStudentListView,
+    HandshakeBlockedStudentView,
+    UconnectBlockedStudentListView,
+    UconnectBlockedStudentView,
+)
+from sis_provisioner.views.api.file.handshake import (
+    HandshakeFileListView,
+    HandshakeFileView,
+)
+from sis_provisioner.views.api.file.uconnect import (
+    UconnectFileListView,
+    UconnectFileView,
+)
+from sis_provisioner.views.pages import HomeView
 
 urlpatterns = []
 

@@ -15,6 +15,11 @@ ingress:
     nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
     nginx.ingress.kubernetes.io/proxy-body-size: "20M"
 
+gateway:
+  enabled: true
+  hostnames:
+    - handshake.axdd.s.uw.edu
+
 autoscaling:
   enabled: true
   minReplicas: 2

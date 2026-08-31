@@ -2,12 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.http import HttpResponse
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 import json
 import re
+
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.utils.decorators import method_decorator
+from django.views import View
 
 
 @method_decorator(login_required, name='dispatch')
@@ -19,7 +20,9 @@ class APIView(View):
                             content_type='application/json')
 
     @staticmethod
-    def error_response(status, message='', content={}):
+    def error_response(status, message='', content=None):
+        if content is None:
+            content = {}
         content['error'] = str(message)
         return HttpResponse(json.dumps(content),
                             status=status,

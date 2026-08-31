@@ -1,12 +1,12 @@
 # Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+# ruff: noqa: B006
 
 from django.test import TestCase
-from uw_person_client.models import Person, Student, Major
+from uw_person_client.models import Major, Person, Student
+
 from sis_provisioner.utils import *
-from datetime import date
-from unittest import mock
 
 
 class HandshakeUtilsTest(TestCase):
@@ -121,6 +121,9 @@ class HandshakeUtilsTest(TestCase):
         self.assertEqual(len(get_majors(student)), 0)
 
         student = self._build_student(majors=[major6, major8])
+        self.assertEqual(len(get_majors(student)), 1)
+
+        student = self._build_student(majors=[major11])
         self.assertEqual(len(get_majors(student)), 1)
 
     def test_is_athlete(self):

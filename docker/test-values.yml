@@ -1,19 +1,7 @@
-ingress:
+gateway:
   enabled: true
-  tls:
-    handshake:
-      secretName: handshake-test.axdd.s.uw.edu-ingress-cert
-      hosts:
-        - handshake-test.axdd.s.uw.edu
-  hosts:
-    handshake:
-      host: handshake-test.axdd.s.uw.edu
-      paths:
-        - "/"
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
-    nginx.ingress.kubernetes.io/proxy-body-size: "20M"
+  hostnames:
+    - handshake-test.axdd.s.uw.edu
 
 autoscaling:
   enabled: false

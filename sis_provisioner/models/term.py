@@ -1,10 +1,15 @@
 # Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+# ruff: noqa: RUF012
 
 from django.db import models
+
 from sis_provisioner.dao.term import (
-    current_term, next_term, get_term_by_year_and_quarter)
+    current_term,
+    get_term_by_year_and_quarter,
+    next_term,
+)
 
 
 class TermManager(models.Manager):
@@ -51,8 +56,8 @@ class Term(models.Model):
 
     @property
     def name(self):
-        return '{}{}'.format(
-            dict(self.QUARTER_CHOICES).get(self.quarter), self.year)
+        quarter = dict(self.QUARTER_CHOICES).get(self.quarter)
+        return f'{quarter}{self.year}'
 
     def json_data(self):
         return {

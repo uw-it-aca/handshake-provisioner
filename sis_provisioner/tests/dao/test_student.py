@@ -3,15 +3,17 @@
 
 
 from django.test import TestCase
+
 from sis_provisioner.dao.student import *
 from sis_provisioner.models.term import Term
 
 
 class StudentTest(TestCase):
     databases = '__all__'
-    fixtures = ['person.json', 'employee.json', 'term.json', 'major.json',
-                'student.json', 'adviser.json', 'transfer.json',
-                'transcript.json', 'hold.json', 'degree.json', 'sport.json']
+    fixtures = [  # noqa: RUF012
+        'person.json', 'employee.json', 'term.json', 'major.json',
+        'student.json', 'adviser.json', 'transfer.json',
+        'transcript.json', 'hold.json', 'degree.json', 'sport.json']
 
     def test_get_students_for_handshake(self):
         term = Term(year=2013, quarter=3)

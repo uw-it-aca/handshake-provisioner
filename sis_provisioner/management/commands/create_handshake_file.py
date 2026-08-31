@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
+
 from sis_provisioner.models.handshake import HandshakeStudentsFile, Term
 
 

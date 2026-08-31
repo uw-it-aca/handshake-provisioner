@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models.uconnect import UconnectStudentsFile, Term
+from django.core.management.base import BaseCommand
+
+from sis_provisioner.models.uconnect import Term, UconnectStudentsFile
 
 
 class Command(BaseCommand):

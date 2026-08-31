@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.management.base import BaseCommand, CommandError
-from sis_provisioner.models.handshake import (
-    HandshakeStudentsFile, HandshakeLabelsFile)
-from sis_provisioner.models.uconnect import UconnectStudentsFile
+from django.core.management.base import BaseCommand
+
 from sis_provisioner.models.active import ActiveStudentsFile
+from sis_provisioner.models.handshake import HandshakeLabelsFile, HandshakeStudentsFile
+from sis_provisioner.models.uconnect import UconnectStudentsFile
 
 
 class Command(BaseCommand):

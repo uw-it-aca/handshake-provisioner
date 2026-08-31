@@ -1,15 +1,19 @@
 # Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from django.test import TestCase, RequestFactory
-from django.contrib.auth.models import User
-from unittest.mock import patch, MagicMock
-from sis_provisioner.views.api.file.handshake import (
-    HandshakeFileListView, HandshakeFileView)
-from sis_provisioner.models.handshake import HandshakeStudentsFile
-from sis_provisioner.models.term import Term
 import datetime
 import json
+from unittest.mock import MagicMock, patch
+
+from django.contrib.auth.models import User
+from django.test import RequestFactory, TestCase
+
+from sis_provisioner.models.handshake import HandshakeStudentsFile
+from sis_provisioner.models.term import Term
+from sis_provisioner.views.api.file.handshake import (
+    HandshakeFileListView,
+    HandshakeFileView,
+)
 
 
 class HandshakeFileListViewTest(TestCase):

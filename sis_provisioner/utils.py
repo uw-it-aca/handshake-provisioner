@@ -2,25 +2,22 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.conf import settings
-from sis_provisioner.dao.student import get_majors_by_code
-from nameparser import HumanName
-from datetime import date
-from logging import getLogger
 import re
+from logging import getLogger
+
+from django.conf import settings
+from nameparser import HumanName
+
+from sis_provisioner.dao.student import get_majors_by_code
 
 RE_WORD_BOUNDS = re.compile(r'(\s|-|\(|\)|\.|,|/|:|&|")')
-RE_UNTITLEIZE = re.compile(r'^(?:and|for|of|the|w)$', re.I)
-RE_TITLE_ABBR = re.compile(r'^(?:bs|ms)$', re.I)
+RE_UNTITLEIZE = re.compile(r'^(?:and|for|of|the|w)$', re.IGNORECASE)
+RE_TITLE_ABBR = re.compile(r'^(?:bs|ms)$', re.IGNORECASE)
 
 STUDENT_NUM_LEN = 7
 CLASS_CODE_GRAD_YEAR = {1: 4, 2: 3, 3: 2, 4: 1, 5: 1, 8: 2}
 
 logger = getLogger(__name__)
-
-
-def current_date():
-    return date.today()
 
 
 def titleize(string, andrepl='and'):
@@ -47,11 +44,11 @@ def titleize(string, andrepl='and'):
 
 
 def is_athlete(student):
-    return student.special_program_code in getattr(settings, 'ATHLETE_CODES', {})  # noqa
+    return student.special_program_code in getattr(settings, 'ATHLETE_CODES', {})
 
 
 def is_veteran(student):
-    return student.veteran_benefit_code in getattr(settings, 'VETERAN_CODES', {})  # noqa
+    return student.veteran_benefit_code in getattr(settings, 'VETERAN_CODES', {})
 
 
 def get_class_desc(student, majors):
@@ -114,7 +111,7 @@ def is_pre_major(major):
 
 
 def is_excluded_major(major):
-    return major.major_abbr_code in getattr(settings, 'EXCLUDE_MAJOR_CODES')
+    return major.major_abbr_code in settings.EXCLUDE_MAJOR_CODES
 
 
 def validate_majors(majors) -> list:
@@ -196,9 +193,9 @@ def get_college_names(majors, campus=0):
 
 
 def format_name(first_name, surname):
-    try:
-        full_name = ' '.join([first_name, surname])
-    except TypeError:
+    if first_name and surname:
+        full_name = f'{first_name} {surname}'
+    else:
         full_name = first_name or surname or ''
 
     hname = HumanName(full_name)
