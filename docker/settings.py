@@ -205,7 +205,7 @@ COLLEGES = {
 }
 
 CLASS_CODE_NAMES = {
-    1: "First-year",
+    1: "Freshman",
     2: "Sophomore",
     3: "Junior",
     4: "Senior",

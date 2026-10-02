@@ -294,7 +294,7 @@ class HandshakeUtilsTest(TestCase):
         major3 = self._build_major(major_abbr_code='0-EMBA', college='F')
 
         student = self._build_student(class_code=1)
-        self.assertEqual(get_class_desc(student, [major1]), 'First-year')
+        self.assertEqual(get_class_desc(student, [major1]), 'Freshman')
         student = self._build_student(class_code=2)
         self.assertEqual(get_class_desc(student, [major1]), 'Sophomore')
         student = self._build_student(class_code=3)
