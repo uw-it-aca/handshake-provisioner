@@ -212,6 +212,7 @@ CLASS_CODE_NAMES = {
     5: "Senior",
     8: "Masters",
 }
+CLASS_FIRST_YEAR_ALT = "Freshman"
 
 EMAIL_DOMAIN = "uw.edu"
 
