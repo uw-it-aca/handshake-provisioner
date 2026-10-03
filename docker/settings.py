@@ -205,13 +205,14 @@ COLLEGES = {
 }
 
 CLASS_CODE_NAMES = {
-    1: "Freshman",
+    1: "First-year",
     2: "Sophomore",
     3: "Junior",
     4: "Senior",
     5: "Senior",
     8: "Masters",
 }
+CLASS_FIRST_YEAR_ALT = "Freshman"
 
 EMAIL_DOMAIN = "uw.edu"
 

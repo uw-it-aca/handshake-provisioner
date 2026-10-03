@@ -116,6 +116,10 @@ class HandshakeStudentsFile(ImportFile):
 
             majors = get_majors(student)
 
+            class_desc = get_class_desc(student, majors)
+            if class_desc == settings.CLASS_CODE_NAMES[1]:
+                class_desc = settings.CLASS_FIRST_YEAR_ALT
+
             first_name, middle_name, last_name = format_name(
                 student.person.first_name, student.person.surname)
 
@@ -123,7 +127,7 @@ class HandshakeStudentsFile(ImportFile):
                 student.person.uwnetid,
                 student.person.uwnetid,
                 format_student_number(student.student_number),
-                get_class_desc(student, majors),
+                class_desc,
                 last_name,
                 first_name,
                 middle_name,
