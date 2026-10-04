@@ -3,6 +3,7 @@
 
 # ruff: noqa: B006
 
+from django.conf import settings
 from django.test import TestCase
 from uw_person_client.models import Major, Person, Student
 
@@ -292,6 +293,9 @@ class HandshakeUtilsTest(TestCase):
         major1 = self._build_major(major_abbr_code='0', college='C')
         major2 = self._build_major(major_abbr_code='0-EMBA', college='E')
         major3 = self._build_major(major_abbr_code='0-EMBA', college='F')
+
+        self.assertEqual(settings.CLASS_CODE_NAMES[1], 'First-year')
+        self.assertRaises(KeyError, lambda: settings.CLASS_CODE_NAMES['1'])
 
         student = self._build_student(class_code=1)
         self.assertEqual(get_class_desc(student, [major1]), 'First-year')
