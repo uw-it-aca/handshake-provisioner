@@ -21,7 +21,7 @@ class HandshakeStudentsFileTest(TestCase):
         term.save()
         self.term = term
         self.created_date = datetime.datetime(
-            2019, 6, 15, 2, 45, 0, tzinfo=datetime.timezone.utc)
+            2019, 6, 15, 2, 45, 0, tzinfo=datetime.UTC)
 
     @override_settings(FILENAME_TEST_PREFIX=None)
     def test_create_path(self):
@@ -80,7 +80,7 @@ class UconnectStudentsFileTest(TestCase):
         term.save()
         self.term = term
         self.created_date = datetime.datetime(
-            2019, 6, 15, 2, 45, 0, tzinfo=datetime.timezone.utc)
+            2019, 6, 15, 2, 45, 0, tzinfo=datetime.UTC)
 
     @override_settings(FILENAME_TEST_PREFIX=None)
     def test_create_path(self):
@@ -136,7 +136,7 @@ class UconnectStudentsFileTest(TestCase):
 class ActiveStudentsFileTest(TestCase):
     def setUp(self):
         self.created_date = datetime.datetime(
-            2019, 6, 15, 2, 45, 0, tzinfo=datetime.timezone.utc)
+            2019, 6, 15, 2, 45, 0, tzinfo=datetime.UTC)
 
     def test_create_path(self):
         impfile = ActiveStudentsFile(created_date=self.created_date)
@@ -165,7 +165,7 @@ class BlockedHandshakeStudentTest(TestCase):
             username='javerage',
             added_by='bill',
             added_date=datetime.datetime(
-                2019, 6, 15, 2, 45, 0, tzinfo=datetime.timezone.utc),
+                2019, 6, 15, 2, 45, 0, tzinfo=datetime.UTC),
             reason='Request from student',
         )
         student.save()
@@ -188,7 +188,7 @@ class BlockedUconnectStudentTest(TestCase):
             username='javerage',
             added_by='bill',
             added_date=datetime.datetime(
-                2019, 6, 15, 2, 45, 0, tzinfo=datetime.timezone.utc),
+                2019, 6, 15, 2, 45, 0, tzinfo=datetime.UTC),
             reason='Request from student',
         )
         student.save()

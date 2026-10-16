@@ -10,7 +10,7 @@ from sis_provisioner.models.term import Term
 
 class StudentTest(TestCase):
     databases = '__all__'
-    fixtures = [  # noqa: RUF012
+    fixtures = [
         'person.json', 'employee.json', 'term.json', 'major.json',
         'student.json', 'adviser.json', 'transfer.json',
         'transcript.json', 'hold.json', 'degree.json', 'sport.json']

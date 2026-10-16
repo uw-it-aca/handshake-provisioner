@@ -3,7 +3,7 @@
 
 
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from logging import getLogger
 
 from django.db import models
@@ -41,7 +41,7 @@ class ImportFile(models.Model):
         self.save()
         try:
             write_file(self.path, self._generate_csv())
-            self.generated_date = datetime.now(timezone.utc)
+            self.generated_date = datetime.now(UTC)
             logger.info(f'CSV generated for file ID {self.pk}')
         except EmptyQueryException:
             logger.info(f'CSV skipped for file ID {self.pk}: No students')
@@ -53,7 +53,7 @@ class ImportFile(models.Model):
 
     def save(self, *args, **kwargs):
         if self.created_date is None:
-            self.created_date = datetime.now(timezone.utc)
+            self.created_date = datetime.now(UTC)
         if self.path is None:
             self.path = self._create_path()
         super().save(*args, **kwargs)

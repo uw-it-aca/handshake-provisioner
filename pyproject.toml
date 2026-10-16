@@ -48,7 +48,9 @@ exclude = [
 
 [tool.ruff.lint]
 ignore = [
+    "B006",    # allow mutable data structures for argument defaults
     "BLE001",  # allow broad Exception catches
+    "RUF012",  # allow mutable default value for class attribute
 ]
 
 [tool.coverage.run]
