@@ -42,8 +42,8 @@ class UconnectFileListViewTest(TestCase):
         self.assertEqual(json.loads(response.content), [])
 
     def test_get_returns_files_ordered_by_created_date(self):
-        t1 = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
-        t2 = datetime.datetime(2020, 6, 1, tzinfo=datetime.timezone.utc)
+        t1 = datetime.datetime(2020, 1, 1, tzinfo=datetime.UTC)
+        t2 = datetime.datetime(2020, 6, 1, tzinfo=datetime.UTC)
         UconnectStudentsFile.objects.create(
             term=self.term, created_date=t1)
         UconnectStudentsFile.objects.create(
@@ -108,7 +108,7 @@ class UconnectFileViewTest(TestCase):
         self.import_file = UconnectStudentsFile.objects.create(
             term=self.term,
             created_date=datetime.datetime(
-                2020, 10, 1, tzinfo=datetime.timezone.utc))
+                2020, 10, 1, tzinfo=datetime.UTC))
 
     def _get(self, file_id):
         request = self.factory.get(f'/api/v1/uconnect/file/{file_id}')
@@ -133,7 +133,7 @@ class UconnectFileViewTest(TestCase):
                               lambda self: 'username,email\njaverage,j@uw.edu'
                           )):
             self.import_file.generated_date = datetime.datetime(
-                2020, 10, 2, tzinfo=datetime.timezone.utc)
+                2020, 10, 2, tzinfo=datetime.UTC)
             self.import_file.save()
             response = self._get(self.import_file.pk)
         self.assertEqual(response.status_code, 200)
@@ -152,7 +152,7 @@ class UconnectFileViewTest(TestCase):
                                   FileNotFoundError())
                           )):
             self.import_file.generated_date = datetime.datetime(
-                2020, 10, 2, tzinfo=datetime.timezone.utc)
+                2020, 10, 2, tzinfo=datetime.UTC)
             self.import_file.save()
             response = self._get(self.import_file.pk)
         self.assertEqual(response.status_code, 404)

@@ -42,8 +42,8 @@ class HandshakeBlockedStudentListViewTest(TestCase):
         self.assertEqual(json.loads(response.content), [])
 
     def test_get_returns_students_ordered_by_added_date(self):
-        t1 = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
-        t2 = datetime.datetime(2020, 6, 1, tzinfo=datetime.timezone.utc)
+        t1 = datetime.datetime(2020, 1, 1, tzinfo=datetime.UTC)
+        t2 = datetime.datetime(2020, 6, 1, tzinfo=datetime.UTC)
         BlockedHandshakeStudent.objects.create(
             username='astudent', added_by='admin', added_date=t1)
         BlockedHandshakeStudent.objects.create(
@@ -83,7 +83,7 @@ class HandshakeBlockedStudentListViewTest(TestCase):
     @patch('sis_provisioner.views.api.blocked_student.get_user',
            return_value='adminuser')
     def test_post_duplicate_username_returns_existing(self, mock_get_user):
-        added_date = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
+        added_date = datetime.datetime(2020, 1, 1, tzinfo=datetime.UTC)
         existing = BlockedHandshakeStudent.objects.create(
             username='javerage', added_by='original', added_date=added_date,
             reason='Original reason')
@@ -113,7 +113,7 @@ class HandshakeBlockedStudentViewTest(TestCase):
             username='javerage',
             added_by='admin',
             added_date=datetime.datetime(
-                2020, 1, 1, tzinfo=datetime.timezone.utc),
+                2020, 1, 1, tzinfo=datetime.UTC),
             reason='Test')
 
     def _delete(self, student_id):
@@ -169,8 +169,8 @@ class UconnectBlockedStudentListViewTest(TestCase):
         self.assertEqual(json.loads(response.content), [])
 
     def test_get_returns_students_ordered_by_added_date(self):
-        t1 = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
-        t2 = datetime.datetime(2020, 6, 1, tzinfo=datetime.timezone.utc)
+        t1 = datetime.datetime(2020, 1, 1, tzinfo=datetime.UTC)
+        t2 = datetime.datetime(2020, 6, 1, tzinfo=datetime.UTC)
         BlockedUconnectStudent.objects.create(
             username='astudent', added_by='admin', added_date=t1)
         BlockedUconnectStudent.objects.create(
@@ -210,7 +210,7 @@ class UconnectBlockedStudentListViewTest(TestCase):
     @patch('sis_provisioner.views.api.blocked_student.get_user',
            return_value='adminuser')
     def test_post_duplicate_username_returns_existing(self, mock_get_user):
-        added_date = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
+        added_date = datetime.datetime(2020, 1, 1, tzinfo=datetime.UTC)
         existing = BlockedUconnectStudent.objects.create(
             username='javerage', added_by='original', added_date=added_date,
             reason='Original reason')
@@ -239,7 +239,7 @@ class UconnectBlockedStudentViewTest(TestCase):
             username='javerage',
             added_by='admin',
             added_date=datetime.datetime(
-                2020, 1, 1, tzinfo=datetime.timezone.utc),
+                2020, 1, 1, tzinfo=datetime.UTC),
             reason='Test')
 
     def _delete(self, student_id):

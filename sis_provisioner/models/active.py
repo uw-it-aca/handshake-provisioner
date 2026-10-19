@@ -4,7 +4,7 @@
 
 import csv
 import io
-from datetime import timezone
+from datetime import UTC
 from logging import getLogger
 
 from django.conf import settings
@@ -37,7 +37,7 @@ class ActiveStudentsFile(ImportFile):
 
     def _create_path(self):
         local_tz = get_default_timezone()
-        return self.created_date.replace(tzinfo=timezone.utc).astimezone(
+        return self.created_date.replace(tzinfo=UTC).astimezone(
             local_tz).strftime('%Y/%m/active-students-%Y%m%d-%H%M%S.csv')
 
     def _generate_csv(self):
