@@ -4,7 +4,7 @@
 
 import csv
 import io
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from logging import getLogger
 
 from django.conf import settings
@@ -64,7 +64,7 @@ class UconnectStudentsFile(ImportFile):
         try:
             write_file(settings.UCONNECT_FILENAME, self.content)
             self.imported_status = 200
-            self.imported_date = datetime.now(timezone.utc)
+            self.imported_date = datetime.now(UTC)
             logger.info(f'File ID {self.pk} imported')
         except Exception as ex:
             logger.critical(ex, exc_info=True)
@@ -90,7 +90,7 @@ class UconnectStudentsFile(ImportFile):
             name = f'{prefix}-{name}'
 
         local_tz = get_default_timezone()
-        return self.created_date.replace(tzinfo=timezone.utc).astimezone(
+        return self.created_date.replace(tzinfo=UTC).astimezone(
             local_tz).strftime(f'%Y/%m/{name}-%Y%m%d-%H%M%S.csv')
 
     def _generate_csv(self):

@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "handshake-provisioner"
+dynamic = ["version"]
+description = "UW application that supports Handshake and uConnect"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [
+    {name = "UWIT Student & Educational Technology Services", email = "aca-it@uw.edu"}
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+]
+dependencies = [
+    "django~=5.2",
+    "django-storages[google, s3]",
+    "urllib3<2",  # pinned for boto3
+    "django-person-client~=2.1",
+    "uw-memcached-clients~=1.0",
+    "uw-restclients-core~=1.4",
+    "uw-restclients-sws~=2.5",
+    "nameparser>=1.0.4,<2.0",
+    "uw-django-saml2~=1.8",
+    "psycopg[c]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+]
+
+[tool.setuptools]
+packages = ["sis_provisioner"]
+include-package-data = true
+
+[tool.ruff]
+line-length = 88
+exclude = [
+    "sis_provisioner/migrations/*",
+]
+
+[tool.ruff.lint]
+ignore = [
+    "B006",    # allow mutable data structures for argument defaults
+    "BLE001",  # allow broad Exception catches
+    "RUF012",  # allow mutable default value for class attribute
+]
+
+[tool.coverage.run]
+source = ["sis_provisioner"]
+parallel = true
+omit = [
+     "sis_provisioner/migrations/*",
+     "sis_provisioner/tests/*",
+     "sis_provisioner/static/*",
+]
+
+[tool.coverage.paths]
+source = [
+    "sis_provisioner/",
+    "/app/sis_provisioner/",
+]

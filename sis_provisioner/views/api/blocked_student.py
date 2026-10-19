@@ -3,7 +3,7 @@
 
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from logging import getLogger
 
 from uw_saml.utils import get_user
@@ -30,7 +30,7 @@ class HandshakeBlockedStudentListView(APIView):
         blocked_student, _ = BlockedHandshakeStudent.objects.get_or_create(
             username=username, defaults={
                 'added_by': get_user(request),
-                'added_date': datetime.now(timezone.utc),
+                'added_date': datetime.now(UTC),
                 'reason': reason,
             })
         return self.json_response(blocked_student.json_data())
@@ -62,7 +62,7 @@ class UconnectBlockedStudentListView(APIView):
         blocked_student, _ = BlockedUconnectStudent.objects.get_or_create(
             username=username, defaults={
                 'added_by': get_user(request),
-                'added_date': datetime.now(timezone.utc),
+                'added_date': datetime.now(UTC),
                 'reason': reason,
             })
         return self.json_response(blocked_student.json_data())

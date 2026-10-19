@@ -10,6 +10,6 @@ from uw_sws import sws_now
 def current_datetime():
     override_dt = getattr(settings, "CURRENT_DATETIME_OVERRIDE", None)
     if override_dt is not None:
-        return datetime.strptime(override_dt, "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
+        return datetime.strptime(override_dt, "%Y-%m-%d %H:%M:%S")
     else:
         return sws_now()

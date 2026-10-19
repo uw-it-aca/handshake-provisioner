@@ -1,13 +1,12 @@
 # Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-# ruff: noqa: RUF012
 
 from django.db import models
+from uw_sws.term import get_term_by_year_and_quarter
 
 from sis_provisioner.dao.term import (
     current_term,
-    get_term_by_year_and_quarter,
     next_term,
 )
 

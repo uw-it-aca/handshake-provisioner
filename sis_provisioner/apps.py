@@ -7,7 +7,7 @@ from django.contrib.staticfiles.apps import StaticFilesConfig
 
 
 class SISProvisionerFilesConfig(StaticFilesConfig):
-    ignore_patterns = ['CVS', '*~']  # noqa: RUF012
+    ignore_patterns = ['CVS', '*~']
 
 
 class SISProvisionerConfig(AppConfig):
